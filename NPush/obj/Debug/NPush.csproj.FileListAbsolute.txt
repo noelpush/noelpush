@@ -120,3 +120,6 @@ C:\Users\lbaudin\Desktop\NPush\NPush\obj\Debug\NPush.csproj.GenerateResource.Cac
 C:\Github\NPush\NPush\NPush\bin\Debug\NPush.exe.config
 C:\Github\NPush\NPush\NPush\obj\Debug\NPush.exe
 C:\Github\NPush\NPush\NPush\obj\Debug\NPush.pdb
+C:\Github\NPush\NPush\bin\Debug\NPush.exe.config
+C:\Github\NPush\NPush\obj\Debug\NPush.exe
+C:\Github\NPush\NPush\obj\Debug\NPush.pdb

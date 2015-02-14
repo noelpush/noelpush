@@ -25,7 +25,7 @@ namespace NPush.Views
                 Width = Screen.AllScreens.Sum(screen => screen.WorkingArea.Width),
                 Height = Screen.AllScreens.Select(screen => screen.WorkingArea.Height).Concat(new[] { 0 }).Max(),
                 Left = 0,
-                Top = -50,
+                Top = 0,
                 TopMost = true,
                 Cursor = Cursors.Cross
             };
