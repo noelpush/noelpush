@@ -1,19 +1,33 @@
 ﻿using System;
 
 using NPush.Models;
+using NPush.Views;
 
 
 namespace NPush.ViewModels
 {
-    class NotifyIconViewModel
+    public class NotifyIconViewModel
     {
-        private readonly Manager process;
+        private readonly Manager manager;
         private readonly bool canScreen;
+
+        public event EventHandler EventShowUpdateMessage;
+        public delegate void EventHandler(object sender);
 
         public NotifyIconViewModel()
         {
-            this.process = new Manager();
+            this.manager = new Manager(this);
             this.canScreen = true;
+        }
+
+        public void SubscribeToEvent(EventHandler eventHandler)
+        {
+            this.EventShowUpdateMessage += eventHandler;
+        }
+
+        public void ShowUpdateMessage()
+        {
+            this.EventShowUpdateMessage(null);
         }
 
         private bool CanScreen
@@ -23,12 +37,14 @@ namespace NPush.ViewModels
 
         public void CaptureScreen()
         {
-            if (this.CanScreen) process.CaptureScreen();
+            if (this.CanScreen) 
+                this.manager.CaptureScreen();
         }
 
         public void CaptureRegion()
         {
-            if (this.CanScreen) process.CaptureRegion();
+            if (this.CanScreen) 
+                this.manager.CaptureRegion();
         }
 
         public void Exit()

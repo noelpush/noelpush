@@ -62,11 +62,7 @@
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="Services\Statistics.cs" />
     <Compile Include="Services\Update.cs" />
-    <Compile Include="ViewModels\ProgressBarViewModel.cs" />
     <Compile Include="ViewModels\SelectorViewModel.cs" />
-    <Compile Include="Views\ProgressBarView.xaml.cs">
-      <DependentUpon>ProgressBarView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SelectorView.xaml.cs">
       <DependentUpon>SelectorView.xaml</DependentUpon>
     </Compile>
@@ -84,10 +80,6 @@
       <DependentUpon>NotifyIconView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ProgressBarView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\SelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

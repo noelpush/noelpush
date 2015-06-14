@@ -17,7 +17,6 @@ namespace NPush.Services
         private Stopwatch ChronoUpload;
 
         private Manager manager;
-        private ProgressBarView progressBar;
 
         private string boundary;
         private byte[] boundaryBytes;
@@ -28,7 +27,6 @@ namespace NPush.Services
             this.ChronoUpload = new Stopwatch();
 
             this.manager = manager;
-            this.progressBar = new ProgressBarView();
 
             this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
             this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
@@ -89,12 +87,6 @@ namespace NPush.Services
             webClient.Headers.Add(HttpRequestHeader.ContentType, "multipart/form-data; boundary=" + boundary);
             webClient.UploadDataAsync(new Uri("http://www.noelshack.com/api.php"), param);
             webClient.UploadDataCompleted += WebClientOnUploadDataCompleted;
-            webClient.UploadProgressChanged += WebClientOnUploadProgressChanged;
-        }
-
-        private void WebClientOnUploadProgressChanged(object sender, UploadProgressChangedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(() => progressBar.SetValue(e.ProgressPercentage));
         }
 
         private void WebClientOnUploadDataCompleted(object sender, UploadDataCompletedEventArgs e)

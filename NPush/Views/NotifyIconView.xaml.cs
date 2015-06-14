@@ -24,6 +24,8 @@ namespace NPush.Views
             this.NotifIcon.MouseClick += OnClick;
 
             this.ShowIcon();
+
+            (DataContext as NotifyIconViewModel).SubscribeToEvent(ShowUpdateMessage);
         }
 
         public void ShowIcon()
@@ -63,6 +65,12 @@ namespace NPush.Views
 
             var mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             mi.Invoke(this.NotifIcon, null);
+        }
+
+        private void ShowUpdateMessage(object sender)
+        {
+            this.NotifIcon.BalloonTipText = Properties.Resources.NewVersion;
+            this.NotifIcon.ShowBalloonTip(20000);
         }
     }
 }

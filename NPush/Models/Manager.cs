@@ -11,6 +11,7 @@ using NPush.Objects;
 using NPush.Properties;
 using NPush.Services;
 using NPush.Views;
+using NPush.ViewModels;
 
 
 namespace NPush.Models
@@ -31,13 +32,15 @@ namespace NPush.Models
         private readonly Uploader uploader;
         private readonly Statistics stats;
         private readonly ScreenCapture screenCapture;
+        private readonly NotifyIconViewModel notifyIconViewModel;
 
-        public Manager()
+        public Manager(NotifyIconViewModel notifyIconViewModel)
         {
             this.update = new Update();
             this.screenCapture = new ScreenCapture(this);
             this.uploader = new Uploader(this);
             this.stats = new Statistics();
+            this.notifyIconViewModel = notifyIconViewModel;
 
             if (Settings.Default.uniqueID.Count() != 32)
             {
@@ -47,9 +50,6 @@ namespace NPush.Models
             
             this.version = Settings.Default.version;
             this.uniqueID = Settings.Default.uniqueID;
-
-            var progressBar = new ProgressBarView();
-                progressBar.Show();
 
             this.shortcutsScreen = new Shortcuts();
             this.shortcutsScreen.KeyPressed += CaptureScreen;
@@ -65,16 +65,19 @@ namespace NPush.Models
 
             this.stats.StatsStart(this.uniqueID, this.version, this.getDotnets());
 
-            this.CheckUpdate();
+            //this.CheckUpdate();
         }
 
         private void CheckUpdate()
         {
             bool isUpdated = this.update.CheckVersion();
-
             if (isUpdated) return;
 
-            MessageBox.Show(String.Format(Resources.NewVersion, this.version));
+            //this.notifyIconViewModel.ShowUpdateMessage();
+        }
+
+        private void DoUpdate()
+        {
             this.update.DoUpdate();
         }
 
