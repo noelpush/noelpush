@@ -21,24 +21,23 @@ namespace NPush.Models
         private string uniqueID;
         private readonly string version;
 
-        private Shortcuts shortcutsScreen;
-        private Shortcuts shortcutsRegion;
-        private Shortcuts shortcutsEscape;
+        private Shortcuts shortcutImprEcr;
+        private Shortcuts shortcutEscape;
 
-        public bool isScreenCapturing;
         private ScreenshotData screenshotData;
 
         private readonly Update update;
-        private readonly Uploader uploader;
         private readonly Statistics stats;
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
 
+        private int pressCounter = 0;
+        private DateTime pressDateTime;
+
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            this.update = new Update();
+            //this.update = new Update();
             this.screenCapture = new ScreenCapture(this);
-            this.uploader = new Uploader(this);
             this.stats = new Statistics();
             this.notifyIconViewModel = notifyIconViewModel;
 
@@ -51,67 +50,96 @@ namespace NPush.Models
             this.version = Settings.Default.version;
             this.uniqueID = Settings.Default.uniqueID;
 
-            this.shortcutsScreen = new Shortcuts();
-            this.shortcutsScreen.KeyPressed += CaptureScreen;
-            this.shortcutsScreen.RegisterHotKeys(ModifierKeys.Control, Keys.PrintScreen);
+            this.shortcutImprEcr = new Shortcuts();
+            this.shortcutImprEcr.KeyPressed += Capture;
+            this.shortcutImprEcr.RegisterHotKey(Keys.PrintScreen);
 
-            this.shortcutsRegion = new Shortcuts();
-            this.shortcutsRegion.KeyPressed += CaptureRegion;
-            this.shortcutsRegion.RegisterHotKeys(ModifierKeys.Shift, Keys.PrintScreen);
-
-            this.shortcutsEscape = new Shortcuts();
-            this.shortcutsEscape.KeyPressed += CancelScreen;
-            this.shortcutsEscape.RegisterHotKey(Keys.Escape);
+            this.shortcutEscape = new Shortcuts();
+            this.shortcutEscape.KeyPressed += CancelScreen;
+            this.shortcutEscape.RegisterHotKey(Keys.Escape);
 
             this.stats.StatsStart(this.uniqueID, this.version, this.getDotnets());
 
             //this.CheckUpdate();
         }
 
+        #region Update version
         private void CheckUpdate()
         {
             bool isUpdated = this.update.CheckVersion();
             if (isUpdated) return;
 
-            //this.notifyIconViewModel.ShowUpdateMessage();
+            this.notifyIconViewModel.ShowUpdateMessage();
         }
 
         private void DoUpdate()
         {
             this.update.DoUpdate();
         }
+        #endregion
 
-        private void CancelScreen(object sender, KeyPressedEventArgs e)
+        private void CancelScreen(object sender = null, KeyPressedEventArgs e = null)
         {
-            this.isScreenCapturing = false;
             this.screenCapture.Canceled();
+        }
+
+        public void Capture(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
+        {
+            var date = DateTime.Now;
+            this.pressCounter++;
+
+            // First press or bad time
+            if (this.pressCounter <= 1 || (this.pressCounter > 1 && date > this.pressDateTime.AddMilliseconds(400)))
+            {
+                this.pressCounter = 1;
+                this.CancelScreen();
+                this.pressDateTime = DateTime.Now;
+
+                if (this.pressCounter <= 1)
+                    this.screenCapture.CaptureSimpleScreen();
+
+                return;
+            }
+            
+            // Second press
+            else if (this.pressCounter == 2)
+            {
+                this.pressDateTime = DateTime.Now;
+                this.CaptureRegion();
+                return;
+            }
+
+            // Third press
+            else if (this.pressCounter == 3)
+            {
+                this.CancelScreen();
+                this.CaptureScreen();
+                this.pressCounter = 0;
+                return;
+            }
         }
 
         public void CaptureScreen(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
         {
-            if (this.isScreenCapturing) return;
-            this.isScreenCapturing = true;
-
             this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 1);
             this.screenCapture.CaptureScreen();
         }
 
         public void CaptureRegion(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
         {
-            if (this.isScreenCapturing) return;
-            this.isScreenCapturing = true;
-
             this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 2);
             this.screenCapture.CaptureRegion();
         }
 
-        public void Captured(Bitmap img, int mode)
+        public void Captured(Bitmap img)
         {
+            this.pressCounter = 0;
+
             var sizePicture = this.screenCapture.SaveImage(img);
                 if (sizePicture.Count() > 0) this.screenshotData.sizePng = sizePicture[0];
                 if (sizePicture.Count() > 1) this.screenshotData.sizeJpg = sizePicture[1];
 
-            uploader.Upload(ImageToByte(img));
+            new Uploader(this).Upload(ImageToByte(img));
         }
 
         public void Uploaded(string url, long timing)
@@ -119,16 +147,18 @@ namespace NPush.Models
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
             NotifSound();
 
-            this.isScreenCapturing = false;
-
             this.screenshotData.timing = timing;
-            stats.StatsUpload(this.screenshotData);
+            this.stats.StatsUpload(this.screenshotData);
             this.screenshotData = null;
+        }
+
+        public void Screened(Bitmap bmp)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
         }
 
         internal void UploadFailed()
         {
-            this.isScreenCapturing = false;
             this.stats.StatsFail();
         }
 

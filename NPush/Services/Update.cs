@@ -5,7 +5,6 @@ namespace NPush.Services
 {
     class Update
     {
-
         private string version;
 
         public Update()

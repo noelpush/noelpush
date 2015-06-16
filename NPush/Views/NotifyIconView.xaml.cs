@@ -64,7 +64,11 @@ namespace NPush.Views
             if (e.Button != MouseButtons.Left) return;
 
             var mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            mi.Invoke(this.NotifIcon, null);
+
+            if (!this.NotifMenu.Visible)
+                mi.Invoke(this.NotifIcon, null);
+            else
+                this.NotifMenu.Visible = false;
         }
 
         private void ShowUpdateMessage(object sender)

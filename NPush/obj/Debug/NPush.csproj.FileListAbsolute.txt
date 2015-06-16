@@ -124,8 +124,6 @@ C:\Github\NPush\NPush\bin\Debug\NPush.exe.config
 C:\Github\NPush\NPush\obj\Debug\NPush.exe
 C:\Github\NPush\NPush\obj\Debug\NPush.pdb
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\NPush.exe.config
-C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.exe
-C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.pdb
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\NPush.exe
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\NPush.pdb
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\Utils.Wpf.dll
@@ -140,7 +138,6 @@ C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\ja\System.Windows.Interacti
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\ko\System.Windows.Interactivity.resources.dll
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
 C:\Users\Home\Documents\GitHub\NPush\NPush\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
-C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.csprojResolveAssemblyReference.cache
 C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\Views\NotifyIconView.baml
 C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\Views\SelectorView.baml
 C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\Views\NotifyIconView.g.cs
@@ -150,3 +147,6 @@ C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush_MarkupCompile.cache
 C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.g.resources
 C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.Properties.Resources.resources
 C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.csproj.GenerateResource.Cache
+C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.exe
+C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.pdb
+C:\Users\Home\Documents\GitHub\NPush\NPush\obj\Debug\NPush.csprojResolveAssemblyReference.cache

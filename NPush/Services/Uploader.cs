@@ -8,16 +8,15 @@ using System.Windows;
 using NPush.Models;
 using NPush.Views;
 
-
 namespace NPush.Services
 {
-
     internal class Uploader
     {
         private Stopwatch ChronoUpload;
 
         private Manager manager;
 
+        private string namePicture;
         private string boundary;
         private byte[] boundaryBytes;
         private byte[] headerBytes;
@@ -28,9 +27,10 @@ namespace NPush.Services
 
             this.manager = manager;
 
+            this.namePicture = Properties.Resources.NamePicture;
             this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
             this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
-            this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"npush.png\"\r\nContent-Type: image/png\r\n\r\n");
+            this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + ".png\"\r\nContent-Type: image/png\r\n\r\n");
         }
 
         public void Upload(byte[] imgBytes)
@@ -103,13 +103,13 @@ namespace NPush.Services
         private string CustomUrl(string url)
         {
             /* Faut que je me trouve une regex lulz
-             * http://www.noelshack.com/2015-02-1420740001-npush.png
-             * http://image.noelshack.com/fichiers/2015/02/1420740001-npush.png */
+             * http://www.noelshack.com/2015-02-1420740001-jvpush.png
+             * http://image.noelshack.com/fichiers/2015/02/1420740001-jvpush.png */
 
             url = url.Replace("www", "image");
             url = url.Replace(".com", ".com/fichiers");
             url = url.Replace("-", "/");
-            url = url.Replace("/npush", "-npush");
+            url = url.Replace("/" + this.namePicture, "-" + this.namePicture);
             return url;
         }
     }

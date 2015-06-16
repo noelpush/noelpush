@@ -22,11 +22,26 @@ namespace NPush.Services
         
         public ScreenCapture(Manager manager)
         {
-            WidthScreen = getWidthScreens();
-            HeightScreen = getHeightScreens();
+            this.WidthScreen = getWidthScreens();
+            this.HeightScreen = getHeightScreens();
 
             this.manager = manager;
             this.selector = new SelectorView(this);
+        }
+
+        public void CaptureRegion()
+        {
+            this.selector.Showing();
+        }
+
+        public void CaptureSimpleScreen()
+        {
+            var rec = new Rectangle(0, 0, this.WidthScreen, this.HeightScreen);
+            var bmp = new Bitmap(rec.Width, rec.Height);
+            var g = Graphics.FromImage(bmp);
+            g.CopyFromScreen(Point.Empty, Point.Empty, rec.Size);
+
+            this.manager.Screened(bmp);
         }
 
         public void CaptureScreen()
@@ -35,13 +50,11 @@ namespace NPush.Services
             this.BuildImg(rectangle);
         }
 
-        public void CaptureRegion()
-        {
-            this.selector.Showing();
-        }
-
         public void BuildImg(Rectangle rec)
         {
+            if (rec.Width <= 0 || rec.Height <= 0)
+                return;
+
             var bitmap = new Bitmap(WidthScreen, HeightScreen);
             var bmp = new Bitmap(rec.Width, rec.Height);
 
@@ -49,7 +62,7 @@ namespace NPush.Services
                 g.CopyFromScreen(new Point(rec.Left, rec.Top), Point.Empty, new Size(rec.Width, rec.Height));
                 g.DrawImage(bitmap, 0, 0, rec, GraphicsUnit.Pixel);
 
-            Task.Factory.StartNew(() => manager.Captured(bmp, 2));
+            Task.Factory.StartNew(() => manager.Captured(bmp));
         }
 
         public long[] SaveImage(Bitmap img)
@@ -64,6 +77,8 @@ namespace NPush.Services
 
             var sizePng = (new FileInfo(pathFolder + fileName + ".png")).Length;
             var sizeJpg = (new FileInfo(pathFolder + fileName + ".jpeg")).Length;
+
+            File.Delete(pathFolder + fileName + ".png");
             File.Delete(pathFolder + fileName + ".jpeg");
 
             return new[] { sizePng, sizeJpg };
@@ -96,7 +111,6 @@ namespace NPush.Services
 
         internal void Canceled()
         {
-            this.manager.isScreenCapturing = false;
             this.selector.Hiding();
         }
     }

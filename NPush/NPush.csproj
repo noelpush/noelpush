@@ -66,6 +66,9 @@
     <Compile Include="Views\SelectorView.xaml.cs">
       <DependentUpon>SelectorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Tools\SelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Page Include="Views\NotifyIconView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
