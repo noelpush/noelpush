@@ -10,18 +10,11 @@ namespace NPush.Views.Tools
 {
     class SelectorForm : Form
     {
+        public bool CleanDraw;
         public Point Start { get; set; }
         public Point End { get; set; }
-        public bool ToClean;
         private readonly Pen pen = new Pen(Color.FromArgb(100, 100, 100), 1);
         private readonly SolidBrush brush = new SolidBrush(Color.FromArgb(150, 255, 255, 255));
-
-        internal void Initialize()
-        {
-            this.CreateGraphics().Clear(this.BackColor);
-            this.Start = Point.Empty;
-            this.End = Point.Empty;
-        }
 
         public SelectorForm()
         {
@@ -33,11 +26,26 @@ namespace NPush.Views.Tools
             this.Paint += OnPaint;
         }
 
+        internal void Initialize()
+        {
+            this.Start = Point.Empty;
+            this.End = Point.Empty;
+
+            this.CreateGraphics().Clear(this.BackColor);
+
+            this.CleanDraw = true;
+            this.Refresh();
+            this.CleanDraw = false;
+        }
+
         private void OnPaint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(this.BackColor);
             e.Graphics.FillRectangle(this.brush, this.getRectangle());
             e.Graphics.DrawRectangle(this.pen, this.getRectangle());
+
+            if (this.CleanDraw)
+                e.Graphics.Clear(this.BackColor);
         }
 
         public Rectangle getRectangle()

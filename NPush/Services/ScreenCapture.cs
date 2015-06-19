@@ -107,8 +107,6 @@ namespace NPush.Services
                 Directory.CreateDirectory(pathHistorique);
         }
 
-        // dual monitor http://www.codeproject.com/Articles/330837/ScreenCap-CSharp-Screen-Capture-Application
-
         internal void Canceled()
         {
             this.selector.Hiding();

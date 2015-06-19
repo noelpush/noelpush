@@ -27,27 +27,30 @@ namespace NPush.Views
                 Height = Screen.AllScreens.Select(screen => screen.WorkingArea.Height).Concat(new[] { 0 }).Max(),
                 Left = 0,
                 Top = 0,
-                Cursor = Cursors.Cross,
-                ToClean = false,
-                TopMost = true
+                Cursor = Cursors.Cross/*,
+                TopMost = true*/
             };
 
             this.selectorForm.MouseDown += OnMouseDown;
             this.selectorForm.MouseMove += OnMouseMove;
             this.selectorForm.MouseUp += OnMouseUp;
+            this.selectorForm.KeyDown += OnKeyDown;
 
             this.InitializeComponent();
         }
 
         public void Showing()
         {
-            this.selectorForm.KeyDown += OnKeyDown;
             this.selectorForm.Initialize();
             this.selectorForm.Show();
         }
 
         internal void Hiding()
         {
+            this.selectorForm.CleanDraw = true;
+            this.selectorForm.Refresh();
+            this.selectorForm.CleanDraw = false;
+
             this.selectorForm.Hide();
         }
 
