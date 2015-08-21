@@ -27,8 +27,8 @@ namespace NPush.Views
                 Height = Screen.AllScreens.Select(screen => screen.WorkingArea.Height).Concat(new[] { 0 }).Max(),
                 Left = 0,
                 Top = 0,
-                Cursor = Cursors.Cross/*,
-                TopMost = true*/
+                Cursor = Cursors.Cross,
+                TopMost = true
             };
 
             this.selectorForm.MouseDown += OnMouseDown;

@@ -22,6 +22,7 @@ namespace NPush.Views.Tools
             this.DoubleBuffered = true;
             this.BackColor = Color.FromArgb(255, 255, 254);
             this.TransparencyKey = this.BackColor;
+            this.WindowState = FormWindowState.Maximized;
 
             this.Paint += OnPaint;
         }
