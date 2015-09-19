@@ -37,7 +37,7 @@ namespace NPush.Services
         public void CaptureSimpleScreen()
         {
             var rec = new Rectangle(0, 0, this.WidthScreen, this.HeightScreen);
-            var bmp = new Bitmap(rec.Width, rec.Height);
+            var bmp = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);
             var g = Graphics.FromImage(bmp);
             g.CopyFromScreen(Point.Empty, Point.Empty, rec.Size);
 
@@ -56,7 +56,7 @@ namespace NPush.Services
                 return;
 
             var bitmap = new Bitmap(WidthScreen, HeightScreen);
-            var bmp = new Bitmap(rec.Width, rec.Height);
+            var bmp = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);
 
             var g = Graphics.FromImage(bmp);
                 g.CopyFromScreen(new Point(rec.Left, rec.Top), Point.Empty, new Size(rec.Width, rec.Height));

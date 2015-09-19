@@ -1,7 +1,6 @@
 ﻿using System;
 
 using NPush.Models;
-using NPush.Views;
 
 
 namespace NPush.ViewModels
@@ -25,9 +24,9 @@ namespace NPush.ViewModels
             this.EventShowUpdateMessage += eventHandler;
         }
 
-        public void ShowUpdateMessage()
+        public void ShowMessage(string text)
         {
-            this.EventShowUpdateMessage(null);
+            this.EventShowUpdateMessage(text);
         }
 
         private bool CanScreen

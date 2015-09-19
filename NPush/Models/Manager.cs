@@ -27,7 +27,7 @@ namespace NPush.Models
         private ScreenshotData screenshotData;
 
         private readonly Update update;
-        private readonly Statistics stats;
+        private readonly Statistics statistics;
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
 
@@ -38,7 +38,7 @@ namespace NPush.Models
         {
             //this.update = new Update();
             this.screenCapture = new ScreenCapture(this);
-            this.stats = new Statistics();
+            this.statistics = new Statistics();
             this.notifyIconViewModel = notifyIconViewModel;
 
             if (Settings.Default.uniqueID.Count() != 32)
@@ -58,7 +58,7 @@ namespace NPush.Models
             this.shortcutEscape.KeyPressed += CancelScreen;
             this.shortcutEscape.RegisterHotKey(Keys.Escape);
 
-            this.stats.StatsStart(this.uniqueID, this.version, this.getDotnets());
+            this.statistics.StatsStart(this.uniqueID, this.version, this.getDotnets());
 
             //this.CheckUpdate();
         }
@@ -69,7 +69,7 @@ namespace NPush.Models
             bool isUpdated = this.update.CheckVersion();
             if (isUpdated) return;
 
-            this.notifyIconViewModel.ShowUpdateMessage();
+            this.notifyIconViewModel.ShowMessage(Resources.NewVersion);
         }
 
         private void DoUpdate()
@@ -145,10 +145,10 @@ namespace NPush.Models
         public void Uploaded(string url, long timing)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
-            NotifSound();
+            this.notifyIconViewModel.ShowMessage(url);
 
             this.screenshotData.timing = timing;
-            this.stats.StatsUpload(this.screenshotData);
+            this.statistics.StatsUpload(this.screenshotData);
             this.screenshotData = null;
         }
 
@@ -159,7 +159,7 @@ namespace NPush.Models
 
         internal void UploadFailed()
         {
-            this.stats.StatsFail();
+            this.statistics.StatsFail();
         }
 
         private void NotifSound()

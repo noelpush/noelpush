@@ -71,10 +71,10 @@ namespace NPush.Views
                 this.NotifMenu.Visible = false;
         }
 
-        private void ShowUpdateMessage(object sender)
+        private void ShowUpdateMessage(object text)
         {
-            this.NotifIcon.BalloonTipText = Properties.Resources.NewVersion;
-            this.NotifIcon.ShowBalloonTip(20000);
+            this.NotifIcon.BalloonTipText = text as string;
+            this.NotifIcon.ShowBalloonTip(2000);
         }
     }
 }
