@@ -56,20 +56,16 @@ namespace NPush.Services
             };
         }
 
-        public void RegisterHotKeys(ModifierKeys modifier, Keys key)
+        public bool RegisterHotKey(Keys key)
         {
-            _currentId = _currentId + 1;
-
-            if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
-                throw new InvalidOperationException("Couldn't register the hot key.");
+            _currentId++;
+            return RegisterHotKey(_window.Handle, _currentId, 0, (uint)key);
         }
 
-        public void RegisterHotKey(Keys key)
+        public bool RegisterHotKeys(ModifierKeys modifier, Keys key)
         {
-            _currentId = _currentId + 1;
-
-            if (!RegisterHotKey(_window.Handle, _currentId, 0, (uint)key))
-                throw new InvalidOperationException("Couldn't register the hot key.");
+            _currentId++;
+            return RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key);
         }
 
         public event EventHandler<KeyPressedEventArgs> KeyPressed;

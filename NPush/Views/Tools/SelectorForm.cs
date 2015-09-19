@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
@@ -18,12 +14,7 @@ namespace NPush.Views.Tools
 
         public SelectorForm()
         {
-            this.Opacity = 0.2f;
             this.DoubleBuffered = true;
-            this.BackColor = Color.FromArgb(255, 255, 254);
-            this.TransparencyKey = this.BackColor;
-            this.WindowState = FormWindowState.Maximized;
-
             this.Paint += OnPaint;
         }
 

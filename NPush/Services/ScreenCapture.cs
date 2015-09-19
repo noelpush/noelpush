@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -34,7 +35,7 @@ namespace NPush.Services
             this.selector.Showing();
         }
 
-        public void CaptureSimpleScreen()
+        internal void CaptureSimpleScreen(object sender, DoWorkEventArgs e)
         {
             var rec = new Rectangle(0, 0, this.WidthScreen, this.HeightScreen);
             var bmp = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);

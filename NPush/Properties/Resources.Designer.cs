@@ -79,6 +79,15 @@ namespace NPush.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Une instance de NPush est déjà exécutée, vous ne pouvez pas en exécuter une deuxième..
+        /// </summary>
+        public static string ErrorRegisterHotKey {
+            get {
+                return ResourceManager.GetString("ErrorRegisterHotKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quitter.
         /// </summary>
         public static string Exit {
@@ -98,7 +107,16 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to jvpush.
+        ///   Looks up a localized string similar to Lien copié dans le presse-papier !.
+        /// </summary>
+        public static string LinkPasted {
+            get {
+                return ResourceManager.GetString("LinkPasted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to npush.
         /// </summary>
         public static string NamePicture {
             get {
@@ -107,7 +125,7 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vous utilisez actuellement la version {0} de JvPush. Souhaitez-vous télécharger la nouvelle version disponible ?.
+        ///   Looks up a localized string similar to Vous utilisez actuellement la version {0} de NPush. Souhaitez-vous télécharger la nouvelle version disponible ?.
         /// </summary>
         public static string NewVersion {
             get {

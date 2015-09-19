@@ -126,17 +126,23 @@
   <data name="Exit" xml:space="preserve">
     <value>Quitter</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="NewVersion" xml:space="preserve">
-    <value>Vous utilisez actuellement la version {0} de JvPush. Souhaitez-vous télécharger la nouvelle version disponible ?</value>
+    <value>Vous utilisez actuellement la version {0} de NPush. Souhaitez-vous télécharger la nouvelle version disponible ?</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="notif" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\notif.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="NamePicture" xml:space="preserve">
-    <value>jvpush</value>
+    <value>npush</value>
+  </data>
+  <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LinkPasted" xml:space="preserve">
+    <value>Lien copié dans le presse-papier !</value>
+  </data>
+  <data name="ErrorRegisterHotKey" xml:space="preserve">
+    <value>Une instance de NPush est déjà exécutée, vous ne pouvez pas en exécuter une deuxième.</value>
   </data>
 </root>

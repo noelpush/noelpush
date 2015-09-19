@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -20,7 +21,16 @@ namespace NPush.Views
             this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegion);
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.Exit);
 
-            this.NotifIcon = new NotifyIcon { Icon = Properties.Resources.icon, ContextMenuStrip = this.NotifMenu };
+            var path = System.IO.Directory.GetCurrentDirectory() + @"\\icon.ico";
+            var icon = new Icon(path);
+            //var icon = Properties.Resources.icon;
+
+            this.NotifIcon = new NotifyIcon
+            {
+                Icon = icon,
+                ContextMenuStrip = this.NotifMenu
+            };
+
             this.NotifIcon.MouseClick += OnClick;
 
             this.ShowIcon();

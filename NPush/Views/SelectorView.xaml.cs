@@ -1,11 +1,11 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
 using NPush.Services;
 using NPush.ViewModels;
 using NPush.Views.Tools;
+using Point = System.Drawing.Point;
 
 namespace NPush.Views
 {
@@ -22,13 +22,18 @@ namespace NPush.Views
             this.selectorForm = new SelectorForm
             {
                 ShowInTaskbar = false,
+                WindowState =  FormWindowState.Normal,
                 FormBorderStyle = FormBorderStyle.None,
-                Width = Screen.AllScreens.Sum(screen => screen.WorkingArea.Width),
-                Height = Screen.AllScreens.Select(screen => screen.WorkingArea.Height).Concat(new[] { 0 }).Max(),
                 Left = 0,
                 Top = 0,
+                Width = Screen.AllScreens.Sum(screen => screen.WorkingArea.Width),
+                Height = Screen.AllScreens.Select(screen => screen.WorkingArea.Height).Concat(new[] { 0 }).Max(),
                 Cursor = Cursors.Cross,
-                TopMost = true
+                TopMost = true,
+                Opacity = 0.2f,
+                BackColor = Color.FromArgb(255, 255, 254),
+                TransparencyKey = Color.FromArgb(255, 255, 254),
+                StartPosition = FormStartPosition.Manual
             };
 
             this.selectorForm.MouseDown += OnMouseDown;
@@ -82,6 +87,9 @@ namespace NPush.Views
                 this.Hiding();
         }
 
+        public void Connect(int connectionId, object target)
+        {
+        }
     }
 
 }

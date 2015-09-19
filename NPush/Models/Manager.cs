@@ -1,16 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using NPush.Objects;
 using NPush.Properties;
 using NPush.Services;
-using NPush.Views;
 using NPush.ViewModels;
 
 
@@ -52,11 +53,15 @@ namespace NPush.Models
 
             this.shortcutImprEcr = new Shortcuts();
             this.shortcutImprEcr.KeyPressed += Capture;
-            this.shortcutImprEcr.RegisterHotKey(Keys.PrintScreen);
 
             this.shortcutEscape = new Shortcuts();
             this.shortcutEscape.KeyPressed += CancelScreen;
-            this.shortcutEscape.RegisterHotKey(Keys.Escape);
+
+            if (!this.shortcutImprEcr.RegisterHotKey(Keys.PrintScreen) || !this.shortcutEscape.RegisterHotKey(Keys.Escape))
+            {
+                MessageBox.Show(Resources.ErrorRegisterHotKey);
+                Environment.Exit(1);
+            }
 
             this.statistics.StatsStart(this.uniqueID, this.version, this.getDotnets());
 
@@ -96,9 +101,11 @@ namespace NPush.Models
                 this.pressDateTime = DateTime.Now;
 
                 if (this.pressCounter <= 1)
-                    this.screenCapture.CaptureSimpleScreen();
-
-                return;
+                {
+                    var worker = new BackgroundWorker();
+                    worker.DoWork += screenCapture.CaptureSimpleScreen;
+                    worker.RunWorkerAsync();
+                }
             }
             
             // Second press
@@ -106,7 +113,6 @@ namespace NPush.Models
             {
                 this.pressDateTime = DateTime.Now;
                 this.CaptureRegion();
-                return;
             }
 
             // Third press
@@ -115,7 +121,6 @@ namespace NPush.Models
                 this.CancelScreen();
                 this.CaptureScreen();
                 this.pressCounter = 0;
-                return;
             }
         }
 
@@ -145,7 +150,7 @@ namespace NPush.Models
         public void Uploaded(string url, long timing)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
-            this.notifyIconViewModel.ShowMessage(url);
+            this.notifyIconViewModel.ShowMessage(Resources.LinkPasted);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
