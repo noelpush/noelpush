@@ -140,7 +140,7 @@
     <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="LinkPasted" xml:space="preserve">
-    <value>Lien copié dans le presse-papier !</value>
+    <value>Lien copié dans le presse-papier.</value>
   </data>
   <data name="ErrorRegisterHotKey" xml:space="preserve">
     <value>Une instance de NPush est déjà exécutée, vous ne pouvez pas en exécuter une deuxième.</value>

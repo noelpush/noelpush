@@ -150,7 +150,7 @@ namespace NPush.Models
         public void Uploaded(string url, long timing)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
-            this.notifyIconViewModel.ShowMessage(Resources.LinkPasted);
+            this.notifyIconViewModel.ShowMessage(url + "\n" + Resources.LinkPasted);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
