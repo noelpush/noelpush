@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows;
-
+using System.Windows.Media.Imaging;
 using NPush.Models;
-using NPush.Views;
 
 namespace NPush.Services
 {
@@ -33,10 +33,14 @@ namespace NPush.Services
             this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + ".png\"\r\nContent-Type: image/png\r\n\r\n");
         }
 
+        public void Upload(Bitmap bmp)
+        {
+            this.manager.Uploaded(bmp, 0);
+        }
+
         public void Upload(byte[] imgBytes)
         {
-            ChronoUpload.Reset();
-            ChronoUpload.Start();
+            ChronoUpload.Restart();
 
           //this.UploadWebClient(imgBytes);
           this.UploadHttpWebRequest(imgBytes);

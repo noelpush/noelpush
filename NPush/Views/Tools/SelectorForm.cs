@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace NPush.Views.Tools
 {
-    class SelectorForm : Form
+    sealed class SelectorForm : Form
     {
         public bool CleanDraw;
         public Point Start { get; set; }

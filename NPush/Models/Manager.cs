@@ -5,8 +5,10 @@ using System.Linq;
 using System.Media;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Windows.Media.Imaging;
 using NPush.Objects;
 using NPush.Properties;
 using NPush.Services;
@@ -24,12 +26,15 @@ namespace NPush.Models
         private Shortcuts shortcutEscape;
 
         private ScreenshotData screenshotData;
+        private Task captureScreenTask;
+        private CancellationTokenSource captureScreenTaskToken;
 
         private readonly Update update;
         private readonly Statistics statistics;
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
 
+        private bool noUpload;
         private int pressCounter;
         private DateTime pressDateTime;
 
@@ -42,6 +47,9 @@ namespace NPush.Models
             this.screenCapture = new ScreenCapture(this);
             this.statistics = new Statistics();
             this.notifyIconViewModel = notifyIconViewModel;
+
+            var args = Environment.GetCommandLineArgs();
+            this.noUpload = (args.Count() >= 2 && args[1] == Resources.CommandLineNoUp);
 
             if (Settings.Default.uniqueID.Count() != 32)
             {
@@ -87,8 +95,30 @@ namespace NPush.Models
         private void CancelScreen(object sender = null, KeyPressedEventArgs e = null)
         {
             this.notifyIconViewModel.EnableCommands(true);
-
             this.screenCapture.Canceled();
+            this.StopTask();
+        }
+
+        private void StopTask()
+        {
+            if (this.captureScreenTask == null)
+                return;
+
+            this.captureScreenTaskToken.Cancel();
+            try
+            {
+                this.captureScreenTask.Wait();
+            }
+            catch (Exception e)
+            {
+
+            }
+            finally
+            {
+                this.captureScreenTaskToken.Dispose();
+                this.captureScreenTaskToken = null;
+                this.captureScreenTask = null;
+            }
         }
 
         public void Capture(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
@@ -129,16 +159,14 @@ namespace NPush.Models
 
         public void CaptureScreen(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
         {
-            this.notifyIconViewModel.EnableCommands(false);
-
             this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 1);
             this.screenCapture.CaptureScreen();
+            //this.captureScreenTaskToken = new CancellationTokenSource();
+            //this.captureScreenTask = Task.Run(() => this.screenCapture.CaptureScreen(captureScreenTaskToken), captureScreenTaskToken.Token);
         }
 
         public void CaptureRegion(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
         {
-            this.notifyIconViewModel.EnableCommands(false);
-
             this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 2);
             this.screenCapture.CaptureRegion();
         }
@@ -151,18 +179,37 @@ namespace NPush.Models
                 if (sizePicture.Count() > 0) this.screenshotData.sizePng = sizePicture[0];
                 if (sizePicture.Count() > 1) this.screenshotData.sizeJpg = sizePicture[1];
 
-            new Uploader(this).Upload(ImageToByte(img));
+            // Disable buttons during uploading
+            this.notifyIconViewModel.EnableCommands(false);
+
+            if (this.noUpload)
+                new Uploader(this).Upload(img);
+            else
+                new Uploader(this).Upload(ImageToByte(img));
         }
 
         public void Uploaded(string url, long timing)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
             this.notifyIconViewModel.ShowMessage(url + "\n" + Resources.LinkPasted);
-            this.notifyIconViewModel.EnableCommands(true);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
             this.screenshotData = null;
+
+            this.notifyIconViewModel.EnableCommands(true);
+        }
+
+        public void Uploaded(Bitmap bmp, long timing)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
+            this.notifyIconViewModel.ShowMessage("http://image.noelshack.com/fichiers/2015/xxx-npush.png" + "\n" + Resources.LinkPasted);
+
+            this.screenshotData.timing = timing;
+            this.statistics.StatsUpload(this.screenshotData);
+            this.screenshotData = null;
+
+            this.notifyIconViewModel.EnableCommands(true);
         }
 
         public void Screened(Bitmap bmp)

@@ -87,9 +87,7 @@ namespace NPush.Views
                 this.Hiding();
         }
 
-        public void Connect(int connectionId, object target)
-        {
-        }
+        public void Connect(int connectionId, object target) {}
     }
 
 }

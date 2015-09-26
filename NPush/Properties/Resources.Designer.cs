@@ -79,6 +79,15 @@ namespace NPush.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to --noup.
+        /// </summary>
+        public static string CommandLineNoUp {
+            get {
+                return ResourceManager.GetString("CommandLineNoUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Une instance de NPush est déjà exécutée, vous ne pouvez pas en exécuter une deuxième..
         /// </summary>
         public static string ErrorRegisterHotKey {
@@ -139,6 +148,15 @@ namespace NPush.Properties {
         public static System.IO.UnmanagedMemoryStream notif {
             get {
                 return ResourceManager.GetStream("notif", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Envoi en cours.
+        /// </summary>
+        public static string ScreenInProgress {
+            get {
+                return ResourceManager.GetString("ScreenInProgress", resourceCulture);
             }
         }
         

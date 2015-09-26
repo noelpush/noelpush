@@ -148,4 +148,10 @@
   <data name="SoftwareName" xml:space="preserve">
     <value>NPush</value>
   </data>
+  <data name="ScreenInProgress" xml:space="preserve">
+    <value>Envoi en cours</value>
+  </data>
+  <data name="CommandLineNoUp" xml:space="preserve">
+    <value>--noup</value>
+  </data>
 </root>

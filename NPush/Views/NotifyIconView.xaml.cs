@@ -18,14 +18,16 @@ namespace NPush.Views
         {
             this.DataContext = new NotifyIconViewModel();
 
-            this.NotifMenu = new ContextMenuStrip();
-            this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreen);
-            this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegion);
-            this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.Exit);
-
             var path = System.IO.Directory.GetCurrentDirectory() + @"\\icon.ico";
             var icon = new Icon(path);
             //var icon = Properties.Resources.icon;
+
+            this.NotifMenu = new ContextMenuStrip();
+            this.NotifMenu.Items.Add(Properties.Resources.ScreenInProgress, null);
+            this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreen);
+            this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegion);
+            this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.Exit);
+            this.NotifMenu.Items[0].Visible = false;
 
             this.NotifIcon = new NotifyIcon
             {
@@ -115,8 +117,9 @@ namespace NPush.Views
 
         public void SetEnable(bool enabled)
         {
-            this.NotifIcon.ContextMenuStrip.Items[0].Enabled = enabled;
+            this.NotifIcon.ContextMenuStrip.Items[0].Visible = !enabled;
             this.NotifIcon.ContextMenuStrip.Items[1].Enabled = enabled;
+            this.NotifIcon.ContextMenuStrip.Items[2].Enabled = enabled;
         }
 
         public void Connect(int connectionId, object target){}
