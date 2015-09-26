@@ -8,5 +8,8 @@
     <Setting Name="version" Type="System.String" Scope="Application">
       <Value Profile="(Default)">1.0</Value>
     </Setting>
+    <Setting Name="TimePopup" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

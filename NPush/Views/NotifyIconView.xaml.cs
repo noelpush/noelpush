@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -28,6 +30,7 @@ namespace NPush.Views
             this.NotifIcon = new NotifyIcon
             {
                 Icon = icon,
+                Text = Properties.Resources.SoftwareName,
                 ContextMenuStrip = this.NotifMenu
             };
 
@@ -35,7 +38,9 @@ namespace NPush.Views
 
             this.ShowIcon();
 
-            (DataContext as NotifyIconViewModel).SubscribeToEvent(ShowUpdateMessage);
+            var notifyIconViewModel = DataContext as NotifyIconViewModel;
+            notifyIconViewModel.SubscribeToEvent(ShowMessage);
+            notifyIconViewModel.SubscribeToEvent(EnableCommands);
         }
 
         public void ShowIcon()
@@ -81,10 +86,39 @@ namespace NPush.Views
                 this.NotifMenu.Visible = false;
         }
 
-        private void ShowUpdateMessage(object text)
+        private void ShowMessage(string text)
         {
-            this.NotifIcon.BalloonTipText = text as string;
-            this.NotifIcon.ShowBalloonTip(2000);
+            this.NotifIcon.BalloonTipClicked += NotifIcon_BalloonTipClicked;
+            this.NotifIcon.BalloonTipText = text;
+            this.NotifIcon.ShowBalloonTip(Properties.Settings.Default.TimePopup);
         }
+
+        // Open url in browser if tooltip is clicked
+        private void NotifIcon_BalloonTipClicked(object sender, EventArgs eventArgs)
+        {
+            var url = this.NotifIcon.BalloonTipText.Split('\n').First();
+            Process.Start(url);
+        }
+
+        public void EnableCommands(bool enabled)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() => this.SetEnable(enabled));
+            System.Windows.Application.Current.Dispatcher.Invoke(() => this.SetIcon(enabled));
+        }
+
+        private void SetIcon(bool enabled)
+        {
+            var path = System.IO.Directory.GetCurrentDirectory();
+            path += enabled ? @"\\icon.ico" : @"\\icon_upload.ico";
+            this.NotifIcon.Icon = new Icon(path);
+        }
+
+        public void SetEnable(bool enabled)
+        {
+            this.NotifIcon.ContextMenuStrip.Items[0].Enabled = enabled;
+            this.NotifIcon.ContextMenuStrip.Items[1].Enabled = enabled;
+        }
+
+        public void Connect(int connectionId, object target){}
     }
 }

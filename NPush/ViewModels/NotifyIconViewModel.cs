@@ -1,5 +1,5 @@
 ﻿using System;
-
+using NPush.Events;
 using NPush.Models;
 
 
@@ -10,8 +10,11 @@ namespace NPush.ViewModels
         private readonly Manager manager;
         private readonly bool canScreen;
 
-        public event EventHandler EventShowUpdateMessage;
-        public delegate void EventHandler(object sender);
+        public event TooltipMessageEventHandler ShowUpdateMessageEvent;
+        public delegate void TooltipMessageEventHandler(string text);
+
+        public event EnableCommandsEventHandler EnableCommandsEvent;
+        public delegate void EnableCommandsEventHandler(bool enabled);
 
         public NotifyIconViewModel()
         {
@@ -19,14 +22,24 @@ namespace NPush.ViewModels
             this.canScreen = true;
         }
 
-        public void SubscribeToEvent(EventHandler eventHandler)
+        public void SubscribeToEvent(TooltipMessageEventHandler eventHandler)
         {
-            this.EventShowUpdateMessage += eventHandler;
+            this.ShowUpdateMessageEvent += eventHandler;
+        }
+
+        public void SubscribeToEvent(EnableCommandsEventHandler eventHandler)
+        {
+            this.EnableCommandsEvent += eventHandler;
         }
 
         public void ShowMessage(string text)
         {
-            this.EventShowUpdateMessage(text);
+            this.ShowUpdateMessageEvent(text);
+        }
+
+        public void EnableCommands(bool enabled)
+        {
+            this.EnableCommandsEvent(enabled);
         }
 
         private bool CanScreen

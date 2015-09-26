@@ -124,7 +124,7 @@
     <value>Capturer l’écran</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Quitter</value>
+    <value>Quitter NPush</value>
   </data>
   <data name="NewVersion" xml:space="preserve">
     <value>Vous utilisez actuellement la version {0} de NPush. Souhaitez-vous télécharger la nouvelle version disponible ?</value>
@@ -144,5 +144,8 @@
   </data>
   <data name="ErrorRegisterHotKey" xml:space="preserve">
     <value>Une instance de NPush est déjà exécutée, vous ne pouvez pas en exécuter une deuxième.</value>
+  </data>
+  <data name="SoftwareName" xml:space="preserve">
+    <value>NPush</value>
   </data>
 </root>

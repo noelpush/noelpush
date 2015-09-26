@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using NPush.Objects;
@@ -32,11 +30,14 @@ namespace NPush.Models
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
 
-        private int pressCounter = 0;
+        private int pressCounter;
         private DateTime pressDateTime;
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
+            Settings.Default.TimePopup = Settings.Default.TimePopup;
+            Settings.Default.Save();
+
             //this.update = new Update();
             this.screenCapture = new ScreenCapture(this);
             this.statistics = new Statistics();
@@ -85,6 +86,8 @@ namespace NPush.Models
 
         private void CancelScreen(object sender = null, KeyPressedEventArgs e = null)
         {
+            this.notifyIconViewModel.EnableCommands(true);
+
             this.screenCapture.Canceled();
         }
 
@@ -107,7 +110,7 @@ namespace NPush.Models
                     worker.RunWorkerAsync();
                 }
             }
-            
+
             // Second press
             else if (this.pressCounter == 2)
             {
@@ -116,7 +119,7 @@ namespace NPush.Models
             }
 
             // Third press
-            else if (this.pressCounter == 3)
+            if (this.pressCounter == 3)
             {
                 this.CancelScreen();
                 this.CaptureScreen();
@@ -126,12 +129,16 @@ namespace NPush.Models
 
         public void CaptureScreen(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
         {
+            this.notifyIconViewModel.EnableCommands(false);
+
             this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 1);
             this.screenCapture.CaptureScreen();
         }
 
         public void CaptureRegion(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
         {
+            this.notifyIconViewModel.EnableCommands(false);
+
             this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 2);
             this.screenCapture.CaptureRegion();
         }
@@ -151,6 +158,7 @@ namespace NPush.Models
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
             this.notifyIconViewModel.ShowMessage(url + "\n" + Resources.LinkPasted);
+            this.notifyIconViewModel.EnableCommands(true);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);

@@ -88,7 +88,7 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quitter.
+        ///   Looks up a localized string similar to Quitter NPush.
         /// </summary>
         public static string Exit {
             get {
@@ -139,6 +139,15 @@ namespace NPush.Properties {
         public static System.IO.UnmanagedMemoryStream notif {
             get {
                 return ResourceManager.GetStream("notif", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NPush.
+        /// </summary>
+        public static string SoftwareName {
+            get {
+                return ResourceManager.GetString("SoftwareName", resourceCulture);
             }
         }
     }
