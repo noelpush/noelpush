@@ -8,13 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media.Imaging;
 using NPush.Objects;
 using NPush.Properties;
 using NPush.Services;
 using NPush.ViewModels;
-
-
 namespace NPush.Models
 {
     public class Manager
