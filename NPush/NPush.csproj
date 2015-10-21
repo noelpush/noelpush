@@ -49,6 +49,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Itron.Mcn.Utils.Wpf">
+      <HintPath>References\Itron.Mcn.Utils.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
@@ -59,9 +62,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Utils.Wpf">
-      <HintPath>References\Utils.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="Events\EnableCommandsEventHandler.cs" />
     <Compile Include="Events\BalloonTipMessageEventHandler.cs" />
     <Compile Include="Objects\ScreenshotData.cs" />
@@ -79,7 +80,11 @@
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="Services\Statistics.cs" />
     <Compile Include="Services\Update.cs" />
+    <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="ViewModels\SelectorViewModel.cs" />
+    <Compile Include="Views\PopupView.xaml.cs">
+      <DependentUpon>PopupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SelectorView.xaml.cs">
       <DependentUpon>SelectorView.xaml</DependentUpon>
     </Compile>
@@ -100,6 +105,10 @@
       <DependentUpon>NotifyIconView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PopupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

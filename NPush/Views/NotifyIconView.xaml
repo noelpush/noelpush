@@ -2,4 +2,9 @@
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Visibility="Hidden"/>
+        xmlns:views="clr-namespace:NPush.Views"
+        Visibility="Hidden">
+    
+        <views:PopupView DataContext="{Binding PopupDataContext}"/>
+    
+</Window>

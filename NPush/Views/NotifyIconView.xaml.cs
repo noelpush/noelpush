@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 using NPush.ViewModels;
@@ -9,16 +10,14 @@ namespace NPush.Views
 {
     internal partial class NotifyIconView
     {
-        private bool UploadInProgress { get; set; }
-
         private readonly NotifyIcon NotifIcon;
+        private PopupViewModel PopupDataContext;
         private ContextMenuStrip NotifMenu;
 
         public NotifyIconView()
         {
             this.DataContext = new NotifyIconViewModel();
-
-            this.UploadInProgress = false;
+            this.PopupDataContext = new PopupViewModel();
 
             var path = System.IO.Directory.GetCurrentDirectory() + @"\icon.ico";
             var icon = new Icon(path);
@@ -85,12 +84,6 @@ namespace NPush.Views
 
         private void ExitAction(object sender, EventArgs e)
         {
-            if (this.UploadInProgress)
-            {
-                //this.NotifMenu.Close();
-                return;
-            }
-
             this.NotifMenu.Close();
             this.HideIcon();
 
@@ -121,8 +114,12 @@ namespace NPush.Views
 
         private void ShowMessage(string text)
         {
-            this.NotifIcon.BalloonTipText = text;
-            this.NotifIcon.ShowBalloonTip(Properties.Settings.Default.TimePopup);
+            this.PopupDataContext.ShowPopup();
+            Thread.Sleep(3000);
+            this.PopupDataContext.HidePopup();
+
+            //this.NotifIcon.BalloonTipText = text;
+            //this.NotifIcon.ShowBalloonTip(Properties.Settings.Default.TimePopup);
         }
 
         public void EnableCommands(bool enabled)
@@ -140,10 +137,12 @@ namespace NPush.Views
 
         public void SetEnable(bool enabled)
         {
-            this.UploadInProgress = !enabled;
             this.NotifIcon.ContextMenuStrip.Items[0].Visible = !enabled;
             this.NotifIcon.ContextMenuStrip.Items[1].Enabled = enabled;
             this.NotifIcon.ContextMenuStrip.Items[2].Enabled = enabled;
+
+            // Rename exit button
+            this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNPush;
         }
 
         public void Connect(int connectionId, object target){}

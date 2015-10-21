@@ -97,11 +97,20 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Quitter NPush.
+        ///   Recherche une chaîne localisée semblable à Quitter.
         /// </summary>
         public static string Exit {
             get {
                 return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Quitter NPush.
+        /// </summary>
+        public static string ExitNPush {
+            get {
+                return ResourceManager.GetString("ExitNPush", resourceCulture);
             }
         }
         

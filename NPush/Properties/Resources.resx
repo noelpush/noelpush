@@ -124,7 +124,7 @@
     <value>Capturer l’écran</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Quitter NPush</value>
+    <value>Quitter</value>
   </data>
   <data name="NewVersion" xml:space="preserve">
     <value>Vous utilisez actuellement la version {0} de NPush. Souhaitez-vous télécharger la nouvelle version disponible ?</value>
@@ -153,5 +153,8 @@
   </data>
   <data name="CommandLineNoUp" xml:space="preserve">
     <value>--noup</value>
+  </data>
+  <data name="ExitNPush" xml:space="preserve">
+    <value>Quitter NPush</value>
   </data>
 </root>
