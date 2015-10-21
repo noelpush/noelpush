@@ -27,8 +27,8 @@ namespace NPush.Views
             this.NotifMenu = new ContextMenuStrip();
 
             this.NotifMenu.Items.Add(Properties.Resources.ScreenInProgress, null, this.ScreenInProgressAction);
-            this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreenAction);
             this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegionAction);
+            this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreenAction);
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.ExitAction);
 
             this.NotifMenu.AutoClose = false;
