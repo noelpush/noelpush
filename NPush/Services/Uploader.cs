@@ -25,7 +25,7 @@ namespace NPush.Services
 
             this.manager = manager;
 
-            this.namePicture = Properties.Resources.NamePicture;
+            this.namePicture = new Random().Next(0, 9999) + "-" + Properties.Resources.NamePicture;
             this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
             this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
             this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + ".png\"\r\nContent-Type: image/png\r\n\r\n");
@@ -106,12 +106,12 @@ namespace NPush.Services
         {
             /* Faut que je me trouve une regex lulz
              * http://www.noelshack.com/2015-02-1420740001-jvpush.png
-             * http://image.noelshack.com/fichiers/2015/02/1420740001-jvpush.png */
+             * http://image.noelshack.com/fichiers/2015/43/1445454562-npush.png */
 
             url = url.Replace("www", "image");
             url = url.Replace(".com", ".com/fichiers");
             url = url.Replace("-", "/");
-            url = url.Replace("/" + this.namePicture, "-" + this.namePicture);
+            url = url.Replace("/" + this.namePicture.Replace("-", "/"), "-" + this.namePicture);
             return url;
         }
     }
