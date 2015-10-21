@@ -69,9 +69,7 @@ namespace NPush.Services
 
         public long[] SaveImage(Bitmap img)
         {
-            CheckFolder();
-
-            var pathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\NPush\Historique\";
+            var pathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\NPush\";
             var fileName = DateTime.Now.ToString(@"yyyy-MM-dd-HH-mm-ss-");
 
             img.Save(pathFolder + fileName + ".png", ImageFormat.Png);
@@ -94,19 +92,6 @@ namespace NPush.Services
         private int getWidthScreens()
         {
             return Screen.AllScreens.Sum(screen => screen.WorkingArea.Width);
-        }
-
-        private void CheckFolder()
-        {
-            var pathAppdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var pathNPush = pathAppdata + @"\NPush";
-            var pathHistorique = pathNPush + @"\Historique";
-
-            if (!Directory.Exists(pathNPush))
-                Directory.CreateDirectory(pathNPush);
-
-            if (!Directory.Exists(pathHistorique))
-                Directory.CreateDirectory(pathHistorique);
         }
 
         internal void Canceled()

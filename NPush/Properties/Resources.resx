@@ -143,7 +143,7 @@
     <value>Lien copié dans le presse-papier.</value>
   </data>
   <data name="ErrorRegisterHotKey" xml:space="preserve">
-    <value>Une instance de NPush est déjà exécutée, vous ne pouvez pas en exécuter une deuxième.</value>
+    <value>NPush ne peut pas être exécuté (ErrorRegisterHotKey)</value>
   </data>
   <data name="SoftwareName" xml:space="preserve">
     <value>NPush</value>
