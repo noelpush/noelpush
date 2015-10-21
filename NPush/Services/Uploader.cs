@@ -4,8 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Windows;
-using System.Windows.Media.Imaging;
 using NPush.Models;
 
 namespace NPush.Services

@@ -20,7 +20,7 @@ namespace NPush.Views
 
             this.UploadInProgress = false;
 
-            var path = System.IO.Directory.GetCurrentDirectory() + @"\\icon.ico";
+            var path = System.IO.Directory.GetCurrentDirectory() + @"\icon.ico";
             var icon = new Icon(path);
             //var icon = Properties.Resources.icon;
 
