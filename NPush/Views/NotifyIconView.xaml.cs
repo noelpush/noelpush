@@ -11,13 +11,11 @@ namespace NPush.Views
     internal partial class NotifyIconView
     {
         private readonly NotifyIcon NotifIcon;
-        private PopupViewModel PopupDataContext;
         private ContextMenuStrip NotifMenu;
 
         public NotifyIconView()
         {
             this.DataContext = new NotifyIconViewModel();
-            this.PopupDataContext = new PopupViewModel();
 
             var path = System.IO.Directory.GetCurrentDirectory() + @"\icon.ico";
             var icon = new Icon(path);
@@ -45,7 +43,6 @@ namespace NPush.Views
             this.ShowIcon();
 
             var notifyIconViewModel = DataContext as NotifyIconViewModel;
-            notifyIconViewModel.SubscribeToEvent(ShowMessage);
             notifyIconViewModel.SubscribeToEvent(EnableCommands);
         }
 
@@ -110,16 +107,6 @@ namespace NPush.Views
                 context.Invoke(this.NotifIcon, null);
             else
                 this.NotifMenu.Visible = false;
-        }
-
-        private void ShowMessage(string text)
-        {
-            this.PopupDataContext.ShowPopup();
-            Thread.Sleep(3000);
-            this.PopupDataContext.HidePopup();
-
-            //this.NotifIcon.BalloonTipText = text;
-            //this.NotifIcon.ShowBalloonTip(Properties.Settings.Default.TimePopup);
         }
 
         public void EnableCommands(bool enabled)

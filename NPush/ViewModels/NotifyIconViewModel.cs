@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Threading;
 using NPush.Models;
 
 
@@ -6,11 +8,13 @@ namespace NPush.ViewModels
 {
     public class NotifyIconViewModel
     {
-        private readonly Manager manager;
         private readonly bool canScreen;
 
+        private readonly Manager manager;
+        public PopupViewModel PopupDataContext { get; private set; }
+
         public event TooltipMessageEventHandler ShowUpdateMessageEvent;
-        public delegate void TooltipMessageEventHandler(string text);
+        public delegate void TooltipMessageEventHandler(Bitmap img);
 
         public event EnableCommandsEventHandler EnableCommandsEvent;
         public delegate void EnableCommandsEventHandler(bool enabled);
@@ -18,12 +22,8 @@ namespace NPush.ViewModels
         public NotifyIconViewModel()
         {
             this.manager = new Manager(this);
+            this.PopupDataContext = new PopupViewModel();
             this.canScreen = true;
-        }
-
-        public void SubscribeToEvent(TooltipMessageEventHandler eventHandler)
-        {
-            this.ShowUpdateMessageEvent += eventHandler;
         }
 
         public void SubscribeToEvent(EnableCommandsEventHandler eventHandler)
@@ -31,9 +31,11 @@ namespace NPush.ViewModels
             this.EnableCommandsEvent += eventHandler;
         }
 
-        public void ShowMessage(string text)
+        public void ShowMessage(Bitmap img)
         {
-            this.ShowUpdateMessageEvent(text);
+            this.PopupDataContext.ShowPopup(img);
+            Thread.Sleep(3000);
+            this.PopupDataContext.HidePopup();
         }
 
         public void EnableCommands(bool enabled)

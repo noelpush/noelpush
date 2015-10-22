@@ -25,7 +25,7 @@ namespace NPush.Services
 
             this.manager = manager;
 
-            this.namePicture = new Random().Next(0, 9999) + "-" + Properties.Resources.NamePicture;
+            this.namePicture = new Random().Next(0, 9999) .ToString("0000") + "-" + Properties.Resources.NamePicture;
             this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
             this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
             this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + ".png\"\r\nContent-Type: image/png\r\n\r\n");
@@ -36,15 +36,15 @@ namespace NPush.Services
             this.manager.Uploaded(bmp, 0);
         }
 
-        public void Upload(byte[] imgBytes)
+        public void Upload(Bitmap img, byte[] imgBytes)
         {
             ChronoUpload.Restart();
 
           //this.UploadWebClient(imgBytes);
-          this.UploadHttpWebRequest(imgBytes);
+            this.UploadHttpWebRequest(img, imgBytes);
         }
 
-        private void UploadHttpWebRequest(byte[] formBytes)
+        private void UploadHttpWebRequest(Bitmap img, byte[] formBytes)
         {
             var reponse = "Upload failed";
 
@@ -74,32 +74,7 @@ namespace NPush.Services
             }, request);
             
             ChronoUpload.Stop();
-            this.manager.Uploaded(this.CustomUrl(reponse), ChronoUpload.ElapsedMilliseconds);
-        }
-
-        private void UploadWebClient(byte[] formBytes)
-        {
-            byte[] param = new byte[boundaryBytes.Length + headerBytes.Length + formBytes.Length + boundaryBytes.Length];
-            Buffer.BlockCopy(boundaryBytes, 0, param, 0, boundaryBytes.Length);
-            Buffer.BlockCopy(headerBytes, 0, param, boundaryBytes.Length, headerBytes.Length);
-            Buffer.BlockCopy(formBytes, 0, param, boundaryBytes.Length + headerBytes.Length, formBytes.Length);
-            Buffer.BlockCopy(boundaryBytes, 0, param, boundaryBytes.Length + headerBytes.Length + formBytes.Length, boundaryBytes.Length);
-
-            var webClient = new WebClient();
-            webClient.Headers.Add(HttpRequestHeader.ContentType, "multipart/form-data; boundary=" + boundary);
-            webClient.UploadDataAsync(new Uri("http://www.noelshack.com/api.php"), param);
-            webClient.UploadDataCompleted += WebClientOnUploadDataCompleted;
-        }
-
-        private void WebClientOnUploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
-        {
-            ChronoUpload.Stop();
-            var url = CustomUrl(Encoding.UTF8.GetString(e.Result));
-
-            if (!string.IsNullOrEmpty(url))
-                this.manager.Uploaded(url, ChronoUpload.ElapsedMilliseconds);
-            else
-                this.manager.UploadFailed();
+            this.manager.Uploaded(img, this.CustomUrl(reponse), ChronoUpload.ElapsedMilliseconds);
         }
 
         private string CustomUrl(string url)

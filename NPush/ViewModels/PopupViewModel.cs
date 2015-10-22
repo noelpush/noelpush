@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
-using Itron.Mcn.Utils.Wpf;
+using NPush.Objects.ViewModel;
 
 namespace NPush.ViewModels
 {
-    class PopupViewModel
+    public class PopupViewModel
     {
         public ViewElement<Bitmap> Picture { get; private set; }
         public ViewElement<bool> IsOpen { get; private set; }
@@ -11,18 +11,18 @@ namespace NPush.ViewModels
         public PopupViewModel()
         {
             this.Picture = new ViewElement<Bitmap>();
-            this.IsOpen = new ViewElement<bool>();
-            //this.IsOpen.Value = false;
+            this.IsOpen = new ViewElement<bool> { Value = false };
         }
 
-        public void ShowPopup()
+        public void ShowPopup(Bitmap img)
         {
-            //this.IsOpen.Value = true;
+            this.Picture.Value = img;
+            this.IsOpen.Value = true;
         }
 
         public void HidePopup()
         {
-            //this.IsOpen.Value = false;
+            this.IsOpen.Value = false;
         }
     }
 }

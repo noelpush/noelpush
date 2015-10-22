@@ -49,13 +49,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Itron.Mcn.Utils.Wpf">
-      <HintPath>References\Itron.Mcn.Utils.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -74,7 +70,13 @@
     <Compile Include="Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="Events\EnableCommandsEventHandler.cs" />
     <Compile Include="Events\BalloonTipMessageEventHandler.cs" />
+    <Compile Include="Objects\ViewModel\CommandViewModel.cs" />
+    <Compile Include="Objects\ViewModel\IViewModel.cs" />
+    <Compile Include="Objects\ViewModel\NameOf.cs" />
     <Compile Include="Objects\ScreenshotData.cs" />
+    <Compile Include="Objects\ViewModel\StringExtension.cs" />
+    <Compile Include="Objects\ViewModel\ViewElement.cs" />
+    <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
     <Compile Include="Services\Shortcuts.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\ScreenCapture.cs" />

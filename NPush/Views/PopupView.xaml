@@ -6,15 +6,19 @@
              xmlns:converters="clr-namespace:NPush.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    
     <UserControl.Resources>
         <converters:BitmapToImageSourceConverter x:Key="BitmapToImageSourceConverter"/>
     </UserControl.Resources>
         
     <Grid>
         <Popup 
-            IsOpen="True" 
+            x:Name="Popup"
+            IsOpen="{Binding IsOpen.Value}" 
             PlacementTarget="{Binding ElementName=Window}" 
-            PlacementRectangle="20 20 310 56"
+            PlacementRectangle="0 0 0 0"
+            VerticalOffset="860"
+            HorizontalOffset="1980" 
             AllowsTransparency="True" 
             PopupAnimation="Fade" 
             Width="310"
