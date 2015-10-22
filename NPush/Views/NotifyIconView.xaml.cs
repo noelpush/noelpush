@@ -1,7 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 
 using NPush.ViewModels;
@@ -13,9 +13,13 @@ namespace NPush.Views
         private readonly NotifyIcon NotifIcon;
         private ContextMenuStrip NotifMenu;
 
+        private bool IsOpen;
+
         public NotifyIconView()
         {
             this.DataContext = new NotifyIconViewModel();
+
+            this.IsOpen = false;
 
             var path = System.IO.Directory.GetCurrentDirectory() + @"\icon.ico";
             var icon = new Icon(path);
@@ -28,8 +32,8 @@ namespace NPush.Views
             this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreenAction);
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.ExitAction);
 
-            this.NotifMenu.AutoClose = false;
             this.NotifMenu.Items[0].Visible = false;
+            this.NotifMenu.Items[0].Font = new Font(this.NotifMenu.Items[0].Font.FontFamily, this.NotifMenu.Items[0].Font.Size, System.Drawing.FontStyle.Bold);
 
             this.NotifIcon = new NotifyIcon
             {
@@ -43,7 +47,8 @@ namespace NPush.Views
             this.ShowIcon();
 
             var notifyIconViewModel = DataContext as NotifyIconViewModel;
-            notifyIconViewModel.SubscribeToEvent(EnableCommands);
+            if (notifyIconViewModel != null)
+                notifyIconViewModel.SubscribeToEvent(EnableCommands);
         }
 
         public void ShowIcon()
@@ -58,7 +63,7 @@ namespace NPush.Views
 
         private void ScreenInProgressAction(object sender, EventArgs e)
         {
-            this.OpenNotifyIcon();
+            this.OpenNotifyIconLeftClick();
         }
 
         private void CaptureScreenAction(object sender, EventArgs e)
@@ -93,20 +98,18 @@ namespace NPush.Views
         // Display menu's icon by left click (right click default)
         private void OnClick(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left) 
-                return;
-
-            this.OpenNotifyIcon();
+            if (e.Button == MouseButtons.Left)
+                this.OpenNotifyIconLeftClick();
         }
 
-        private void OpenNotifyIcon()
+        private void OpenNotifyIconLeftClick()
         {
-            var context = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
+            var action = this.IsOpen ? "HideContextMenu" : "ShowContextMenu";
+            if (this.IsOpen)
+                this.IsOpen = false;
 
-            if (!this.NotifMenu.Visible)
-                context.Invoke(this.NotifIcon, null);
-            else
-                this.NotifMenu.Visible = false;
+            var context = typeof(NotifyIcon).GetMethod(action, BindingFlags.Instance | BindingFlags.NonPublic);
+            context.Invoke(this.NotifIcon, null);
         }
 
         public void EnableCommands(bool enabled)
@@ -131,7 +134,5 @@ namespace NPush.Views
             // Rename exit button
             this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNPush;
         }
-
-        public void Connect(int connectionId, object target){}
     }
 }

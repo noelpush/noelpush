@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Security.Cryptography;
@@ -20,7 +22,6 @@ namespace NPush.Models
         private readonly string version;
 
         private Shortcuts shortcutImprEcr;
-        private Shortcuts shortcutEscape;
 
         private ScreenshotData screenshotData;
         private Task captureScreenTask;
@@ -60,10 +61,7 @@ namespace NPush.Models
             this.shortcutImprEcr = new Shortcuts();
             this.shortcutImprEcr.KeyPressed += Capture;
 
-            this.shortcutEscape = new Shortcuts();
-            this.shortcutEscape.KeyPressed += CancelScreen;
-
-            if (!this.shortcutImprEcr.RegisterHotKey(Keys.PrintScreen) || !this.shortcutEscape.RegisterHotKey(Keys.Escape))
+            if (!this.shortcutImprEcr.RegisterHotKey(Keys.PrintScreen))
             {
                 MessageBox.Show(Resources.ErrorRegisterHotKey);
                 Environment.Exit(1);
@@ -80,7 +78,7 @@ namespace NPush.Models
             bool isUpdated = this.update.CheckVersion();
             if (isUpdated) return;
 
-            this.notifyIconViewModel.ShowMessage(Resources.NewVersion);
+            //this.notifyIconViewModel.ShowMessage();
         }
 
         private void DoUpdate()
@@ -172,9 +170,11 @@ namespace NPush.Models
         {
             this.pressCounter = 0;
 
-            var sizePicture = this.screenCapture.SaveImage(img);
+            /*
+             * var sizePicture = this.screenCapture.SaveImage(img);
                 if (sizePicture.Count() > 0) this.screenshotData.sizePng = sizePicture[0];
                 if (sizePicture.Count() > 1) this.screenshotData.sizeJpg = sizePicture[1];
+            */
 
             // Disable buttons during uploading
             this.notifyIconViewModel.EnableCommands(false);
@@ -182,13 +182,13 @@ namespace NPush.Models
             if (this.noUpload)
                 new Uploader(this).Upload(img);
             else
-                new Uploader(this).Upload(ImageToByte(img));
+                new Uploader(this).Upload(img, ImageToByte(img));
         }
 
-        public void Uploaded(string url, long timing)
+        public void Uploaded(Bitmap img, string url, long timing)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
-            this.notifyIconViewModel.ShowMessage(url + "\n" + Resources.LinkPasted);
+            this.notifyIconViewModel.ShowMessage(img);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
@@ -197,10 +197,20 @@ namespace NPush.Models
             this.notifyIconViewModel.EnableCommands(true);
         }
 
-        public void Uploaded(Bitmap bmp, long timing)
+        public void Uploaded(Bitmap img, long timing)
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
-            this.notifyIconViewModel.ShowMessage("http://image.noelshack.com/fichiers/2015/xxx-npush.png" + "\n" + Resources.LinkPasted);
+            var pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NPush\\";
+
+            if (!Directory.Exists(pathPictures))
+            {
+                Directory.CreateDirectory(pathPictures);
+            }
+
+            var filename = pathPictures + DateTime.Now.ToString("dd-mm-yyyy HHhmmmsss") + ".png";
+            img.Save(filename, ImageFormat.Png);
+
+            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
+            this.notifyIconViewModel.ShowMessage(img);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
