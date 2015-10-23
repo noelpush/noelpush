@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using NPush.Models;
+using NPush.Views;
 
 
 namespace NPush.ViewModels
@@ -12,8 +13,8 @@ namespace NPush.ViewModels
 
         private readonly Manager manager;
         public PopupViewModel PopupDataContext { get; private set; }
+        public PopupView Popup { get; private set; }
 
-        public event TooltipMessageEventHandler ShowUpdateMessageEvent;
         public delegate void TooltipMessageEventHandler(Bitmap img);
 
         public event EnableCommandsEventHandler EnableCommandsEvent;
@@ -23,6 +24,10 @@ namespace NPush.ViewModels
         {
             this.manager = new Manager(this);
             this.PopupDataContext = new PopupViewModel();
+
+            this.Popup = new PopupView();
+            this.Popup.DataContext = this.PopupDataContext;
+
             this.canScreen = true;
         }
 
@@ -31,10 +36,10 @@ namespace NPush.ViewModels
             this.EnableCommandsEvent += eventHandler;
         }
 
-        public void ShowMessage(Bitmap img)
+        public void ShowPopup(Bitmap img)
         {
             this.PopupDataContext.ShowPopup(img);
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
             this.PopupDataContext.HidePopup();
         }
 

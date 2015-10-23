@@ -78,7 +78,7 @@ namespace NPush.Models
             bool isUpdated = this.update.CheckVersion();
             if (isUpdated) return;
 
-            //this.notifyIconViewModel.ShowMessage();
+            //this.notifyIconViewModel.ShowPopup();
         }
 
         private void DoUpdate()
@@ -188,12 +188,12 @@ namespace NPush.Models
         public void Uploaded(Bitmap img, string url, long timing)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
-            this.notifyIconViewModel.ShowMessage(img);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
             this.screenshotData = null;
 
+            this.notifyIconViewModel.ShowPopup(img);
             this.notifyIconViewModel.EnableCommands(true);
         }
 
@@ -210,7 +210,7 @@ namespace NPush.Models
             img.Save(filename, ImageFormat.Png);
 
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
-            this.notifyIconViewModel.ShowMessage(img);
+            this.notifyIconViewModel.ShowPopup(img);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
