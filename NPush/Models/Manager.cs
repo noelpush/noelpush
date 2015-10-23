@@ -54,7 +54,7 @@ namespace NPush.Models
                 Settings.Default.uniqueID = this.GenerateID();
                 Settings.Default.Save();
             }
-            
+
             this.version = Settings.Default.version;
             this.uniqueID = Settings.Default.uniqueID;
 
@@ -68,24 +68,7 @@ namespace NPush.Models
             }
 
             this.statistics.StatsStart(this.uniqueID, this.version, this.getDotnets());
-
-            //this.CheckUpdate();
         }
-
-        #region Update version
-        private void CheckUpdate()
-        {
-            bool isUpdated = this.update.CheckVersion();
-            if (isUpdated) return;
-
-            //this.notifyIconViewModel.ShowPopup();
-        }
-
-        private void DoUpdate()
-        {
-            this.update.DoUpdate();
-        }
-        #endregion
 
         private void CancelScreen(object sender = null, KeyPressedEventArgs e = null)
         {
