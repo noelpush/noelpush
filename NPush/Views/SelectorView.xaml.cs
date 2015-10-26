@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 using NPush.Services;
@@ -14,7 +13,7 @@ namespace NPush.Views
         public ScreenCapture ScreenCapture;
         public SelectorForm selectorForm;
 
-        public SelectorView(ScreenCapture screenCapture)
+        public SelectorView(ScreenCapture screenCapture, Rectangle area)
         {
             this.DataContext = new SelectorViewModel();
             this.ScreenCapture = screenCapture;
@@ -24,10 +23,10 @@ namespace NPush.Views
                 ShowInTaskbar = false,
                 WindowState =  FormWindowState.Normal,
                 FormBorderStyle = FormBorderStyle.None,
-                Left = 0,
-                Top = 0,
-                Width = Screen.AllScreens.Sum(screen => screen.WorkingArea.Width),
-                Height = Screen.AllScreens.Select(screen => screen.WorkingArea.Height).Concat(new[] { 0 }).Max(),
+                Left = area.Left,
+                Top = area.Top,
+                Width = area.Width,
+                Height = area.Height,
                 Cursor = Cursors.Cross,
                 TopMost = true,
                 Opacity = 0.2f,
