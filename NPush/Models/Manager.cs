@@ -70,7 +70,7 @@ namespace NPush.Models
             this.statistics.StatsStart(this.uniqueID, this.version, this.getDotnets());
         }
 
-        private void CancelScreen(object sender = null, KeyPressedEventArgs e = null)
+        private void CancelScreen(KeyPressedEventArgs e = null)
         {
             this.notifyIconViewModel.EnableCommands(true);
             this.screenCapture.Canceled();
@@ -176,8 +176,8 @@ namespace NPush.Models
             this.statistics.StatsUpload(this.screenshotData);
             this.screenshotData = null;
 
-            this.notifyIconViewModel.ShowPopup(img);
             this.notifyIconViewModel.EnableCommands(true);
+            this.notifyIconViewModel.ShowPopup(img);
         }
 
         public void Uploaded(Bitmap img, long timing)
@@ -193,13 +193,13 @@ namespace NPush.Models
             img.Save(filename, ImageFormat.Png);
 
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
+
+            this.notifyIconViewModel.EnableCommands(true);
             this.notifyIconViewModel.ShowPopup(img);
 
             this.screenshotData.timing = timing;
             this.statistics.StatsUpload(this.screenshotData);
             this.screenshotData = null;
-
-            this.notifyIconViewModel.EnableCommands(true);
         }
 
         public void Screened(Bitmap bmp)

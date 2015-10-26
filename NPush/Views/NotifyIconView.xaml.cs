@@ -33,6 +33,7 @@ namespace NPush.Views
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.ExitAction);
 
             this.NotifMenu.Items[0].Visible = false;
+            this.NotifMenu.Items[0].Enabled = false;
             this.NotifMenu.Items[0].Font = new Font(this.NotifMenu.Items[0].Font.FontFamily, this.NotifMenu.Items[0].Font.Size, System.Drawing.FontStyle.Bold);
 
             this.NotifIcon = new NotifyIcon
@@ -127,9 +128,11 @@ namespace NPush.Views
 
         public void SetEnable(bool enabled)
         {
-            this.NotifIcon.ContextMenuStrip.Items[0].Visible = !enabled;
             this.NotifIcon.ContextMenuStrip.Items[1].Enabled = enabled;
             this.NotifIcon.ContextMenuStrip.Items[2].Enabled = enabled;
+
+            // Show/Hide the upload info
+            this.NotifMenu.Items[0].Visible = !enabled;
 
             // Rename exit button
             this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNPush;
