@@ -15,6 +15,7 @@
        Height="80"
        Placement="Absolute"
        IsEnabled="True"
+       MouseDown="PopupView_OnMouseDown"
        Style="{StaticResource PopupStyle}"
        PlacementRectangle="{Binding Position.Value}"
        IsOpen="{Binding IsOpen.Value}">
