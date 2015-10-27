@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading;
+using System.Windows.Threading;
 using NPush.Models;
 using NPush.Views;
 
@@ -12,8 +13,11 @@ namespace NPush.ViewModels
         private readonly bool canScreen;
 
         private readonly Manager manager;
-        public PopupViewModel PopupDataContext { get; private set; }
-        public PopupView Popup { get; private set; }
+        public PopupUploadView PopupUpload { get; private set; }
+        public PopupUploadViewModel PopupUploadDataContext { get; private set; }
+
+        public PopupMessageView PopupMessage { get; private set; }
+        public PopupMessageViewModel PopupMessageDataContext { get; private set; }
 
         public delegate void TooltipMessageEventHandler(Bitmap img);
 
@@ -22,13 +26,15 @@ namespace NPush.ViewModels
 
         public NotifyIconViewModel()
         {
-            this.manager = new Manager(this);
-            this.PopupDataContext = new PopupViewModel();
-
-            this.Popup = new PopupView();
-            this.Popup.DataContext = this.PopupDataContext;
-
             this.canScreen = true;
+
+            this.PopupUploadDataContext = new PopupUploadViewModel();
+            this.PopupMessageDataContext = new PopupMessageViewModel();
+
+            this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
+            this.PopupMessage = new PopupMessageView { DataContext = this.PopupMessageDataContext };
+
+            this.manager = new Manager(this);
         }
 
         public void SubscribeToEvent(EnableCommandsEventHandler eventHandler)
@@ -36,11 +42,18 @@ namespace NPush.ViewModels
             this.EnableCommandsEvent += eventHandler;
         }
 
-        public void ShowPopup(Bitmap img)
+        public void ShowPopupUpload(Bitmap img, int delay = 2000)
         {
-            this.PopupDataContext.ShowPopup(img);
-            Thread.Sleep(2000);
-            this.PopupDataContext.HidePopup();
+            this.PopupUploadDataContext.ShowPopup(img);
+            Thread.Sleep(delay);
+            this.PopupUploadDataContext.HidePopup();
+        }
+
+        public void ShowPopupMessage(string text, int delay = 2000)
+        {
+            this.PopupMessageDataContext.ShowPopup(text);
+            Thread.Sleep(delay);
+            this.PopupMessageDataContext.HidePopup();
         }
 
         public void EnableCommands(bool enabled)

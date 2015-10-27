@@ -17,8 +17,6 @@ namespace NPush.Views
 
         public NotifyIconView()
         {
-            this.DataContext = new NotifyIconViewModel();
-
             this.IsOpen = false;
 
             var icon = Properties.Resources.icon;
@@ -45,9 +43,8 @@ namespace NPush.Views
 
             this.ShowIcon();
 
-            var notifyIconViewModel = DataContext as NotifyIconViewModel;
-            if (notifyIconViewModel != null)
-                notifyIconViewModel.SubscribeToEvent(EnableCommands);
+            this.DataContext = new NotifyIconViewModel();
+            (this.DataContext as NotifyIconViewModel).SubscribeToEvent(EnableCommands);
         }
 
         public void ShowIcon()

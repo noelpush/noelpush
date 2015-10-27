@@ -3,16 +3,16 @@ using NPush.ViewModels;
 
 namespace NPush.Views
 {
-    public partial class PopupView
+    public partial class PopupUploadView
     {
-        public PopupView()
+        public PopupUploadView()
         {
             this.InitializeComponent();
         }
 
         private void PopupView_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var dataContext = this.DataContext as PopupViewModel;
+            var dataContext = this.DataContext as PopupUploadViewModel;
 
             if (dataContext != null)
                 dataContext.IsOpen.Value = false;

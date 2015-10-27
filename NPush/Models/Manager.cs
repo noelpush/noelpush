@@ -18,11 +18,6 @@ namespace NPush.Models
 {
     public class Manager
     {
-        private string uniqueID;
-        private readonly string version;
-
-        private Shortcuts shortcutImprEcr;
-
         private Task captureScreenTask;
         private CancellationTokenSource captureScreenTaskToken;
 
@@ -30,16 +25,12 @@ namespace NPush.Models
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
 
-        private bool noUpload;
+        private readonly bool noUpload;
         private int pressCounter;
         private DateTime pressDateTime;
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            Settings.Default.TimePopup = Settings.Default.TimePopup;
-            Settings.Default.Save();
-
-            //this.update = new Update();
             this.screenCapture = new ScreenCapture(this);
             this.notifyIconViewModel = notifyIconViewModel;
 
@@ -52,10 +43,6 @@ namespace NPush.Models
                 Settings.Default.Save();
             }
 
-            this.version = Settings.Default.version;
-            this.uniqueID = Settings.Default.uniqueID;
-
-            this.shortcutImprEcr = new Shortcuts();
             Shortcuts.OnKeyPress += Capture;
         }
 
@@ -158,7 +145,7 @@ namespace NPush.Models
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
 
             this.notifyIconViewModel.EnableCommands(true);
-            this.notifyIconViewModel.ShowPopup(img);
+            this.notifyIconViewModel.ShowPopupUpload(img);
         }
 
         public void Uploaded(Bitmap img, long timing)
@@ -176,7 +163,7 @@ namespace NPush.Models
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
 
             this.notifyIconViewModel.EnableCommands(true);
-            this.notifyIconViewModel.ShowPopup(img);
+            this.notifyIconViewModel.ShowPopupUpload(img);
         }
 
         public void Screened(Bitmap bmp)
@@ -187,16 +174,6 @@ namespace NPush.Models
         internal void UploadFailed()
         {
 
-        }
-
-        private void NotifSound()
-        {
-            new SoundPlayer(Resources.notif).Play();
-        }
-
-        private string getDotnets()
-        {
-            return "4.0";
         }
 
         private static byte[] ImageToByte(Bitmap img)
