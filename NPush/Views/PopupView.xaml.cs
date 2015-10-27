@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using NPush.ViewModels;
 
 namespace NPush.Views
@@ -8,7 +7,7 @@ namespace NPush.Views
     {
         public PopupView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void PopupView_OnMouseDown(object sender, MouseButtonEventArgs e)

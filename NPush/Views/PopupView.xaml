@@ -16,7 +16,6 @@
        Placement="Absolute"
        IsEnabled="True"
        MouseDown="PopupView_OnMouseDown"
-       Style="{StaticResource PopupStyle}"
        PlacementRectangle="{Binding Position.Value}"
        IsOpen="{Binding IsOpen.Value}">
 
@@ -24,54 +23,60 @@
         <converters:BitmapToImageSourceConverter x:Key="BitmapToImageSourceConverter" />
     </Popup.Resources>
 
-
-    <Border Width="300" Height="55" Background="White" CornerRadius="5">
+    <Border>
         <Border.Effect>
             <DropShadowEffect BlurRadius="15" Direction="235" ShadowDepth="2" Opacity=".3" Color="Black" />
         </Border.Effect>
-        
-        <Grid >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="27" />
-                <RowDefinition Height="25" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Image
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.RowSpan="2"
-                Width="52"
-                Height="39"
-                Source="{Binding Picture.Value, Converter={StaticResource BitmapToImageSourceConverter}}" />
+        <Grid>
+            <Border>
+                <StackPanel Width="305" Height="80">
+                    <Grid Margin="5 15 0 0">
+                        <Border CornerRadius="5" Background="White">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27" />
+                                    <RowDefinition Height="26" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.RowSpan="2"
+                                    Width="52"
+                                    Height="39"
+                                    Source="{Binding Picture.Value, Converter={StaticResource BitmapToImageSourceConverter}}" />
 
-            <Label
-                Grid.Row="0"
-                Grid.Column="1"
-                Foreground="Black"
-                Background="White"
-                Style="{x:Null}"
-                Content="Image envoyée !"
-                FontFamily="Calibri"
-                FontWeight="Bold"
-                FontSize="16"
-                Padding="0 6 0 0"
-                Margin="0 0 0 0" />
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Foreground="Black"
+                                    Style="{x:Null}"
+                                    Content="Image envoyée !"
+                                    FontFamily="Calibri"
+                                    FontWeight="Bold"
+                                    FontSize="17"
+                                    Padding="0 6 0 0"
+                                    Margin="0 0 0 0" />
 
-            <Label
-                Grid.Row="1"
-                Grid.Column="1"
-                Foreground="Black"
-                Background="White"
-                Style="{x:Null}"
-                Content="Lien copié dans le presse-papier."
-                FontFamily="Calibri"
-                FontSize="14.5"
-                Padding="0 2 0 0"
-                Margin="0 0 0 0" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Foreground="Black"
+                                    Style="{x:Null}"
+                                    Content="Lien copié dans le presse-papier."
+                                    FontFamily="Calibri"
+                                    FontSize="14.5"
+                                    Padding="0 2 0 0"
+                                    Margin="0 0 0 0" />
+                            </Grid>
+                        </Border>
+                    </Grid>
 
+                </StackPanel>
+            </Border>
         </Grid>
     </Border>
 </Popup>

@@ -33,8 +33,8 @@ namespace NPush.ViewModels
 
         private void UpdatePosition()
         {
-            var height = Screen.PrimaryScreen.WorkingArea.Height - 65;
-            var width = Screen.PrimaryScreen.WorkingArea.Width - 310;
+            var height = Screen.PrimaryScreen.Bounds.Height - 118;
+            var width = Screen.PrimaryScreen.Bounds.Width - 323;
 
             this.Position.Value = new Rect(width, height, 0, 0);
         }
