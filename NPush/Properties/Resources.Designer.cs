@@ -125,6 +125,16 @@ namespace NPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        public static System.Drawing.Icon icon_upload {
+            get {
+                object obj = ResourceManager.GetObject("icon_upload", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Lien copié dans le presse-papier..
         /// </summary>
         public static string LinkPasted {

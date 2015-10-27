@@ -1,115 +1,56 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 
 namespace NPush.Services
 {
-    public sealed class Shortcuts : IDisposable
+    public sealed class Shortcuts
     {
-        [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-        [DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        private const int WH_KEYBOARD_LL = 13;
+        private const int WM_KEYDOWN = 0x0100;
+        private static readonly LowLevelKeyboardProc _proc = HookCallback;
+        private static IntPtr _hookID = IntPtr.Zero;
 
-        private class Window : NativeWindow, IDisposable
-        {
-            private static int WM_HOTKEY = 0x0312;
+        public delegate void KeyPressHandler();
 
-            public Window()
-            {
-                this.CreateHandle(new CreateParams());
-            }
-
-            protected override void WndProc(ref Message m)
-            {
-                base.WndProc(ref m);
-
-                if (m.Msg == WM_HOTKEY)
-                {
-                    Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
-                    ModifierKeys modifier = (ModifierKeys)((int)m.LParam & 0xFFFF);
-
-                    if (KeyPressed != null)
-                        KeyPressed(this, new KeyPressedEventArgs(modifier, key));
-                }
-            }
-
-            public event EventHandler<KeyPressedEventArgs> KeyPressed;
-
-            public void Dispose()
-            {
-                this.DestroyHandle();
-            }
-        }
-
-        private Window _window = new Window();
-        private int _currentId;
+        public static event KeyPressHandler OnKeyPress;
 
         public Shortcuts()
         {
-            // register the event of the inner native window.
-            _window.KeyPressed += delegate(object sender, KeyPressedEventArgs args)
+            _hookID = SetHook(_proc);
+        }
+
+        private static IntPtr SetHook(LowLevelKeyboardProc proc)
+        {
+            using (Process curProcess = Process.GetCurrentProcess())
+            using (ProcessModule curModule = curProcess.MainModule)
             {
-                if (KeyPressed != null)
-                    KeyPressed(this, args);
-            };
-        }
-
-        public bool RegisterHotKey(Keys key)
-        {
-            _currentId++;
-            return RegisterHotKey(_window.Handle, _currentId, 0, (uint)key);
-        }
-
-        public bool RegisterHotKeys(ModifierKeys modifier, Keys key)
-        {
-            _currentId++;
-            return RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key);
-        }
-
-        public event EventHandler<KeyPressedEventArgs> KeyPressed;
-
-        public void Dispose()
-        {
-            for (int i = _currentId; i > 0; i--)
-            {
-                UnregisterHotKey(_window.Handle, i);
+                return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+                    GetModuleHandle(curModule.ModuleName), 0);
             }
-
-            _window.Dispose();
         }
-    }
 
+        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-    public class KeyPressedEventArgs : EventArgs
-    {
-        private ModifierKeys _modifier;
-        private Keys _key;
-
-        internal KeyPressedEventArgs(ModifierKeys modifier, Keys key)
+        private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            _modifier = modifier;
-            _key = key;
+            if (nCode >= 0 && wParam == (IntPtr) WM_KEYDOWN && Marshal.ReadInt32(lParam) == 44)
+            {
+                OnKeyPress();
+            }
+            return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
 
-        public ModifierKeys Modifier
-        {
-            get { return _modifier; }
-        }
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr SetWindowsHookEx(int idHook,
+            LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
-        public Keys Key
-        {
-            get { return _key; }
-        }
-    }
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
+            IntPtr wParam, IntPtr lParam);
 
-    [Flags]
-    public enum ModifierKeys : uint
-    {
-        Alt = 1,
-        Control = 2,
-        Shift = 4,
-        Win = 8
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string lpModuleName);
     }
 }

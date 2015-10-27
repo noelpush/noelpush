@@ -23,12 +23,10 @@ namespace NPush.Models
 
         private Shortcuts shortcutImprEcr;
 
-        private ScreenshotData screenshotData;
         private Task captureScreenTask;
         private CancellationTokenSource captureScreenTaskToken;
 
         private readonly Update update;
-        private readonly Statistics statistics;
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
 
@@ -43,7 +41,6 @@ namespace NPush.Models
 
             //this.update = new Update();
             this.screenCapture = new ScreenCapture(this);
-            this.statistics = new Statistics();
             this.notifyIconViewModel = notifyIconViewModel;
 
             var args = Environment.GetCommandLineArgs();
@@ -59,18 +56,10 @@ namespace NPush.Models
             this.uniqueID = Settings.Default.uniqueID;
 
             this.shortcutImprEcr = new Shortcuts();
-            this.shortcutImprEcr.KeyPressed += Capture;
-
-            if (!this.shortcutImprEcr.RegisterHotKey(Keys.PrintScreen))
-            {
-                MessageBox.Show(Resources.ErrorRegisterHotKey);
-                Environment.Exit(1);
-            }
-
-            this.statistics.StatsStart(this.uniqueID, this.version, this.getDotnets());
+            Shortcuts.OnKeyPress += Capture;
         }
 
-        private void CancelScreen(KeyPressedEventArgs e = null)
+        private void CancelScreen()
         {
             this.notifyIconViewModel.EnableCommands(true);
             this.screenCapture.Canceled();
@@ -99,7 +88,7 @@ namespace NPush.Models
             }
         }
 
-        public void Capture(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
+        public void Capture()
         {
             var date = DateTime.Now;
             this.pressCounter++;
@@ -135,17 +124,13 @@ namespace NPush.Models
             }
         }
 
-        public void CaptureScreen(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
+        public void CaptureScreen()
         {
-            this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 1);
             this.screenCapture.CaptureScreen();
-            //this.captureScreenTaskToken = new CancellationTokenSource();
-            //this.captureScreenTask = Task.Run(() => this.screenCapture.CaptureScreen(captureScreenTaskToken), captureScreenTaskToken.Token);
         }
 
-        public void CaptureRegion(object sender = null, KeyPressedEventArgs keyPressedEventArgs = null)
+        public void CaptureRegion()
         {
-            this.screenshotData = new ScreenshotData(this.uniqueID, this.version, 2);
             this.screenCapture.CaptureRegion();
         }
 
@@ -172,10 +157,6 @@ namespace NPush.Models
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
 
-            this.screenshotData.timing = timing;
-            this.statistics.StatsUpload(this.screenshotData);
-            this.screenshotData = null;
-
             this.notifyIconViewModel.EnableCommands(true);
             this.notifyIconViewModel.ShowPopup(img);
         }
@@ -196,10 +177,6 @@ namespace NPush.Models
 
             this.notifyIconViewModel.EnableCommands(true);
             this.notifyIconViewModel.ShowPopup(img);
-
-            this.screenshotData.timing = timing;
-            this.statistics.StatsUpload(this.screenshotData);
-            this.screenshotData = null;
         }
 
         public void Screened(Bitmap bmp)
@@ -209,7 +186,7 @@ namespace NPush.Models
 
         internal void UploadFailed()
         {
-            this.statistics.StatsFail();
+
         }
 
         private void NotifSound()

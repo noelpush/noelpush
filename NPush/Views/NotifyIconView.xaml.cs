@@ -21,9 +21,7 @@ namespace NPush.Views
 
             this.IsOpen = false;
 
-            var path = System.IO.Directory.GetCurrentDirectory() + @"\icon.ico";
-            var icon = new Icon(path);
-            //var icon = Properties.Resources.icon;
+            var icon = Properties.Resources.icon;
 
             this.NotifMenu = new ContextMenuStrip();
 
@@ -121,9 +119,8 @@ namespace NPush.Views
 
         private void SetIcon(bool enabled)
         {
-            var path = System.IO.Directory.GetCurrentDirectory();
-            path += enabled ? @"\\icon.ico" : @"\\icon_upload.ico";
-            this.NotifIcon.Icon = new Icon(path);
+            var icon = enabled ? Properties.Resources.icon : Properties.Resources.icon_upload;
+            this.NotifIcon.Icon = icon;
         }
 
         public void SetEnable(bool enabled)
