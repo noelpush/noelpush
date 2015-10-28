@@ -4,13 +4,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NPush.Objects;
+using System.Windows.Threading;
 using NPush.Properties;
 using NPush.Services;
 using NPush.ViewModels;
@@ -31,6 +30,8 @@ namespace NPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
+            Shortcuts.OnKeyPress += Capture;
+
             this.screenCapture = new ScreenCapture(this);
             this.notifyIconViewModel = notifyIconViewModel;
 
@@ -43,7 +44,10 @@ namespace NPush.Models
                 Settings.Default.Save();
             }
 
-            Shortcuts.OnKeyPress += Capture;
+            if (IsFirstRun())
+            {
+                this.ShowPopupFirstRun();
+            }
         }
 
         private void CancelScreen()
@@ -169,6 +173,26 @@ namespace NPush.Models
         public void Screened(Bitmap bmp)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
+        }
+
+        private static bool IsFirstRun()
+        {
+            const string REGISTRY_KEY = @"HKEY_CURRENT_USER\NPush";
+            const string REGISTY_VALUE = "FirstRun";
+
+            if (Convert.ToInt32(Microsoft.Win32.Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0)) != 0)
+                return false;
+
+            Microsoft.Win32.Registry.SetValue(REGISTRY_KEY, REGISTY_VALUE, 1, Microsoft.Win32.RegistryValueKind.DWord);
+            return true;
+        }
+
+        private void ShowPopupFirstRun()
+        {
+            // Task + Dispatcher because it doesn't want to start without.......
+            Task.Factory.StartNew(() =>
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                    this.notifyIconViewModel.ShowPopupMessage("NPush a été correctement installé !", 4000)));
         }
 
         internal void UploadFailed()

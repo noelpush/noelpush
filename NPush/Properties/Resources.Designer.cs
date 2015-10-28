@@ -171,7 +171,7 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Envoi en cours.
+        ///   Recherche une chaîne localisée semblable à Envoi en cours….
         /// </summary>
         public static string ScreenInProgress {
             get {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 
 namespace NPush.Services
@@ -16,7 +17,7 @@ namespace NPush.Services
 
         public static event KeyPressHandler OnKeyPress;
 
-        public Shortcuts()
+        static Shortcuts()
         {
             _hookID = SetHook(_proc);
         }
@@ -35,7 +36,7 @@ namespace NPush.Services
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr) WM_KEYDOWN && Marshal.ReadInt32(lParam) == 44)
+            if ((nCode >= 0) && (wParam == (IntPtr) WM_KEYDOWN) && ((Keys)Marshal.ReadInt32(lParam) == Keys.PrintScreen))
             {
                 OnKeyPress();
             }
