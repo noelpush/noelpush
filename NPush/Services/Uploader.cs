@@ -46,35 +46,42 @@ namespace NPush.Services
 
         private void UploadHttpWebRequest(Bitmap img, byte[] formBytes)
         {
-            var reponse = "Upload failed";
-
-            var request = (HttpWebRequest)WebRequest.Create("http://www.noelshack.com/api.php");
-            request.ContentType = "multipart/form-data; boundary=" + boundary;
-            request.Method = "POST";
-            request.KeepAlive = true;
-            request.Credentials = CredentialCache.DefaultCredentials;
-            request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
-            request.GetRequestStream().Write(headerBytes, 0, headerBytes.Length);
-            request.GetRequestStream().Write(formBytes, 0, formBytes.Length);
-            request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
-            request.GetRequestStream().Close();
-
-            request.BeginGetResponse(r =>
+            try
             {
-                try
+                var reponse = "Upload failed";
+
+                var request = (HttpWebRequest) WebRequest.Create("http://www.noelshack.com/api.php");
+                request.ContentType = "multipart/form-data; boundary=" + boundary;
+                request.Method = "POST";
+                request.KeepAlive = true;
+                request.Credentials = CredentialCache.DefaultCredentials;
+                request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
+                request.GetRequestStream().Write(headerBytes, 0, headerBytes.Length);
+                request.GetRequestStream().Write(formBytes, 0, formBytes.Length);
+                request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
+                request.GetRequestStream().Close();
+
+                request.BeginGetResponse(r =>
                 {
-                    var httpRequest = (HttpWebRequest)r.AsyncState;
-                    var httpResponse = (HttpWebResponse)httpRequest.EndGetResponse(r);
-                    reponse = new StreamReader(httpResponse.GetResponseStream()).ReadToEnd();
-                }
-                catch (Exception e)
-                {
-                    reponse = e.Message;
-                }
-            }, request);
-            
-            ChronoUpload.Stop();
-            this.manager.Uploaded(img, this.CustomUrl(reponse), ChronoUpload.ElapsedMilliseconds);
+                    try
+                    {
+                        var httpRequest = (HttpWebRequest) r.AsyncState;
+                        var httpResponse = (HttpWebResponse) httpRequest.EndGetResponse(r);
+                        reponse = new StreamReader(httpResponse.GetResponseStream()).ReadToEnd();
+                    }
+                    catch (Exception e)
+                    {
+                        reponse = e.Message;
+                    }
+                }, request);
+
+                ChronoUpload.Stop();
+                this.manager.Uploaded(img, this.CustomUrl(reponse), ChronoUpload.ElapsedMilliseconds);
+            }
+            catch (WebException e)
+            {
+                this.manager.UploadFailed();
+            }
         }
 
         private string CustomUrl(string url)

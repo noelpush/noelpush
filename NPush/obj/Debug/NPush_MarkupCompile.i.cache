@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\choco\Documents\GitHub\JVPush-sources\NPush\App.xaml
-4-852684015
+5431100298
 
-331377040991
+351792974174
 141187498226
-Views\NotifyIconView.xaml;Views\Popup\PopupFirstRunView.xaml;Views\Popup\PopupUploadView.xaml;Views\SelectorView.xaml;
+Views\NotifyIconView.xaml;Views\Popup\PopupFirstRunView.xaml;Views\Popup\PopupUploadViewFailed.xaml;Views\Popup\PopupUploadView.xaml;Views\SelectorView.xaml;
 
-False
+True
 

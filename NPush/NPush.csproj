@@ -98,10 +98,14 @@
     <Compile Include="Services\Statistics.cs" />
     <Compile Include="Services\Update.cs" />
     <Compile Include="ViewModels\Popup\PopupFirstRunViewModel.cs" />
+    <Compile Include="ViewModels\Popup\PopupUploadFailedViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupUploadViewModel.cs" />
     <Compile Include="ViewModels\SelectorViewModel.cs" />
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">
       <DependentUpon>PopupFirstRunView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Popup\PopupUploadViewFailed.xaml.cs">
+      <DependentUpon>PopupUploadViewFailed.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Popup\PopupUploadView.xaml.cs">
       <DependentUpon>PopupUploadView.xaml</DependentUpon>
@@ -129,6 +133,10 @@
     <Page Include="Views\Popup\PopupFirstRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Popup\PopupUploadViewFailed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Popup\PopupUploadView.xaml">
       <SubType>Designer</SubType>

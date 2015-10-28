@@ -197,7 +197,7 @@ namespace NPush.Models
 
         internal void UploadFailed()
         {
-
+            this.notifyIconViewModel.ShowPopupUploadFailed();
         }
 
         private static byte[] ImageToByte(Bitmap img)

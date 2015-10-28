@@ -5,7 +5,6 @@ using NPush.Models;
 using NPush.ViewModels.Popup;
 using NPush.Views.Popup;
 
-
 namespace NPush.ViewModels
 {
     public class NotifyIconViewModel
@@ -13,8 +12,12 @@ namespace NPush.ViewModels
         private readonly bool canScreen;
 
         private readonly Manager manager;
+
         public PopupUploadView PopupUpload { get; private set; }
         public PopupUploadViewModel PopupUploadDataContext { get; private set; }
+
+        public PopupUploadFailedView PopupUploadFailed { get; private set; }
+        public PopupUploadFailedViewModel PopupUploadFailedDataContext { get; private set; }
 
         public PopupFirstRunView PopupFirstRun { get; private set; }
         public PopupFirstRunViewModel PopupFirstRunDataContext { get; private set; }
@@ -30,9 +33,11 @@ namespace NPush.ViewModels
 
             this.PopupUploadDataContext = new PopupUploadViewModel();
             this.PopupFirstRunDataContext = new PopupFirstRunViewModel();
+            this.PopupUploadFailedDataContext = new PopupUploadFailedViewModel();
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
             this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
+            this.PopupUploadFailed = new PopupUploadFailedView { DataContext = this.PopupUploadFailedDataContext };
 
             this.manager = new Manager(this);
         }
@@ -42,11 +47,18 @@ namespace NPush.ViewModels
             this.EnableCommandsEvent += eventHandler;
         }
 
-        public void ShowPopupUpload(Bitmap img, int delay = 2000)
+        public void ShowPopupUpload(Bitmap img, int delay = 3000)
         {
             this.PopupUploadDataContext.ShowPopup(img);
             Thread.Sleep(delay);
             this.PopupUploadDataContext.HidePopup();
+        }
+
+        public void ShowPopupUploadFailed(int delay = 3000)
+        {
+            this.PopupUploadFailedDataContext.ShowPopup();
+            Thread.Sleep(delay);
+            this.PopupUploadFailedDataContext.HidePopup();
         }
 
         public void ShowPopupMessage(int delay = 7000)
@@ -82,6 +94,5 @@ namespace NPush.ViewModels
         {
             Environment.Exit(1);
         }
-
     }
 }

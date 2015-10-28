@@ -172,4 +172,10 @@
   <data name="PopupUpload2" xml:space="preserve">
     <value>Lien copié dans le presse-papier.</value>
   </data>
+  <data name="PopupUploadFailed1" xml:space="preserve">
+    <value>Erreur durant l'upload !</value>
+  </data>
+  <data name="PopupUploadFailed2" xml:space="preserve">
+    <value>Veuillez vérifier votre connexion internet.</value>
+  </data>
 </root>

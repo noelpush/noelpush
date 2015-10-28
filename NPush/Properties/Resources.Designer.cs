@@ -207,6 +207,24 @@ namespace NPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Erreur durant l&apos;upload !.
+        /// </summary>
+        public static string PopupUploadFailed1 {
+            get {
+                return ResourceManager.GetString("PopupUploadFailed1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Veuillez vérifier votre connexion internet..
+        /// </summary>
+        public static string PopupUploadFailed2 {
+            get {
+                return ResourceManager.GetString("PopupUploadFailed2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Envoi en cours….
         /// </summary>
         public static string ScreenInProgress {
