@@ -97,6 +97,7 @@
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="Services\Statistics.cs" />
     <Compile Include="Services\Update.cs" />
+    <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupFirstRunViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupUploadFailedViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupUploadViewModel.cs" />
