@@ -1,18 +1,18 @@
 ﻿using System.Windows.Input;
-using NPush.ViewModels;
+using NPush.ViewModels.Popup;
 
-namespace NPush.Views
+namespace NPush.Views.Popup
 {
-    public partial class PopupMessageView
+    public partial class PopupFirstRunView
     {
-        public PopupMessageView()
+        public PopupFirstRunView()
         {
             InitializeComponent();
         }
 
         private void PopupView_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var dataContext = this.DataContext as PopupMessageViewModel;
+            var dataContext = this.DataContext as PopupFirstRunViewModel;
 
             if (dataContext != null)
                 dataContext.IsOpen.Value = false;

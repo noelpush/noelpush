@@ -192,7 +192,7 @@ namespace NPush.Models
             // Task + Dispatcher because it doesn't want to start without.......
             Task.Factory.StartNew(() =>
                 Dispatcher.CurrentDispatcher.Invoke(() =>
-                    this.notifyIconViewModel.ShowPopupMessage("NPush a été correctement installé !", 4000)));
+                    this.notifyIconViewModel.ShowPopupMessage()));
         }
 
         internal void UploadFailed()

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
-using NPush.ViewModels;
+using NPush.ViewModels.Popup;
 
-namespace NPush.Views
+namespace NPush.Views.Popup
 {
     public partial class PopupUploadView
     {

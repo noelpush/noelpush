@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading;
-using System.Windows.Threading;
 using NPush.Models;
-using NPush.Views;
+using NPush.ViewModels.Popup;
+using NPush.Views.Popup;
 
 
 namespace NPush.ViewModels
@@ -16,8 +16,8 @@ namespace NPush.ViewModels
         public PopupUploadView PopupUpload { get; private set; }
         public PopupUploadViewModel PopupUploadDataContext { get; private set; }
 
-        public PopupMessageView PopupMessage { get; private set; }
-        public PopupMessageViewModel PopupMessageDataContext { get; private set; }
+        public PopupFirstRunView PopupFirstRun { get; private set; }
+        public PopupFirstRunViewModel PopupFirstRunDataContext { get; private set; }
 
         public delegate void TooltipMessageEventHandler(Bitmap img);
 
@@ -29,10 +29,10 @@ namespace NPush.ViewModels
             this.canScreen = true;
 
             this.PopupUploadDataContext = new PopupUploadViewModel();
-            this.PopupMessageDataContext = new PopupMessageViewModel();
+            this.PopupFirstRunDataContext = new PopupFirstRunViewModel();
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
-            this.PopupMessage = new PopupMessageView { DataContext = this.PopupMessageDataContext };
+            this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
 
             this.manager = new Manager(this);
         }
@@ -49,11 +49,11 @@ namespace NPush.ViewModels
             this.PopupUploadDataContext.HidePopup();
         }
 
-        public void ShowPopupMessage(string text, int delay = 2000)
+        public void ShowPopupMessage(int delay = 7000)
         {
-            this.PopupMessageDataContext.ShowPopup(text);
+            this.PopupFirstRunDataContext.ShowPopup();
             Thread.Sleep(delay);
-            this.PopupMessageDataContext.HidePopup();
+            this.PopupFirstRunDataContext.HidePopup();
         }
 
         public void EnableCommands(bool enabled)

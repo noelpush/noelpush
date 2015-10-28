@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Forms;
 using NPush.Objects.ViewModel;
 
-namespace NPush.ViewModels
+namespace NPush.ViewModels.Popup
 {
     public class PopupUploadViewModel
     {

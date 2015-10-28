@@ -171,6 +171,42 @@ namespace NPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à NPush vient d’être installé !.
+        /// </summary>
+        public static string PopupFirstRun1 {
+            get {
+                return ResourceManager.GetString("PopupFirstRun1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Appuyez deux fois sur Impr Écran pour capturer une région. Trois fois pour capturer tout l’écran..
+        /// </summary>
+        public static string PopupFirstRun2 {
+            get {
+                return ResourceManager.GetString("PopupFirstRun2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Image envoyée !.
+        /// </summary>
+        public static string PopupUpload1 {
+            get {
+                return ResourceManager.GetString("PopupUpload1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Lien copié dans le presse-papier..
+        /// </summary>
+        public static string PopupUpload2 {
+            get {
+                return ResourceManager.GetString("PopupUpload2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Envoi en cours….
         /// </summary>
         public static string ScreenInProgress {
