@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using NLog;
 using NPush.Properties;
 using NPush.Services;
 using NPush.ViewModels;
@@ -17,12 +18,14 @@ namespace NPush.Models
 {
     public class Manager
     {
+        private readonly Logger logger;
+
         private Task captureScreenTask;
         private CancellationTokenSource captureScreenTaskToken;
 
-        private readonly Update update;
         private readonly ScreenCapture screenCapture;
         private readonly NotifyIconViewModel notifyIconViewModel;
+        private readonly UpdatesManager updatesManager;
 
         private readonly bool noUpload;
         private int pressCounter;
@@ -30,9 +33,10 @@ namespace NPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            Shortcuts.OnKeyPress += Capture;
+            this.logger = LogManager.GetCurrentClassLogger();
 
             this.screenCapture = new ScreenCapture(this);
+            this.updatesManager = new UpdatesManager();
             this.notifyIconViewModel = notifyIconViewModel;
 
             var args = Environment.GetCommandLineArgs();
@@ -44,10 +48,14 @@ namespace NPush.Models
                 Settings.Default.Save();
             }
 
-            if (IsFirstRun())
+            if (this.IsFirstRun)
             {
                 this.ShowPopupFirstRun();
             }
+
+            Shortcuts.OnKeyPress += Capture;
+
+            this.updatesManager.CheckUpdate();
         }
 
         private void CancelScreen()
@@ -69,7 +77,7 @@ namespace NPush.Models
             }
             catch (Exception e)
             {
-
+                this.logger.Error(e.Message);
             }
             finally
             {
@@ -154,7 +162,7 @@ namespace NPush.Models
 
         public void Uploaded(Bitmap img, long timing)
         {
-            var pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NPush\\";
+            var pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NoelPush\\";
 
             if (!Directory.Exists(pathPictures))
             {
@@ -175,16 +183,19 @@ namespace NPush.Models
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
         }
 
-        private static bool IsFirstRun()
+        private bool IsFirstRun
         {
-            const string REGISTRY_KEY = @"HKEY_CURRENT_USER\NPush";
-            const string REGISTY_VALUE = "FirstRun";
+            get
+            {
+                const string REGISTRY_KEY = @"HKEY_CURRENT_USER\NoelPush";
+                const string REGISTY_VALUE = "FirstRun";
 
-            if (Convert.ToInt32(Microsoft.Win32.Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0)) != 0)
-                return false;
+                if (Convert.ToInt32(Microsoft.Win32.Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0)) != 0)
+                    return false;
 
-            Microsoft.Win32.Registry.SetValue(REGISTRY_KEY, REGISTY_VALUE, 1, Microsoft.Win32.RegistryValueKind.DWord);
-            return true;
+                Microsoft.Win32.Registry.SetValue(REGISTRY_KEY, REGISTY_VALUE, 1, Microsoft.Win32.RegistryValueKind.DWord);
+                return true;
+            }
         }
 
         private void ShowPopupFirstRun()

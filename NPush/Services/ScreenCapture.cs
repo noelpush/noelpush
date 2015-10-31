@@ -63,7 +63,7 @@ namespace NPush.Services
 
         public long[] SaveImage(Bitmap img)
         {
-            var pathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\NPush\";
+            var pathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\NoelPush\";
             var fileName = DateTime.Now.ToString(@"yyyy-MM-dd-HH-mm-ss-");
 
             img.Save(pathFolder + fileName + ".png", ImageFormat.Png);

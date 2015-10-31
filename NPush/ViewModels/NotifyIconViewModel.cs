@@ -49,21 +49,21 @@ namespace NPush.ViewModels
 
         public void ShowPopupUpload(Bitmap img, int delay = 3000)
         {
-            this.PopupUploadDataContext.ShowPopup(img);
+            this.PopupUploadDataContext.ShowPopup(img, delay);
             Thread.Sleep(delay);
             this.PopupUploadDataContext.HidePopup();
         }
 
         public void ShowPopupUploadFailed(int delay = 3000)
         {
-            this.PopupUploadFailedDataContext.ShowPopup();
+            this.PopupUploadFailedDataContext.ShowPopup(delay);
             Thread.Sleep(delay);
             this.PopupUploadFailedDataContext.HidePopup();
         }
 
         public void ShowPopupMessage(int delay = 7000)
         {
-            this.PopupFirstRunDataContext.ShowPopup();
+            this.PopupFirstRunDataContext.ShowPopup(delay);
             Thread.Sleep(delay);
             this.PopupFirstRunDataContext.HidePopup();
         }

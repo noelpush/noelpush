@@ -126,15 +126,12 @@
   <data name="Exit" xml:space="preserve">
     <value>Quitter</value>
   </data>
-  <data name="NewVersion" xml:space="preserve">
-    <value>Vous utilisez actuellement la version {0} de NPush. Souhaitez-vous télécharger la nouvelle version disponible ?</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="notif" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\notif.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="NamePicture" xml:space="preserve">
-    <value>npush</value>
+    <value>noelpush</value>
   </data>
   <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,11 +139,8 @@
   <data name="LinkPasted" xml:space="preserve">
     <value>Lien copié dans le presse-papier.</value>
   </data>
-  <data name="ErrorRegisterHotKey" xml:space="preserve">
-    <value>NPush ne peut pas être exécuté (ErrorRegisterHotKey)</value>
-  </data>
   <data name="SoftwareName" xml:space="preserve">
-    <value>NPush</value>
+    <value>NoelPush</value>
   </data>
   <data name="ScreenInProgress" xml:space="preserve">
     <value>Envoi en cours…</value>
@@ -155,7 +149,7 @@
     <value>--noup</value>
   </data>
   <data name="ExitNPush" xml:space="preserve">
-    <value>Quitter NPush</value>
+    <value>Quitter NoelPush</value>
   </data>
   <data name="icon_upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icon_upload.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

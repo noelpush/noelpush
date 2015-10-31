@@ -9,9 +9,6 @@
 //------------------------------------------------------------------------------
 
 namespace NPush.Properties {
-    using System;
-    
-    
     /// <summary>
     ///   Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
     /// </summary>
@@ -88,15 +85,6 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à NPush ne peut pas être exécuté (ErrorRegisterHotKey).
-        /// </summary>
-        public static string ErrorRegisterHotKey {
-            get {
-                return ResourceManager.GetString("ErrorRegisterHotKey", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Quitter.
         /// </summary>
         public static string Exit {
@@ -106,7 +94,7 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Quitter NPush.
+        ///   Recherche une chaîne localisée semblable à Quitter NoelPush.
         /// </summary>
         public static string ExitNPush {
             get {
@@ -144,20 +132,11 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à npush.
+        ///   Recherche une chaîne localisée semblable à noelpush.
         /// </summary>
         public static string NamePicture {
             get {
                 return ResourceManager.GetString("NamePicture", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Vous utilisez actuellement la version {0} de NPush. Souhaitez-vous télécharger la nouvelle version disponible ?.
-        /// </summary>
-        public static string NewVersion {
-            get {
-                return ResourceManager.GetString("NewVersion", resourceCulture);
             }
         }
         
@@ -234,7 +213,7 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à NPush.
+        ///   Recherche une chaîne localisée semblable à NoelPush.
         /// </summary>
         public static string SoftwareName {
             get {

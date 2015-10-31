@@ -4,15 +4,17 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
+using NLog;
 using NPush.Models;
 
 namespace NPush.Services
 {
     internal class Uploader
     {
-        private Stopwatch ChronoUpload;
-
+        private readonly Logger logger;
         private Manager manager;
+
+        private Stopwatch ChronoUpload;
 
         private string namePicture;
         private string boundary;
@@ -21,6 +23,8 @@ namespace NPush.Services
 
         public Uploader(Manager manager)
         {
+            this.logger = LogManager.GetCurrentClassLogger();
+
             this.ChronoUpload = new Stopwatch();
 
             this.manager = manager;
@@ -38,9 +42,7 @@ namespace NPush.Services
 
         public void Upload(Bitmap img, byte[] imgBytes)
         {
-            ChronoUpload.Restart();
-
-          //this.UploadWebClient(imgBytes);
+            this.ChronoUpload.Restart();
             this.UploadHttpWebRequest(img, imgBytes);
         }
 
@@ -71,6 +73,7 @@ namespace NPush.Services
                     }
                     catch (Exception e)
                     {
+                        this.logger.Error(e.Message);
                         reponse = e.Message;
                     }
                 }, request);
@@ -80,15 +83,15 @@ namespace NPush.Services
             }
             catch (WebException e)
             {
+                this.logger.Error(e.Message);
                 this.manager.UploadFailed();
             }
         }
 
         private string CustomUrl(string url)
         {
-            /* Faut que je me trouve une regex lulz
-             * http://www.noelshack.com/2015-02-1420740001-jvpush.png
-             * http://image.noelshack.com/fichiers/2015/43/1445454562-npush.png */
+            /* http://www.noelshack.com/2015-02-1420740001-noelpush.png
+             * http://image.noelshack.com/fichiers/2015/02/1420740001-noelpush.png */
 
             url = url.Replace("www", "image");
             url = url.Replace(".com", ".com/fichiers");

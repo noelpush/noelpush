@@ -34,7 +34,7 @@ namespace NPush.Views
             this.NotifIcon = new NotifyIcon
             {
                 Icon = icon,
-                Text = Properties.Resources.SoftwareName,
+                Text = Properties.Resources.SoftwareName + " 1.1",
                 ContextMenuStrip = this.NotifMenu
             };
 
