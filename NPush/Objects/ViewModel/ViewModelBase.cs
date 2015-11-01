@@ -2,7 +2,7 @@
 using System.ComponentModel;
 
 
-namespace NPush.Objects.ViewModel
+namespace NoelPush.Objects.ViewModel
 {
     /// <summary>
     /// Abstract base class for view models.

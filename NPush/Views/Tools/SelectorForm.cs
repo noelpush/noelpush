@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace NPush.Views.Tools
+namespace NoelPush.Views.Tools
 {
     sealed class SelectorForm : Form
     {

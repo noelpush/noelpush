@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NPush.Properties {
+namespace NoelPush.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

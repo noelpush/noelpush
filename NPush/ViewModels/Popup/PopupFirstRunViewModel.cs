@@ -1,4 +1,4 @@
-﻿namespace NPush.ViewModels.Popup
+﻿namespace NoelPush.ViewModels.Popup
 {
     public class PopupFirstRunViewModel : PopupViewModel
     {

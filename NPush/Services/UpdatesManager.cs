@@ -6,7 +6,7 @@ using NLog;
 using Squirrel;
 
 
-namespace NPush.Services
+namespace NoelPush.Services
 {
     class UpdatesManager
     {
@@ -25,11 +25,11 @@ namespace NPush.Services
             this.timerUpdates.Enabled = true;
         }
 
-        private async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
+        public async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
         {
             try 
             {
-                using (var mgr = new UpdateManager(@"http://choco.ovh/npush/releases/", "NoelPush"))
+                using (var mgr = new UpdateManager(@"http://choco.ovh/NoelPush/releases/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
                           onFirstRun: () => FirstRun = true,

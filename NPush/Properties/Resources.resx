@@ -148,14 +148,14 @@
   <data name="CommandLineNoUp" xml:space="preserve">
     <value>--noup</value>
   </data>
-  <data name="ExitNPush" xml:space="preserve">
+  <data name="ExitNoelPush" xml:space="preserve">
     <value>Quitter NoelPush</value>
   </data>
   <data name="icon_upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icon_upload.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="PopupFirstRun1" xml:space="preserve">
-    <value>NPush vient d’être installé !</value>
+    <value>NoelPush vient d’être installé !</value>
   </data>
   <data name="PopupFirstRun2" xml:space="preserve">
     <value>Appuyez deux fois sur Impr Écran pour capturer une région. Trois fois pour capturer tout l’écran.</value>

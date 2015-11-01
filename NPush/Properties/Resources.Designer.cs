@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NPush.Properties {
+namespace NoelPush.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace NPush.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NPush.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NoelPush.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -99,9 +99,9 @@ namespace NPush.Properties {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Quitter NoelPush.
         /// </summary>
-        public static string ExitNPush {
+        public static string ExitNoelPush {
             get {
-                return ResourceManager.GetString("ExitNPush", resourceCulture);
+                return ResourceManager.GetString("ExitNoelPush", resourceCulture);
             }
         }
         
@@ -153,7 +153,7 @@ namespace NPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à NPush vient d’être installé !.
+        ///   Recherche une chaîne localisée semblable à NoelPush vient d’être installé !.
         /// </summary>
         public static string PopupFirstRun1 {
             get {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NPush.Objects.ViewModel.Itron.Mcn.Utils.Extension;
+using NoelPush.Objects.ViewModel.Itron.Mcn.Utils.Extension;
 
-namespace NPush.Objects.ViewModel
+namespace NoelPush.Objects.ViewModel
 {
     /// <summary>
     /// Utility class to do some name retreival from the T class

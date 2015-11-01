@@ -1,4 +1,4 @@
-﻿namespace NPush.ViewModels
+﻿namespace NoelPush.ViewModels
 {
     class SelectorViewModel
     {

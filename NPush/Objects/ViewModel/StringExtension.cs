@@ -1,4 +1,4 @@
-﻿namespace NPush.Objects.ViewModel
+﻿namespace NoelPush.Objects.ViewModel
 {
     using System.Collections.Generic;
     using System.Globalization;

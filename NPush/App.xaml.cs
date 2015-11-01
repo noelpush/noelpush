@@ -3,7 +3,7 @@ using System.Threading;
 using System.Windows;
 using NLog;
 
-namespace NPush
+namespace NoelPush
 {
     public partial class App
     {

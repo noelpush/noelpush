@@ -3,9 +3,9 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
-using NPush.ViewModels;
+using NoelPush.ViewModels;
 
-namespace NPush.Views
+namespace NoelPush.Views
 {
     internal partial class NotifyIconView
     {
@@ -128,7 +128,7 @@ namespace NPush.Views
             this.NotifMenu.Items[0].Visible = !enabled;
 
             // Rename exit button
-            this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNPush;
+            this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNoelPush;
         }
     }
 }

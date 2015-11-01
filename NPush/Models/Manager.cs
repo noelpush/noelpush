@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using NLog;
-using NPush.Properties;
-using NPush.Services;
-using NPush.ViewModels;
-namespace NPush.Models
+using NoelPush.Properties;
+using NoelPush.Services;
+using NoelPush.ViewModels;
+namespace NoelPush.Models
 {
     public class Manager
     {

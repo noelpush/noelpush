@@ -1,4 +1,4 @@
-﻿namespace NPush.Objects
+﻿namespace NoelPush.Objects
 {
     class ScreenshotData
     {

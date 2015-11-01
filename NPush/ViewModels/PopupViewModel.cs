@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
-using NPush.Objects.ViewModel;
+using NoelPush.Objects.ViewModel;
 
-namespace NPush.ViewModels
+namespace NoelPush.ViewModels
 {
     public class PopupViewModel
     {

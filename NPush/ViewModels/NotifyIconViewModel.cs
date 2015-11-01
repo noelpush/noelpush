@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading;
-using NPush.Models;
-using NPush.ViewModels.Popup;
-using NPush.Views.Popup;
+using NoelPush.Models;
+using NoelPush.ViewModels.Popup;
+using NoelPush.Views.Popup;
 
-namespace NPush.ViewModels
+namespace NoelPush.ViewModels
 {
     public class NotifyIconViewModel
     {

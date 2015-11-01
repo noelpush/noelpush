@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace NPush.Objects.ViewModel
+namespace NoelPush.Objects.ViewModel
 {
     public interface IViewModel : INotifyPropertyChanged
     {

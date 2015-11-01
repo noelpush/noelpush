@@ -5,7 +5,7 @@
     using System.Windows.Data;
     using System.Windows.Media.Imaging;
 
-namespace NPush.Converters
+namespace NoelPush.Converters
 {
     public class BitmapToImageSourceConverter : IValueConverter
     {

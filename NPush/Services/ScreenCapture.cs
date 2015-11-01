@@ -6,11 +6,11 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using NPush.Models;
-using NPush.Views;
+using NoelPush.Models;
+using NoelPush.Views;
 
 
-namespace NPush.Services
+namespace NoelPush.Services
 {
     public class ScreenCapture
     {

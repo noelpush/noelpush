@@ -5,9 +5,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using NLog;
-using NPush.Models;
+using NoelPush.Models;
 
-namespace NPush.Services
+namespace NoelPush.Services
 {
     internal class Uploader
     {

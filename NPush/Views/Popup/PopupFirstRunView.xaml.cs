@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
-using NPush.ViewModels.Popup;
+using NoelPush.ViewModels.Popup;
 
-namespace NPush.Views.Popup
+namespace NoelPush.Views.Popup
 {
     public partial class PopupFirstRunView
     {

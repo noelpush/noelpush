@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NPush.Events
+namespace NoelPush.Events
 {
     class EnableCommandsEventHandler : EventArgs
     {

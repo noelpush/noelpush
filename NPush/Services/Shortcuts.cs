@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 
-namespace NPush.Services
+namespace NoelPush.Services
 {
     public sealed class Shortcuts
     {

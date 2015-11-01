@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using NPush.Objects.ViewModel;
+using NoelPush.Objects.ViewModel;
 
-namespace NPush.ViewModels.Popup
+namespace NoelPush.ViewModels.Popup
 {
     public class PopupUploadViewModel : PopupViewModel
     {

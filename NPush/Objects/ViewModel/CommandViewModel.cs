@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 
-namespace NPush.Objects.ViewModel
+namespace NoelPush.Objects.ViewModel
 {
     /// <summary>
     /// View model containing a <see cref="ICommand"/>.

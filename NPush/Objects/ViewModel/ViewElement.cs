@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace NPush.Objects.ViewModel
+namespace NoelPush.Objects.ViewModel
 {
     [Serializable]
     public class ViewElement<T> : IDataErrorInfo, INotifyPropertyChanged, ISerializable

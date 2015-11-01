@@ -1,12 +1,12 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-using NPush.Services;
-using NPush.ViewModels;
-using NPush.Views.Tools;
+using NoelPush.Services;
+using NoelPush.ViewModels;
+using NoelPush.Views.Tools;
 using Point = System.Drawing.Point;
 
-namespace NPush.Views
+namespace NoelPush.Views
 {
     internal partial class SelectorView
     {

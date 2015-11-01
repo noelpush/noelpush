@@ -1,7 +1,7 @@
-﻿using NPush.Objects;
+﻿using NoelPush.Objects;
 
 
-namespace NPush.Services
+namespace NoelPush.Services
 {
     using System.Net.Http;
 
@@ -10,7 +10,7 @@ namespace NPush.Services
 
         public void StatsStart(string uniqueID, string version, string dotnets)
         {
-            var url = "http://npush.noelpush.com/stats.php?startup&";
+            var url = "http://NoelPush.noelpush.com/stats.php?startup&";
             url += "uid=" + uniqueID;
             url += "&ver=" + version;
             url += "&dotnets=" + dotnets;
@@ -21,7 +21,7 @@ namespace NPush.Services
 
         public void StatsUpload(ScreenshotData screenData)
         {
-            var url = "http://npush.noelpush.com/stats.php?";
+            var url = "http://NoelPush.noelpush.com/stats.php?";
             url += "uid=" + screenData.uniqueID;
             url += "&ver=" + screenData.version;
             url += "&size_png=" + screenData.sizePng;
@@ -35,7 +35,7 @@ namespace NPush.Services
 
         internal void StatsFail()
         {
-            var url = "http://npush.noelpush.com/stats.php?fail";
+            var url = "http://NoelPush.noelpush.com/stats.php?fail";
             
             return;
             var response = new HttpClient().GetStringAsync(url);
