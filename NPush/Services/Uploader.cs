@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using NLog;
 using NoelPush.Models;
+using NoelPush.Objects;
 
 namespace NoelPush.Services
 {
@@ -13,8 +14,6 @@ namespace NoelPush.Services
     {
         private readonly Logger logger;
         private Manager manager;
-
-        private Stopwatch ChronoUpload;
 
         private string namePicture;
         private string boundary;
@@ -24,8 +23,6 @@ namespace NoelPush.Services
         public Uploader(Manager manager)
         {
             this.logger = LogManager.GetCurrentClassLogger();
-
-            this.ChronoUpload = new Stopwatch();
 
             this.manager = manager;
 
@@ -37,16 +34,23 @@ namespace NoelPush.Services
 
         public void Upload(Bitmap bmp)
         {
-            this.manager.Uploaded(bmp, 0);
+            this.manager.Uploaded(bmp);
         }
 
-        public void Upload(Bitmap img, byte[] imgBytes)
+        public void Upload(Bitmap img, byte[] imgBytes, ScreenshotData data)
         {
-            this.ChronoUpload.Restart();
-            this.UploadHttpWebRequest(img, imgBytes);
+            var ChronoUpload = new Stopwatch();
+            ChronoUpload.Start();
+            var url = this.UploadHttpWebRequest(img, imgBytes);
+            data.path = url;
+            ChronoUpload.Stop();
+            data.upload_delay = (int)ChronoUpload.ElapsedMilliseconds;
+
+
+            Statistics.Send(data);
         }
 
-        private void UploadHttpWebRequest(Bitmap img, byte[] formBytes)
+        private string UploadHttpWebRequest(Bitmap img, byte[] formBytes)
         {
             try
             {
@@ -78,14 +82,17 @@ namespace NoelPush.Services
                     }
                 }, request);
 
-                ChronoUpload.Stop();
-                this.manager.Uploaded(img, this.CustomUrl(reponse), ChronoUpload.ElapsedMilliseconds);
+                this.manager.Uploaded(img, this.CustomUrl(reponse));
+
+                return reponse;
             }
             catch (WebException e)
             {
                 this.logger.Error(e.Message);
                 this.manager.UploadFailed();
             }
+
+            return string.Empty;
         }
 
         private string CustomUrl(string url)

@@ -9,7 +9,7 @@ using System.Windows;
 [assembly: AssemblyDescription("Partagez vos screens via NoelShack.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("noelpush")]
+[assembly: AssemblyProduct("NoelPush")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -51,3 +51,4 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyMetadata("SquirrelAwareVersion", "1")]

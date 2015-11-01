@@ -11,9 +11,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using NLog;
+using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
+
 namespace NoelPush.Models
 {
     public class Manager
@@ -87,6 +89,7 @@ namespace NoelPush.Models
             }
         }
 
+        public ScreenshotData screenshotData;
         public void Capture()
         {
             var date = DateTime.Now;
@@ -95,6 +98,9 @@ namespace NoelPush.Models
             // First press or bad time
             if (this.pressCounter <= 1 || (this.pressCounter > 1 && date > this.pressDateTime.AddMilliseconds(400)))
             {
+                this.screenshotData = new ScreenshotData();
+                screenshotData.start_date = date;
+
                 this.pressCounter = 1;
                 this.CancelScreen();
                 this.pressDateTime = DateTime.Now;
@@ -110,38 +116,43 @@ namespace NoelPush.Models
             // Second press
             else if (this.pressCounter == 2)
             {
+                this.screenshotData.mode = 1;
+                this.screenshotData.second_press_delay = (int)(screenshotData.start_date - date).TotalMilliseconds;
+
                 this.pressDateTime = DateTime.Now;
-                this.CaptureRegion();
+                this.CaptureRegion(screenshotData);
             }
 
             // Third press
             if (this.pressCounter == 3)
             {
+                this.screenshotData.mode = 2;
+                screenshotData.third_press_delay = (int)(screenshotData.start_date - date).TotalMilliseconds;
+
                 this.CancelScreen();
-                this.CaptureScreen();
+                this.CaptureScreen(screenshotData);
                 this.pressCounter = 0;
             }
         }
 
-        public void CaptureScreen()
+        public void CaptureScreen(ScreenshotData data)
         {
-            this.screenCapture.CaptureScreen();
+            this.screenCapture.CaptureScreen(data);
         }
 
-        public void CaptureRegion()
+        public void CaptureRegion(ScreenshotData data)
         {
-            this.screenCapture.CaptureRegion();
+            this.screenCapture.CaptureRegion(data);
         }
 
-        public void Captured(Bitmap img)
+        public void Captured(Bitmap img, ScreenshotData data)
         {
             this.pressCounter = 0;
 
-            /*
-             * var sizePicture = this.screenCapture.SaveImage(img);
-                if (sizePicture.Count() > 0) this.screenshotData.sizePng = sizePicture[0];
-                if (sizePicture.Count() > 1) this.screenshotData.sizeJpg = sizePicture[1];
-            */
+            var sizePicture = this.screenCapture.SaveImage(img);
+
+            if (sizePicture.Count() > 0) data.png_size = (int)sizePicture[0];
+            if (sizePicture.Count() > 1) data.jpg_size = (int)sizePicture[1];
 
             // Disable buttons during uploading
             this.notifyIconViewModel.EnableCommands(false);
@@ -149,10 +160,10 @@ namespace NoelPush.Models
             if (this.noUpload)
                 new Uploader(this).Upload(img);
             else
-                new Uploader(this).Upload(img, ImageToByte(img));
+                new Uploader(this).Upload(img, ImageToByte(img), data);
         }
 
-        public void Uploaded(Bitmap img, string url, long timing)
+        public void Uploaded(Bitmap img, string url)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
 
@@ -160,7 +171,7 @@ namespace NoelPush.Models
             this.notifyIconViewModel.ShowPopupUpload(img);
         }
 
-        public void Uploaded(Bitmap img, long timing)
+        public void Uploaded(Bitmap img)
         {
             var pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NoelPush\\";
 
@@ -203,7 +214,6 @@ namespace NoelPush.Models
 
         public string GenerateID()
         {
-
             var rand = new Random().Next(99999, 999999999).ToString();
             var inputBytes = Encoding.ASCII.GetBytes(rand);
             var hash = MD5.Create().ComputeHash(inputBytes);

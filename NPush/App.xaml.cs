@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows;
 using NLog;
+using Squirrel;
 
 namespace NoelPush
 {
@@ -13,6 +14,21 @@ namespace NoelPush
         protected override void OnStartup(StartupEventArgs e)
         {
             this.logger = LogManager.GetCurrentClassLogger();
+
+            try
+            {
+                using (var mgr = new UpdateManager(@"http://choco.ovh/NoelPush/releases/", "NoelPush"))
+                {
+                    SquirrelAwareApp.HandleEvents(
+                        onInitialInstall: v => this.InstallEvent(mgr),
+                        onAppUpdate: v => this.UpdateEvent(mgr),
+                        onAppUninstall: v => this.UninstallEvent(mgr));
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.Error(ex.Message);
+            }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
@@ -49,6 +65,29 @@ namespace NoelPush
             }
 
             return false;
+        }
+        
+
+        private void InstallEvent(UpdateManager mgr)
+        {
+            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu, false);
+            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup, false);
+            mgr.CreateUninstallerRegistryEntry();
+        }
+
+        private void UpdateEvent(UpdateManager mgr)
+        {
+            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu, true);
+            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup, true);
+            mgr.RemoveUninstallerRegistryEntry();
+            mgr.CreateUninstallerRegistryEntry();
+        }
+
+        private void UninstallEvent(UpdateManager mgr)
+        {
+            mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu);
+            mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup);
+            mgr.RemoveUninstallerRegistryEntry();
         }
     }
 }

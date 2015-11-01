@@ -1,19 +1,25 @@
-﻿namespace NoelPush.Objects
-{
-    class ScreenshotData
-    {
-        public string uniqueID { get; private set; }
-        public string version { get; private set; }
-        public int mode { get; private set; }
-        public long sizePng { get; set; }
-        public long sizeJpg { get; set; }
-        public long timing { get; set; }
+﻿using System;
+using System.Drawing;
+using NoelPush.Properties;
 
-        public ScreenshotData(string uniqueID, string version, int mode)
+namespace NoelPush.Objects
+{
+    public class ScreenshotData
+    {
+        public string version { get; set; }
+        public DateTime start_date { get; set; }
+        public int second_press_delay { get; set; }
+        public int third_press_delay { get; set; }
+        public int upload_delay { get; set; }
+        public string path { get; set; }
+        public Rectangle img_size { get; set; }
+        public int png_size { get; set; }
+        public int jpg_size { get; set; }
+        public int mode { get; set; }
+
+        public ScreenshotData()
         {
-            this.uniqueID = uniqueID;
-            this.version = version;
-            this.mode = mode;
+            this.version = Resources.Version;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-
+using NoelPush.Objects;
 using NoelPush.Services;
 using NoelPush.ViewModels;
 using NoelPush.Views.Tools;
@@ -10,6 +10,7 @@ namespace NoelPush.Views
 {
     internal partial class SelectorView
     {
+        private ScreenshotData data;
         public ScreenCapture ScreenCapture;
         public SelectorForm selectorForm;
 
@@ -43,8 +44,9 @@ namespace NoelPush.Views
             this.InitializeComponent();
         }
 
-        public void Showing()
+        public void Showing(ScreenshotData data)
         {
+            this.data = data;
             this.selectorForm.Initialize();
             this.selectorForm.Show();
         }
@@ -77,7 +79,7 @@ namespace NoelPush.Views
             if (e.Button != MouseButtons.Left) return;
 
             this.Hiding();
-            this.ScreenCapture.BuildImg(this.selectorForm.getRectangle());
+            this.ScreenCapture.BuildImg(this.selectorForm.getRectangle(), this.data);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)

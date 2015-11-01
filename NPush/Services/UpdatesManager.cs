@@ -32,10 +32,7 @@ namespace NoelPush.Services
                 using (var mgr = new UpdateManager(@"http://choco.ovh/NoelPush/releases/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
-                          onFirstRun: () => FirstRun = true,
-                          onInitialInstall: v => mgr.CreateShortcutForThisExe(),
-                          onAppUpdate: v => mgr.CreateShortcutForThisExe(),
-                          onAppUninstall: v => mgr.RemoveShortcutForThisExe());
+                          onFirstRun: () => this.FirstRun = true);
 
                     var updates = await mgr.CheckForUpdate();
 

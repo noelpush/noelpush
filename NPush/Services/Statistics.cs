@@ -1,44 +1,38 @@
-﻿using NoelPush.Objects;
-
+﻿using System;
+using NLog;
+using NoelPush.Objects;
 
 namespace NoelPush.Services
 {
     using System.Net.Http;
 
-    class Statistics
+    static class Statistics
     {
-
-        public void StatsStart(string uniqueID, string version, string dotnets)
+        public static void Send(ScreenshotData screenData)
         {
-            var url = "http://NoelPush.noelpush.com/stats.php?startup&";
-            url += "uid=" + uniqueID;
-            url += "&ver=" + version;
-            url += "&dotnets=" + dotnets;
+            // http://choco.ovh/npush/stats.php?path=&version=&mode=&png=&jpg=
 
-            return;
-            var response = new HttpClient().GetStringAsync(url);
-        }
+            var url = "http://choco.ovh/npush/stats.php?";
 
-        public void StatsUpload(ScreenshotData screenData)
-        {
-            var url = "http://NoelPush.noelpush.com/stats.php?";
-            url += "uid=" + screenData.uniqueID;
-            url += "&ver=" + screenData.version;
-            url += "&size_png=" + screenData.sizePng;
-            url += "&size_jpg=" + screenData.sizeJpg;
-            url += "&timing=" + screenData.timing;
+            url += "path=" + screenData.path;
+            url += "&version=" + screenData.version;
             url += "&mode=" + screenData.mode;
+            url += "&png=" + screenData.png_size;
+            url += "&jpg=" + screenData.jpg_size;
 
-            return;
-            var response = new HttpClient().GetStringAsync(url);
+            SendRequest(url);
         }
 
-        internal void StatsFail()
+        private static void SendRequest(string url)
         {
-            var url = "http://NoelPush.noelpush.com/stats.php?fail";
-            
-            return;
-            var response = new HttpClient().GetStringAsync(url);
+            try
+            {
+                new HttpClient().GetStringAsync(url);
+            }
+            catch (Exception e)
+            {
+                LogManager.GetCurrentClassLogger().Error(e.Message);
+            }
         }
     }
 }

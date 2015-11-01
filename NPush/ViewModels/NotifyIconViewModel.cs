@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using NoelPush.Models;
+using NoelPush.Objects;
 using NoelPush.ViewModels.Popup;
 using NoelPush.Views.Popup;
 
@@ -78,16 +79,22 @@ namespace NoelPush.ViewModels
             get { return this.canScreen; }
         }
 
-        public void CaptureScreen()
-        {
-            if (this.CanScreen) 
-                this.manager.CaptureScreen();
-        }
-
         public void CaptureRegion()
         {
-            if (this.CanScreen) 
-                this.manager.CaptureRegion();
+            var data = new ScreenshotData();
+            data.mode = 4;
+
+            if (this.CanScreen)
+                this.manager.CaptureRegion(data);
+        }
+
+        public void CaptureScreen()
+        {
+            var data = new ScreenshotData();
+            data.mode = 3;
+
+            if (this.CanScreen)
+                this.manager.CaptureScreen(data);
         }
 
         public void Exit()
