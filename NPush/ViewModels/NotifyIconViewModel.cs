@@ -61,7 +61,7 @@ namespace NPush.ViewModels
             this.PopupUploadFailedDataContext.HidePopup();
         }
 
-        public void ShowPopupMessage(int delay = 7000)
+        public void ShowPopupMessage(int delay = 11000)
         {
             this.PopupFirstRunDataContext.ShowPopup(delay);
             Thread.Sleep(delay);

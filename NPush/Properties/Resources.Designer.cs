@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace NPush.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
     /// </summary>
@@ -218,6 +221,15 @@ namespace NPush.Properties {
         public static string SoftwareName {
             get {
                 return ResourceManager.GetString("SoftwareName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à 1.3.
+        /// </summary>
+        public static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
     }

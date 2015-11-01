@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using NLog;
-using NoelPush.Properties;
+using NPush.Properties;
 using NPush.Services;
 using NPush.ViewModels;
 namespace NPush.Models
