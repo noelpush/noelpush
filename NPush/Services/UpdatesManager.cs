@@ -29,7 +29,7 @@ namespace NoelPush.Services
         {
             try 
             {
-                using (var mgr = new UpdateManager(@"http://choco.ovh/NoelPush/releases/", "NoelPush"))
+                using (var mgr = new UpdateManager(@"http://choco.ovh/npush/releases/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
                           onFirstRun: () => this.FirstRun = true);
@@ -46,9 +46,6 @@ namespace NoelPush.Services
                         var latestExe = Path.Combine(mgr.RootAppDirectory, string.Concat("app-", lastVersion.Version), "NoelPush.exe");
                         mgr.Dispose();
 
-                        #if (DEBUG)
-                        return; 
-                        #endif
                         UpdateManager.RestartApp(latestExe);
                     }
                     mgr.Dispose();

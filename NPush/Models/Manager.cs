@@ -149,18 +149,21 @@ namespace NoelPush.Models
         {
             this.pressCounter = 0;
 
-            var sizePicture = this.screenCapture.SaveImage(img);
+            var pictureData = this.screenCapture.GetPictureSize(img);
 
-            if (sizePicture.Count() > 0) data.png_size = (int)sizePicture[0];
-            if (sizePicture.Count() > 1) data.jpg_size = (int)sizePicture[1];
+            data.png_size = pictureData.sizePng;
+            data.jpg_size = pictureData.sizeJpeg;
+
+            var smallBitmap = pictureData.GetSmallestPicture();
+            var format = pictureData.GetPictureType();
 
             // Disable buttons during uploading
             this.notifyIconViewModel.EnableCommands(false);
 
             if (this.noUpload)
-                new Uploader(this).Upload(img);
+                new Uploader(this, format).Upload(img);
             else
-                new Uploader(this).Upload(img, ImageToByte(img), data);
+                new Uploader(this, format).Upload(img, ImageToByte(smallBitmap), data);
         }
 
         public void Uploaded(Bitmap img, string url)

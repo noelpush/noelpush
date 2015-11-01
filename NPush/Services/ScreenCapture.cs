@@ -63,21 +63,33 @@ namespace NoelPush.Services
                 Task.Factory.StartNew(() => manager.Captured(selection, data));
         }
 
-        public long[] SaveImage(Bitmap img)
+        public PictureData GetPictureSize(Bitmap img)
         {
             var pathFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\NoelPush\";
             var fileName = DateTime.Now.ToString(@"yyyy-MM-dd-HH-mm-ss-");
 
-            img.Save(pathFolder + fileName + ".png", ImageFormat.Png);
-            img.Save(pathFolder + fileName + ".jpeg", ImageFormat.Jpeg);
+            var pathPng = pathFolder + fileName + ".png";
+            var pathJpeg = pathFolder + fileName + ".jpeg";
 
-            var sizePng = (new FileInfo(pathFolder + fileName + ".png")).Length;
-            var sizeJpg = (new FileInfo(pathFolder + fileName + ".jpeg")).Length;
+            img.Save(pathPng, ImageFormat.Png);
+            img.Save(pathJpeg, ImageFormat.Jpeg);
 
-            File.Delete(pathFolder + fileName + ".png");
-            File.Delete(pathFolder + fileName + ".jpeg");
+            var sizePng = (int)(new FileInfo(pathPng)).Length;
+            var sizeJpeg = (int)(new FileInfo(pathJpeg)).Length;
 
-            return new[] { sizePng, sizeJpg };
+            var bmpPng = LoadImage(pathPng);
+            var bmpJpeg = LoadImage(pathJpeg);
+
+            File.Delete(pathPng);
+            File.Delete(pathJpeg);
+
+            return new PictureData(bmpPng, bmpJpeg, sizePng, sizeJpeg);
+        }
+
+        public static Bitmap LoadImage(string path)
+        {
+            var ms = new MemoryStream(File.ReadAllBytes(path)); // Don't use using!!
+            return new Bitmap(Image.FromStream(ms));
         }
 
         private int Height

@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace NoelPush.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
     /// </summary>
@@ -222,7 +225,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 1.3.
+        ///   Recherche une chaîne localisée semblable à 2.2.
         /// </summary>
         public static string Version {
             get {

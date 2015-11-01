@@ -20,7 +20,7 @@ namespace NoelPush.Services
         private byte[] boundaryBytes;
         private byte[] headerBytes;
 
-        public Uploader(Manager manager)
+        public Uploader(Manager manager, string format)
         {
             this.logger = LogManager.GetCurrentClassLogger();
 
@@ -29,7 +29,7 @@ namespace NoelPush.Services
             this.namePicture = new Random().Next(0, 9999) .ToString("0000") + "-" + Properties.Resources.NamePicture;
             this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
             this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
-            this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + ".png\"\r\nContent-Type: image/png\r\n\r\n");
+            this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + "." + format + "\"\r\nContent-Type: image/" + format + "\r\n\r\n");
         }
 
         public void Upload(Bitmap bmp)
@@ -45,7 +45,6 @@ namespace NoelPush.Services
             data.path = url;
             ChronoUpload.Stop();
             data.upload_delay = (int)ChronoUpload.ElapsedMilliseconds;
-
 
             Statistics.Send(data);
         }
