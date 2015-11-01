@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using NLog;
-using NPush.Properties;
+using NoelPush.Properties;
 using NPush.Services;
 using NPush.ViewModels;
 namespace NPush.Models
@@ -48,14 +48,14 @@ namespace NPush.Models
                 Settings.Default.Save();
             }
 
-            if (this.IsFirstRun)
-            {
-                this.ShowPopupFirstRun();
-            }
-
             Shortcuts.OnKeyPress += Capture;
 
             this.updatesManager.CheckUpdate();
+
+            if (this.updatesManager.FirstRun)
+            {
+                this.ShowPopupFirstRun();
+            }
         }
 
         private void CancelScreen()
@@ -181,21 +181,6 @@ namespace NPush.Models
         public void Screened(Bitmap bmp)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
-        }
-
-        private bool IsFirstRun
-        {
-            get
-            {
-                const string REGISTRY_KEY = @"HKEY_CURRENT_USER\NoelPush";
-                const string REGISTY_VALUE = "FirstRun";
-
-                if (Convert.ToInt32(Microsoft.Win32.Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0)) != 0)
-                    return false;
-
-                Microsoft.Win32.Registry.SetValue(REGISTRY_KEY, REGISTY_VALUE, 1, Microsoft.Win32.RegistryValueKind.DWord);
-                return true;
-            }
         }
 
         private void ShowPopupFirstRun()
