@@ -20,7 +20,7 @@ namespace NoelPush.Services
             this.logger = LogManager.GetCurrentClassLogger();
 
             this.timerUpdates = new Timer();
-            this.timerUpdates.Interval = TimeSpan.FromHours(1).TotalMilliseconds;
+            this.timerUpdates.Interval = TimeSpan.FromMinutes(10).TotalMilliseconds;
             this.timerUpdates.Elapsed += this.CheckUpdate;
             this.timerUpdates.Enabled = true;
         }
@@ -29,7 +29,7 @@ namespace NoelPush.Services
         {
             try 
             {
-                using (var mgr = new UpdateManager(@"http://choco.ovh/npush/releases/", "NoelPush"))
+                using (var mgr = new UpdateManager(@"http://releases.noelpush.com/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
                           onFirstRun: () => this.FirstRun = true);

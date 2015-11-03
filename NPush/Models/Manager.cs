@@ -4,130 +4,164 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using Microsoft.Win32;
 using NLog;
 using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
+using Application = System.Windows.Application;
 
 namespace NoelPush.Models
 {
     public class Manager
     {
         private readonly Logger logger;
+        private readonly bool noUpload;
+        private readonly NotifyIconViewModel notifyIconViewModel;
+        private readonly ScreenCapture screenCapture;
+        private readonly UpdatesManager updatesManager;
 
+        public string UserId { get; private set; }
         private Task captureScreenTask;
         private CancellationTokenSource captureScreenTaskToken;
 
-        private readonly ScreenCapture screenCapture;
-        private readonly NotifyIconViewModel notifyIconViewModel;
-        private readonly UpdatesManager updatesManager;
-
-        private readonly bool noUpload;
         private int pressCounter;
         private DateTime pressDateTime;
+        public ScreenshotData screenshotData;
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            this.logger = LogManager.GetCurrentClassLogger();
+            logger = LogManager.GetCurrentClassLogger();
 
-            this.screenCapture = new ScreenCapture(this);
-            this.updatesManager = new UpdatesManager();
+            this.UserId = GetUserIdInRegistry();
+
+            screenCapture = new ScreenCapture(this);
+            updatesManager = new UpdatesManager();
             this.notifyIconViewModel = notifyIconViewModel;
 
-            var args = Environment.GetCommandLineArgs();
-            this.noUpload = (args.Count() >= 2 && args[1] == Resources.CommandLineNoUp);
-
-            if (Settings.Default.uniqueID.Count() != 32)
-            {
-                Settings.Default.uniqueID = this.GenerateID();
-                Settings.Default.Save();
-            }
+            string[] args = Environment.GetCommandLineArgs();
+            noUpload = (args.Count() >= 2 && args[1] == Resources.CommandLineNoUp);
 
             Shortcuts.OnKeyPress += Capture;
 
-            this.updatesManager.CheckUpdate();
+            updatesManager.CheckUpdate();
 
-            if (this.updatesManager.FirstRun)
+            if (updatesManager.FirstRun)
             {
-                this.ShowPopupFirstRun();
+                ShowPopupFirstRun();
             }
+        }
+
+        private string GetUserIdInRegistry()
+        {
+            const string REGISTRY_KEY = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
+            const string REGISTY_VALUE = "ID";
+
+            try
+            {
+                var Key = Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0) as string;
+                if (Key != null)
+                {
+                    return Key;
+                }
+                else
+                {
+                    return this.WriteUserIdInRegistry();
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+            }
+
+            return "Undefined";
+        }
+
+
+        private string WriteUserIdInRegistry()
+        {
+            const string REGISTRY_FIRST_KEY = @"HKEY_CURRENT_USER\SOFTWARE\";
+            string REGISTY_FIRST_VALUE = "NoelPush";
+
+            const string REGISTRY_SECOND_KEY = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
+            string REGISTY_SECOND_VALUE = "ID";
+
+            string REGISTY_STRING = GenerateID();
+
+            if (Convert.ToInt32(Registry.GetValue(REGISTRY_FIRST_KEY, REGISTY_FIRST_VALUE, 0)) != 0)
+                return "Undefined";
+
+            Registry.SetValue(REGISTRY_FIRST_KEY, REGISTY_FIRST_VALUE, 0, RegistryValueKind.String);
+            Registry.SetValue(REGISTRY_SECOND_KEY, REGISTY_SECOND_VALUE, REGISTY_STRING, RegistryValueKind.String);
+
+            return REGISTY_STRING;
         }
 
         private void CancelScreen()
         {
-            this.notifyIconViewModel.EnableCommands(true);
-            this.screenCapture.Canceled();
-            this.StopTask();
+            notifyIconViewModel.EnableCommands(true);
+            screenCapture.Canceled();
+            StopTask();
         }
 
         private void StopTask()
         {
-            if (this.captureScreenTask == null)
+            if (captureScreenTask == null)
                 return;
 
-            this.captureScreenTaskToken.Cancel();
+            captureScreenTaskToken.Cancel();
             try
             {
-                this.captureScreenTask.Wait();
+                captureScreenTask.Wait();
             }
             catch (Exception e)
             {
-                this.logger.Error(e.Message);
+                logger.Error(e.Message);
             }
             finally
             {
-                this.captureScreenTaskToken.Dispose();
-                this.captureScreenTaskToken = null;
-                this.captureScreenTask = null;
+                captureScreenTaskToken.Dispose();
+                captureScreenTaskToken = null;
+                captureScreenTask = null;
             }
         }
 
-        public ScreenshotData screenshotData;
         public void Capture()
         {
-            var date = DateTime.Now;
+            DateTime date = DateTime.Now;
             this.pressCounter++;
 
             // First press or bad time
             if (this.pressCounter <= 1 || (this.pressCounter > 1 && date > this.pressDateTime.AddMilliseconds(400)))
             {
-                this.screenshotData = new ScreenshotData();
-                screenshotData.start_date = date;
+                this.screenshotData = new ScreenshotData(this.UserId);
 
                 this.pressCounter = 1;
                 this.CancelScreen();
                 this.pressDateTime = DateTime.Now;
-
-                if (this.pressCounter <= 1)
-                {
-                    var worker = new BackgroundWorker();
-                    worker.DoWork += screenCapture.CaptureSimpleScreen;
-                    worker.RunWorkerAsync();
-                }
             }
 
-            // Second press
+                // Second press
             else if (this.pressCounter == 2)
             {
                 this.screenshotData.mode = 1;
-                this.screenshotData.second_press_delay = (int)(screenshotData.start_date - date).TotalMilliseconds;
+                this.screenshotData.second_press_date = DateTime.Now;
+                this.screenshotData.third_press_date = DateTime.MinValue;
 
                 this.pressDateTime = DateTime.Now;
-                this.CaptureRegion(screenshotData);
+                this.CaptureRegion(this.screenshotData);
             }
 
             // Third press
             if (this.pressCounter == 3)
             {
                 this.screenshotData.mode = 2;
-                screenshotData.third_press_delay = (int)(screenshotData.start_date - date).TotalMilliseconds;
+                this.screenshotData.third_press_date = DateTime.Now;
 
                 this.CancelScreen();
                 this.CaptureScreen(screenshotData);
@@ -137,64 +171,67 @@ namespace NoelPush.Models
 
         public void CaptureScreen(ScreenshotData data)
         {
-            this.screenCapture.CaptureScreen(data);
+            screenCapture.CaptureScreen(data);
         }
 
         public void CaptureRegion(ScreenshotData data)
         {
-            this.screenCapture.CaptureRegion(data);
+            screenCapture.CaptureRegion(data);
         }
 
         public void Captured(Bitmap img, ScreenshotData data)
         {
-            this.pressCounter = 0;
+            pressCounter = 0;
 
-            var pictureData = this.screenCapture.GetPictureSize(img);
+            PictureData pictureData = screenCapture.GetPictureSize(img);
 
             data.png_size = pictureData.sizePng;
-            data.jpg_size = pictureData.sizeJpeg;
+            data.jpeg_size = pictureData.sizeJpeg;
 
-            var smallBitmap = pictureData.GetSmallestPicture();
-            var format = pictureData.GetPictureType();
+            Bitmap smallBitmap = pictureData.GetSmallestPicture();
+            string format = pictureData.GetPictureType();
 
             // Disable buttons during uploading
-            this.notifyIconViewModel.EnableCommands(false);
+            notifyIconViewModel.EnableCommands(false);
 
-            if (this.noUpload)
+            if (noUpload)
                 new Uploader(this, format).Upload(img);
             else
-                new Uploader(this, format).Upload(img, ImageToByte(smallBitmap), data);
+            {
+                if (data.first_press_date != DateTime.MinValue)
+                    new Uploader(this, format).Upload(smallBitmap, ImageToByte(smallBitmap), data);
+                else
+                    new Uploader(this, format).Upload(smallBitmap, ImageToByte(smallBitmap), data);
+            }
         }
 
-        public void Uploaded(Bitmap img, string url)
+        public void Uploaded(Bitmap img, string url, ScreenshotData screenshotData)
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
+            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
 
-            this.notifyIconViewModel.EnableCommands(true);
-            this.notifyIconViewModel.ShowPopupUpload(img);
+            screenshotData.url = url;
+            Statistics.Send(screenshotData);
+
+            notifyIconViewModel.EnableCommands(true);
+            notifyIconViewModel.ShowPopupUpload(img);
         }
 
         public void Uploaded(Bitmap img)
         {
-            var pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NoelPush\\";
+            string pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NoelPush\\";
 
             if (!Directory.Exists(pathPictures))
             {
                 Directory.CreateDirectory(pathPictures);
             }
 
-            var filename = pathPictures + DateTime.Now.ToString("dd-mm-yyyy HHhmmmsss") + ".png";
+            string filename = pathPictures + DateTime.Now.ToString("dd-mm-yyyy HHhmmmsss") + ".png";
             img.Save(filename, ImageFormat.Png);
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
+            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
 
-            this.notifyIconViewModel.EnableCommands(true);
-            this.notifyIconViewModel.ShowPopupUpload(img);
-        }
-
-        public void Screened(Bitmap bmp)
-        {
-            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(bmp));
+            notifyIconViewModel.EnableCommands(true);
+            notifyIconViewModel.ShowPopupUpload(img);
         }
 
         private void ShowPopupFirstRun()
@@ -202,30 +239,31 @@ namespace NoelPush.Models
             // Task + Dispatcher because it doesn't want to start without.......
             Task.Factory.StartNew(() =>
                 Dispatcher.CurrentDispatcher.Invoke(() =>
-                    this.notifyIconViewModel.ShowPopupMessage()));
+                    notifyIconViewModel.ShowPopupMessage()));
         }
 
         internal void UploadFailed()
         {
-            this.notifyIconViewModel.ShowPopupUploadFailed();
+            notifyIconViewModel.ShowPopupUploadFailed();
         }
 
         private static byte[] ImageToByte(Bitmap img)
         {
-            return (byte[])new ImageConverter().ConvertTo(img, typeof(byte[]));
+            return (byte[]) new ImageConverter().ConvertTo(img, typeof (byte[]));
         }
 
         public string GenerateID()
         {
-            var rand = new Random().Next(99999, 999999999).ToString();
-            var inputBytes = Encoding.ASCII.GetBytes(rand);
-            var hash = MD5.Create().ComputeHash(inputBytes);
+            var random = new Random();
+            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            string password = string.Empty;
 
-            var id = new StringBuilder();
-            foreach (var t in hash)
-                id.Append(t.ToString("X2"));
+            for (int i = 0; i < 32; i++)
+            {
+                password += alphabet[random.Next(0, alphabet.Length) - 1];
+            }
 
-            return id.ToString();
+            return password;
         }
     }
 }

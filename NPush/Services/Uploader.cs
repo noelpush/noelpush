@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -37,22 +36,18 @@ namespace NoelPush.Services
             this.manager.Uploaded(bmp);
         }
 
-        public void Upload(Bitmap img, byte[] imgBytes, ScreenshotData data)
+        public void Upload(Bitmap img, byte[] imgBytes, ScreenshotData screenshotData)
         {
-            var ChronoUpload = new Stopwatch();
-            ChronoUpload.Start();
-            var url = this.UploadHttpWebRequest(img, imgBytes);
-            data.path = url;
-            ChronoUpload.Stop();
-            data.upload_delay = (int)ChronoUpload.ElapsedMilliseconds;
-
-            Statistics.Send(data);
+            this.UploadHttpWebRequest(img, imgBytes, screenshotData);
         }
 
-        private string UploadHttpWebRequest(Bitmap img, byte[] formBytes)
+        private void UploadHttpWebRequest(Bitmap img, byte[] formBytes, ScreenshotData screenshotData)
         {
             try
             {
+                var start_upload = new DateTime();
+                var stop_upload = new DateTime();
+
                 var reponse = "Upload failed";
 
                 var request = (HttpWebRequest) WebRequest.Create("http://www.noelshack.com/api.php");
@@ -66,6 +61,7 @@ namespace NoelPush.Services
                 request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
                 request.GetRequestStream().Close();
 
+                start_upload = DateTime.Now;
                 request.BeginGetResponse(r =>
                 {
                     try
@@ -73,6 +69,7 @@ namespace NoelPush.Services
                         var httpRequest = (HttpWebRequest) r.AsyncState;
                         var httpResponse = (HttpWebResponse) httpRequest.EndGetResponse(r);
                         reponse = new StreamReader(httpResponse.GetResponseStream()).ReadToEnd();
+                        stop_upload = DateTime.Now;
                     }
                     catch (Exception e)
                     {
@@ -81,17 +78,17 @@ namespace NoelPush.Services
                     }
                 }, request);
 
-                this.manager.Uploaded(img, this.CustomUrl(reponse));
 
-                return reponse;
+                screenshotData.start_upload = start_upload;
+                screenshotData.stop_upload = stop_upload;
+
+                this.manager.Uploaded(img, this.CustomUrl(reponse), screenshotData);
             }
             catch (WebException e)
             {
                 this.logger.Error(e.Message);
                 this.manager.UploadFailed();
             }
-
-            return string.Empty;
         }
 
         private string CustomUrl(string url)

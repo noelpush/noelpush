@@ -22,26 +22,5 @@ namespace NoelPush.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string uniqueID {
-            get {
-                return ((string)(this["uniqueID"]));
-            }
-            set {
-                this["uniqueID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1.0")]
-        public string version {
-            get {
-                return ((string)(this["version"]));
-            }
-        }
     }
 }

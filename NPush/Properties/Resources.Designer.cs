@@ -225,7 +225,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 2.2.
+        ///   Recherche une chaîne localisée semblable à 2.
         /// </summary>
         public static string Version {
             get {

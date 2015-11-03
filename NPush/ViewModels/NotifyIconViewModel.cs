@@ -81,20 +81,30 @@ namespace NoelPush.ViewModels
 
         public void CaptureRegion()
         {
-            var data = new ScreenshotData();
-            data.mode = 4;
+            var screenshotData = new ScreenshotData(this.manager.UserId)
+            {
+                mode = 1,
+                first_press_date = DateTime.MinValue,
+                second_press_date = DateTime.MinValue,
+                third_press_date = DateTime.MinValue
+            };
 
             if (this.CanScreen)
-                this.manager.CaptureRegion(data);
+                this.manager.CaptureRegion(screenshotData);
         }
 
         public void CaptureScreen()
         {
-            var data = new ScreenshotData();
-            data.mode = 3;
+            var screenshotData = new ScreenshotData(this.manager.UserId)
+            {
+                mode = 2,
+                first_press_date = DateTime.MinValue,
+                second_press_date = DateTime.MinValue,
+                third_press_date = DateTime.MinValue
+            };
 
             if (this.CanScreen)
-                this.manager.CaptureScreen(data);
+                this.manager.CaptureScreen(screenshotData);
         }
 
         public void Exit()

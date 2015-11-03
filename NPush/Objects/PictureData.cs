@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Windows;
 
 namespace NoelPush.Objects
 {
@@ -22,6 +21,9 @@ namespace NoelPush.Objects
 
         public Bitmap GetSmallestPicture()
         {
+            if (this.sizePng < 500000)
+                return this.bitmapPng;
+
             return this.sizeJpeg < this.sizePng ? this.bitmapJpeg : this.bitmapPng;
         }
 

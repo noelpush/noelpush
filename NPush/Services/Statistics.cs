@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using NLog;
 using NoelPush.Objects;
 
@@ -10,24 +12,37 @@ namespace NoelPush.Services
     {
         public static void Send(ScreenshotData screenData)
         {
-            // http://choco.ovh/npush/stats.php?path=&version=&mode=&png=&jpg=
+            var url = "http://stats.noelpush.com/upload";
 
-            var url = "http://choco.ovh/npush/stats.php?";
+            var values = new Dictionary<string, string>
+            {
+                { "uid", screenData.userId },
+                { "version", screenData.version },
+                { "url", screenData.url },
+                { "mode", screenData.mode.ToString(CultureInfo.InvariantCulture) },
+                { "png_filesize", screenData.png_size.ToString(CultureInfo.InvariantCulture) },
+                { "jpeg_filesize", screenData.jpeg_size.ToString(CultureInfo.InvariantCulture) },
+                { "width", screenData.img_size.Width.ToString(CultureInfo.InvariantCulture) },
+                { "height", screenData.img_size.Height.ToString(CultureInfo.InvariantCulture) },
+                { "upload_delay",  ((int)(screenData.stop_upload - screenData.start_upload).TotalMilliseconds).ToString(CultureInfo.InvariantCulture) },
+                { "total_delay",  ((int)(screenData.stop_upload - screenData.start_date).TotalMilliseconds).ToString(CultureInfo.InvariantCulture) },
+                { "second_press_delay", (screenData.second_press_date == DateTime.MinValue ? -1 : (int)(screenData.second_press_date - screenData.first_press_date).TotalMilliseconds).ToString(CultureInfo.InvariantCulture) },
+                { "third_press_delay", (screenData.third_press_date == DateTime.MinValue ? -1 : (int)(screenData.third_press_date - screenData.second_press_date).TotalMilliseconds).ToString(CultureInfo.InvariantCulture) },
+            };
 
-            url += "path=" + screenData.path;
-            url += "&version=" + screenData.version;
-            url += "&mode=" + screenData.mode;
-            url += "&png=" + screenData.png_size;
-            url += "&jpg=" + screenData.jpg_size;
-
-            SendRequest(url);
+            SendRequest(url, values);
         }
 
-        private static void SendRequest(string url)
+        private static async void SendRequest(string url, Dictionary<string, string> values)
         {
             try
             {
-                new HttpClient().GetStringAsync(url);
+                using (var client = new HttpClient())
+                {
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await client.PostAsync(url, content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                }
             }
             catch (Exception e)
             {
