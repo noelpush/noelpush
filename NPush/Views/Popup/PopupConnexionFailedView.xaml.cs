@@ -3,9 +3,9 @@ using NoelPush.ViewModels.Popup;
 
 namespace NoelPush.Views.Popup
 {
-    public partial class PopupUploadFailedView
+    public partial class PopupConnexionFailedView
     {
-        public PopupUploadFailedView()
+        public PopupConnexionFailedView()
         {
             this.InitializeComponent();
         }

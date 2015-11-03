@@ -20,6 +20,9 @@ namespace NoelPush.ViewModels
         public PopupUploadFailedView PopupUploadFailed { get; private set; }
         public PopupUploadFailedViewModel PopupUploadFailedDataContext { get; private set; }
 
+        public PopupConnexionFailedView PopupConnexionFailed { get; private set; }
+        public PopupConnexionFailedViewModel PopupConnexionFailedDataContext { get; private set; }
+
         public PopupFirstRunView PopupFirstRun { get; private set; }
         public PopupFirstRunViewModel PopupFirstRunDataContext { get; private set; }
 
@@ -35,6 +38,7 @@ namespace NoelPush.ViewModels
             this.PopupUploadDataContext = new PopupUploadViewModel();
             this.PopupFirstRunDataContext = new PopupFirstRunViewModel();
             this.PopupUploadFailedDataContext = new PopupUploadFailedViewModel();
+            this.PopupConnexionFailedDataContext = new PopupConnexionFailedViewModel();
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
             this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
@@ -67,6 +71,13 @@ namespace NoelPush.ViewModels
             this.PopupFirstRunDataContext.ShowPopup(delay);
             Thread.Sleep(delay);
             this.PopupFirstRunDataContext.HidePopup();
+        }
+
+        public void ShowPopupConnexionFailed(int delay = 4000)
+        {
+            this.PopupConnexionFailedDataContext.ShowPopup(delay);
+            Thread.Sleep(delay);
+            this.PopupConnexionFailedDataContext.HidePopup();
         }
 
         public void EnableCommands(bool enabled)

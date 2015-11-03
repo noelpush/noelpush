@@ -45,12 +45,14 @@ namespace NoelPush.Services
         {
             try
             {
+                bool error = false;
                 var start_upload = new DateTime();
                 var stop_upload = new DateTime();
 
                 var reponse = "Upload failed";
 
-                var request = (HttpWebRequest) WebRequest.Create("http://www.noelshack.com/api.php");
+                var request = (HttpWebRequest)WebRequest.Create("http://www.noelshack.com/api.php");
+                request.Timeout = (int)TimeSpan.FromSeconds(60).TotalMilliseconds;
                 request.ContentType = "multipart/form-data; boundary=" + boundary;
                 request.Method = "POST";
                 request.KeepAlive = true;
@@ -73,8 +75,10 @@ namespace NoelPush.Services
                     }
                     catch (Exception e)
                     {
+                        stop_upload = DateTime.Now;
                         this.logger.Error(e.Message);
                         reponse = e.Message;
+                        error = true;
                     }
                 }, request);
 
@@ -82,12 +86,12 @@ namespace NoelPush.Services
                 screenshotData.start_upload = start_upload;
                 screenshotData.stop_upload = stop_upload;
 
-                this.manager.Uploaded(img, this.CustomUrl(reponse), screenshotData);
+                this.manager.Uploaded(img, this.CustomUrl(reponse), screenshotData, error);
             }
             catch (WebException e)
             {
                 this.logger.Error(e.Message);
-                this.manager.UploadFailed();
+                this.manager.ConnexionFailed();
             }
         }
 

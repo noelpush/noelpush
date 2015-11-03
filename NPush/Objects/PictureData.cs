@@ -23,13 +23,21 @@ namespace NoelPush.Objects
         {
             if (this.sizePng < 500000)
                 return this.bitmapPng;
-
-            return this.sizeJpeg < this.sizePng ? this.bitmapJpeg : this.bitmapPng;
+            else if (this.sizeJpeg < this.sizePng)
+                return this.bitmapJpeg;
+            else 
+                return this.bitmapPng;
         }
 
         public string GetPictureType()
         {
-            return this.sizeJpeg < this.sizePng ? "jpeg" : "png";
+            if (this.sizePng < 500000)
+                return "png";
+
+            else if (this.sizeJpeg < this.sizePng)
+                return "jpeg";
+            else
+                return "png";
         }
     }
 }

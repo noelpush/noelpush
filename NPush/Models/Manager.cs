@@ -205,15 +205,21 @@ namespace NoelPush.Models
             }
         }
 
-        public void Uploaded(Bitmap img, string url, ScreenshotData screenshotData)
+        public void Uploaded(Bitmap img, string url, ScreenshotData screenshotData, bool error)
         {
-            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
+            if (!error)
+            {
+                Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
+                this.notifyIconViewModel.EnableCommands(true);
+                this.notifyIconViewModel.ShowPopupUpload(img);
+            }
+            else
+            {
+                this.UploadFailed();
+            }
 
             screenshotData.url = url;
             Statistics.Send(screenshotData);
-
-            notifyIconViewModel.EnableCommands(true);
-            notifyIconViewModel.ShowPopupUpload(img);
         }
 
         public void Uploaded(Bitmap img)
@@ -245,6 +251,11 @@ namespace NoelPush.Models
         internal void UploadFailed()
         {
             notifyIconViewModel.ShowPopupUploadFailed();
+        }
+
+        internal void ConnexionFailed()
+        {
+            notifyIconViewModel.ShowPopupConnexionFailed();
         }
 
         private static byte[] ImageToByte(Bitmap img)

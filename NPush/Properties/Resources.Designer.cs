@@ -153,6 +153,24 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Erreur durant l’envoi….
+        /// </summary>
+        public static string PopupConnexionFailed1 {
+            get {
+                return ResourceManager.GetString("PopupConnexionFailed1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Veuillez vérifier votre connexion internet..
+        /// </summary>
+        public static string PopupConnexionFailed2 {
+            get {
+                return ResourceManager.GetString("PopupConnexionFailed2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à NoelPush vient d’être installé !.
         /// </summary>
         public static string PopupFirstRun1 {
@@ -189,7 +207,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Erreur durant l&apos;upload !.
+        ///   Recherche une chaîne localisée semblable à Erreur durant l’envoi….
         /// </summary>
         public static string PopupUploadFailed1 {
             get {
@@ -198,7 +216,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Veuillez vérifier votre connexion internet..
+        ///   Recherche une chaîne localisée semblable à L’image était trop volumineuse..
         /// </summary>
         public static string PopupUploadFailed2 {
             get {
@@ -225,7 +243,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 2.
+        ///   Recherche une chaîne localisée semblable à 3.
         /// </summary>
         public static string Version {
             get {
