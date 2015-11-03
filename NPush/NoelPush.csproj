@@ -120,7 +120,6 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="Events\EnableCommandsEventHandler.cs" />
-    <Compile Include="Events\BalloonTipMessageEventHandler.cs" />
     <Compile Include="Objects\PictureData.cs" />
     <Compile Include="Objects\ViewModel\CommandViewModel.cs" />
     <Compile Include="Objects\ViewModel\IViewModel.cs" />
