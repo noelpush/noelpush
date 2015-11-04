@@ -22,6 +22,7 @@ namespace NoelPush.Views
             this.selectorForm = new SelectorForm
             {
                 ShowInTaskbar = false,
+                Size = new Size(1, 1),
                 WindowState =  FormWindowState.Normal,
                 FormBorderStyle = FormBorderStyle.None,
                 Left = area.Left,

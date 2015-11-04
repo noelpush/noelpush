@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -128,6 +129,7 @@
     <Compile Include="Objects\ViewModel\StringExtension.cs" />
     <Compile Include="Objects\ViewModel\ViewElement.cs" />
     <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Services\CUploader.cs" />
     <Compile Include="Services\Shortcuts.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
@@ -254,6 +256,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NoelPushC\NoelPushC.vcxproj">
+      <Project>{1372c52a-2ca6-4136-a111-746814e08457}</Project>
+      <Name>NoelPushC</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

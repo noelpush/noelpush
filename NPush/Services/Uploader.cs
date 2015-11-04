@@ -29,6 +29,7 @@ namespace NoelPush.Services
             this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
             this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
             this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + "." + format + "\"\r\nContent-Type: image/" + format + "\r\n\r\n");
+            var a = "Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + "." + format + "\"\r\nContent-Type: image/" + format;
         }
 
         public void Upload(Bitmap bmp)
@@ -39,6 +40,41 @@ namespace NoelPush.Services
         public void Upload(Bitmap img, byte[] imgBytes, ScreenshotData screenshotData)
         {
             this.UploadHttpWebRequest(img, imgBytes, screenshotData);
+            //this.UploadFile(@"C:\Users\choco\Pictures\png3.png");
+        }
+
+        bool UploadFile(string strFileName)
+        {
+            System.Net.CredentialCache MyCredentialCache;
+            MyCredentialCache = new System.Net.CredentialCache();
+            HttpWebResponse Response = null;
+            try
+            {
+                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("http://www.noelshack.com/api.php");
+                req.Timeout = -1;
+                req.Proxy = null;
+                req.Method = "POST";
+                req.AllowWriteStreamBuffering = true;
+                req.ContentType = "multipart/form-data; boundary=" + this.boundary;
+                Stream reqStream = req.GetRequestStream();
+                FileStream loFile = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
+                byte[] lcfile = new byte[loFile.Length];
+
+                reqStream.Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
+                reqStream.Write(this.headerBytes, 0, this.headerBytes.Length);
+                reqStream.Write(lcfile, 0, (int)loFile.Length);
+                reqStream.Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
+                reqStream.Close();
+                req.Credentials = MyCredentialCache;
+
+                Response = (HttpWebResponse)req.GetResponse();
+                Response.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                    return false;
+            } 
         }
 
         private void UploadHttpWebRequest(Bitmap img, byte[] formBytes, ScreenshotData screenshotData)
@@ -51,25 +87,30 @@ namespace NoelPush.Services
 
                 var reponse = "Upload failed";
 
+                ServicePointManager.DefaultConnectionLimit = int.MaxValue;
+
                 var request = (HttpWebRequest)WebRequest.Create("http://www.noelshack.com/api.php");
+                request.Proxy = null;
+                request.AllowWriteStreamBuffering = true;
                 request.Timeout = (int)TimeSpan.FromSeconds(60).TotalMilliseconds;
-                request.ContentType = "multipart/form-data; boundary=" + boundary;
+                request.ContentType = "multipart/form-data; boundary=" + this.boundary;
                 request.Method = "POST";
                 request.KeepAlive = true;
                 request.Credentials = CredentialCache.DefaultCredentials;
-                request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
-                request.GetRequestStream().Write(headerBytes, 0, headerBytes.Length);
+                request.GetRequestStream().Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
+                request.GetRequestStream().Write(this.headerBytes, 0, this.headerBytes.Length);
                 request.GetRequestStream().Write(formBytes, 0, formBytes.Length);
-                request.GetRequestStream().Write(boundaryBytes, 0, boundaryBytes.Length);
+                request.GetRequestStream().Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
                 request.GetRequestStream().Close();
 
                 start_upload = DateTime.Now;
+
                 request.BeginGetResponse(r =>
                 {
                     try
                     {
                         var httpRequest = (HttpWebRequest) r.AsyncState;
-                        var httpResponse = (HttpWebResponse) httpRequest.EndGetResponse(r);
+                        var httpResponse = (HttpWebResponse)httpRequest.EndGetResponse(r);
                         reponse = new StreamReader(httpResponse.GetResponseStream()).ReadToEnd();
                         stop_upload = DateTime.Now;
                     }

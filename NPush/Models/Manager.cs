@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -55,6 +56,13 @@ namespace NoelPush.Models
             {
                 ShowPopupFirstRun();
             }
+
+            this.TestCUpload();
+        }
+
+        public void TestCUpload()
+        {
+            new CUploader().Upload(new byte[] { 0x00 });
         }
 
         private string GetUserIdInRegistry()
