@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using NLog;
 using NoelPush.Models;
@@ -15,9 +17,6 @@ namespace NoelPush.Services
         private Manager manager;
 
         private string namePicture;
-        private string boundary;
-        private byte[] boundaryBytes;
-        private byte[] headerBytes;
 
         public Uploader(Manager manager, string format)
         {
@@ -25,11 +24,7 @@ namespace NoelPush.Services
 
             this.manager = manager;
 
-            this.namePicture = new Random().Next(0, 9999) .ToString("0000") + "-" + Properties.Resources.NamePicture;
-            this.boundary = "------WebKitFormBoundary" + DateTime.Now.Ticks.ToString("x");
-            this.boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
-            this.headerBytes = Encoding.UTF8.GetBytes("Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + "." + format + "\"\r\nContent-Type: image/" + format + "\r\n\r\n");
-            var a = "Content-Disposition: form-data; name=\"fichier\"; filename=\"" + this.namePicture + "." + format + "\"\r\nContent-Type: image/" + format;
+            this.namePicture = new Random().Next(0, 9999).ToString("0000") + "-" + Properties.Resources.NamePicture + "." + format;
         }
 
         public void Upload(Bitmap bmp)
@@ -39,100 +34,47 @@ namespace NoelPush.Services
 
         public void Upload(Bitmap img, byte[] imgBytes, ScreenshotData screenshotData)
         {
-            this.UploadHttpWebRequest(img, imgBytes, screenshotData);
-            //this.UploadFile(@"C:\Users\choco\Pictures\png3.png");
+            this.UploadHttpClient(img, imgBytes, screenshotData);
         }
 
-        bool UploadFile(string strFileName)
+        public static Int32 OnWriteData(Byte[] buf, Int32 size, Int32 nmemb, Object extraData)
         {
-            System.Net.CredentialCache MyCredentialCache;
-            MyCredentialCache = new System.Net.CredentialCache();
-            HttpWebResponse Response = null;
-            try
-            {
-                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("http://www.noelshack.com/api.php");
-                req.Timeout = -1;
-                req.Proxy = null;
-                req.Method = "POST";
-                req.AllowWriteStreamBuffering = true;
-                req.ContentType = "multipart/form-data; boundary=" + this.boundary;
-                Stream reqStream = req.GetRequestStream();
-                FileStream loFile = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
-                byte[] lcfile = new byte[loFile.Length];
-
-                reqStream.Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
-                reqStream.Write(this.headerBytes, 0, this.headerBytes.Length);
-                reqStream.Write(lcfile, 0, (int)loFile.Length);
-                reqStream.Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
-                reqStream.Close();
-                req.Credentials = MyCredentialCache;
-
-                Response = (HttpWebResponse)req.GetResponse();
-                Response.Close();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                    return false;
-            } 
+            Console.Write(Encoding.UTF8.GetString(buf));
+            return size * nmemb;
         }
 
-        private void UploadHttpWebRequest(Bitmap img, byte[] formBytes, ScreenshotData screenshotData)
+        private async void UploadHttpClient(Bitmap img, byte[] formBytes, ScreenshotData screenshotData)
         {
+            screenshotData.start_upload = DateTime.Now;
+
             try
             {
-                bool error = false;
-                var start_upload = new DateTime();
-                var stop_upload = new DateTime();
-
-                var reponse = "Upload failed";
-
-                ServicePointManager.DefaultConnectionLimit = int.MaxValue;
-
-                var request = (HttpWebRequest)WebRequest.Create("http://www.noelshack.com/api.php");
-                request.Proxy = null;
-                request.AllowWriteStreamBuffering = true;
-                request.Timeout = (int)TimeSpan.FromSeconds(60).TotalMilliseconds;
-                request.ContentType = "multipart/form-data; boundary=" + this.boundary;
-                request.Method = "POST";
-                request.KeepAlive = true;
-                request.Credentials = CredentialCache.DefaultCredentials;
-                request.GetRequestStream().Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
-                request.GetRequestStream().Write(this.headerBytes, 0, this.headerBytes.Length);
-                request.GetRequestStream().Write(formBytes, 0, formBytes.Length);
-                request.GetRequestStream().Write(this.boundaryBytes, 0, this.boundaryBytes.Length);
-                request.GetRequestStream().Close();
-
-                start_upload = DateTime.Now;
-
-                request.BeginGetResponse(r =>
+                using (var client = new HttpClient())
                 {
-                    try
+                    client.Timeout = TimeSpan.FromSeconds(60);
+
+                    using (var content = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
                     {
-                        var httpRequest = (HttpWebRequest) r.AsyncState;
-                        var httpResponse = (HttpWebResponse)httpRequest.EndGetResponse(r);
-                        reponse = new StreamReader(httpResponse.GetResponseStream()).ReadToEnd();
-                        stop_upload = DateTime.Now;
+                        content.Add(new StreamContent(new MemoryStream(formBytes)), "fichier", this.namePicture);
+
+                        using (var message = await client.PostAsync("http://www.noelshack.com/api.php", content))
+                        {
+                            var reponse = await message.Content.ReadAsStringAsync();
+
+                            screenshotData.stop_upload = DateTime.Now;
+                            this.manager.Uploaded(img, this.CustomUrl(reponse), screenshotData, false);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        stop_upload = DateTime.Now;
-                        this.logger.Error(e.Message);
-                        reponse = e.Message;
-                        error = true;
-                    }
-                }, request);
-
-
-                screenshotData.start_upload = start_upload;
-                screenshotData.stop_upload = stop_upload;
-
-                this.manager.Uploaded(img, this.CustomUrl(reponse), screenshotData, error);
+                }
             }
-            catch (WebException e)
+            catch (Exception e)
             {
                 this.logger.Error(e.Message);
-                this.manager.ConnexionFailed();
+
+                if (e.Message == "A task was canceled.")
+                    this.manager.UploadFailed();
+                else
+                    this.manager.ConnexionFailed();
             }
         }
 

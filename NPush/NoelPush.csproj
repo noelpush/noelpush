@@ -52,6 +52,27 @@
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DeltaCompressionDotNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
       <HintPath>..\packages\DeltaCompressionDotNet.1.0.0\lib\net45\DeltaCompressionDotNet.dll</HintPath>
@@ -129,7 +150,6 @@
     <Compile Include="Objects\ViewModel\StringExtension.cs" />
     <Compile Include="Objects\ViewModel\ViewElement.cs" />
     <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
-    <Compile Include="Services\CUploader.cs" />
     <Compile Include="Services\Shortcuts.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
@@ -147,8 +167,8 @@
     <Compile Include="Views\Popup\PopupConnexionFailedView.xaml.cs">
       <DependentUpon>PopupConnexionFailedView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Popup\PopupUploadViewFailed.xaml.cs">
-      <DependentUpon>PopupUploadViewFailed.xaml</DependentUpon>
+    <Compile Include="Views\Popup\PopupUploadFailedView.xaml.cs">
+      <DependentUpon>PopupUploadFailedView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Popup\PopupUploadView.xaml.cs">
       <DependentUpon>PopupUploadView.xaml</DependentUpon>
@@ -181,7 +201,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Popup\PopupUploadViewFailed.xaml">
+    <Page Include="Views\Popup\PopupUploadFailedView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -256,12 +276,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NoelPushC\NoelPushC.vcxproj">
-      <Project>{1372c52a-2ca6-4136-a111-746814e08457}</Project>
-      <Name>NoelPushC</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +13,6 @@ using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
-using Application = System.Windows.Application;
 
 namespace NoelPush.Models
 {
@@ -56,13 +53,6 @@ namespace NoelPush.Models
             {
                 ShowPopupFirstRun();
             }
-
-            this.TestCUpload();
-        }
-
-        public void TestCUpload()
-        {
-            new CUploader().Upload(new byte[] { 0x00 });
         }
 
         private string GetUserIdInRegistry()
@@ -217,7 +207,7 @@ namespace NoelPush.Models
         {
             if (!error)
             {
-                Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
+                System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
                 this.notifyIconViewModel.EnableCommands(true);
                 this.notifyIconViewModel.ShowPopupUpload(img);
             }
@@ -242,7 +232,7 @@ namespace NoelPush.Models
             string filename = pathPictures + DateTime.Now.ToString("dd-mm-yyyy HHhmmmsss") + ".png";
             img.Save(filename, ImageFormat.Png);
 
-            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
+            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
 
             notifyIconViewModel.EnableCommands(true);
             notifyIconViewModel.ShowPopupUpload(img);
@@ -258,6 +248,7 @@ namespace NoelPush.Models
 
         internal void UploadFailed()
         {
+            notifyIconViewModel.EnableCommands(true);
             notifyIconViewModel.ShowPopupUploadFailed();
         }
 
