@@ -177,30 +177,15 @@ namespace NoelPush.Models
             screenCapture.CaptureRegion(data);
         }
 
-        public void Captured(Bitmap img, ScreenshotData data)
+        public void Captured(Bitmap img, ScreenshotData screenshotData)
         {
-            pressCounter = 0;
+            this.pressCounter = 0;
 
-            PictureData pictureData = screenCapture.GetPictureSize(img);
+            this.notifyIconViewModel.EnableCommands(false);
 
-            data.png_size = pictureData.sizePng;
-            data.jpeg_size = pictureData.sizeJpeg;
+            var pictureData = new PictureData(img, screenshotData);
 
-            Bitmap smallBitmap = pictureData.GetSmallestPicture();
-            string format = pictureData.GetPictureType();
-
-            // Disable buttons during uploading
-            notifyIconViewModel.EnableCommands(false);
-
-            if (noUpload)
-                new Uploader(this, format).Upload(img);
-            else
-            {
-                if (data.first_press_date != DateTime.MinValue)
-                    new Uploader(this, format).Upload(smallBitmap, ImageToByte(smallBitmap), data);
-                else
-                    new Uploader(this, format).Upload(smallBitmap, ImageToByte(smallBitmap), data);
-            }
+            new Uploader(this).Upload(pictureData);
         }
 
         public void Uploaded(Bitmap img, string url, ScreenshotData screenshotData, bool error)
@@ -255,11 +240,6 @@ namespace NoelPush.Models
         internal void ConnexionFailed()
         {
             notifyIconViewModel.ShowPopupConnexionFailed();
-        }
-
-        private static byte[] ImageToByte(Bitmap img)
-        {
-            return (byte[]) new ImageConverter().ConvertTo(img, typeof (byte[]));
         }
 
         public string GenerateID()

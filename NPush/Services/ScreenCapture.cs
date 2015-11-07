@@ -55,57 +55,6 @@ namespace NoelPush.Services
                 Task.Factory.StartNew(() => manager.Captured(selection, screenshotData));
         }
 
-        public PictureData GetPictureSize(Bitmap img)
-        {
-            var pathFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\NoelPush\";
-            var fileName = DateTime.Now.ToString(@"yyyy-MM-dd-HH-mm-ss-");
-
-            var pathPng = pathFolder + fileName + ".png";
-            var pathJpeg = pathFolder + fileName + ".jpeg";
-
-            this.SaveImage(img, pathPng, pathJpeg);
-
-            var sizePng = (int)(new FileInfo(pathPng)).Length;
-            var sizeJpeg = (int)(new FileInfo(pathJpeg)).Length;
-
-            var bmpPng = LoadImage(pathPng);
-            var bmpJpeg = LoadImage(pathJpeg);
-
-            File.Delete(pathPng);
-            File.Delete(pathJpeg);
-
-            return new PictureData(bmpPng, bmpJpeg, sizePng, sizeJpeg);
-        }
-
-        private void SaveImage(Bitmap img, string pathPng, string pathJpeg)
-        {
-            // Png
-            img.Save(pathPng, ImageFormat.Png);
-
-            // Jpg
-            var jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
-            var myEncoder = Encoder.Quality;
-            var myEncoderParameters = new EncoderParameters(1);
-
-            var myEncoderParameter = new EncoderParameter(myEncoder, 90L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            img.Save(pathJpeg, jpgEncoder, myEncoderParameters);
-
-        }
-
-        private ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-            return codecs.FirstOrDefault(codec => codec.FormatID == format.Guid);
-        }
-
-        public static Bitmap LoadImage(string path)
-        {
-            var ms = new MemoryStream(File.ReadAllBytes(path)); // Don't use using!!
-            return new Bitmap(Image.FromStream(ms));
-        }
-
         private int Height
         {
             get { return SystemInformation.VirtualScreen.Height; }

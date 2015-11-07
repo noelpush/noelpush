@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using NLog;
@@ -16,25 +14,18 @@ namespace NoelPush.Services
         private readonly Logger logger;
         private Manager manager;
 
-        private string namePicture;
-
-        public Uploader(Manager manager, string format)
+        public Uploader(Manager manager)
         {
             this.logger = LogManager.GetCurrentClassLogger();
 
             this.manager = manager;
 
-            this.namePicture = new Random().Next(0, 9999).ToString("0000") + "-" + Properties.Resources.NamePicture + "." + format;
         }
 
-        public void Upload(Bitmap bmp)
+        public void Upload(PictureData pictureData)
         {
-            this.manager.Uploaded(bmp);
-        }
-
-        public void Upload(Bitmap img, byte[] imgBytes, ScreenshotData screenshotData)
-        {
-            this.UploadHttpClient(img, imgBytes, screenshotData);
+            var namePicture = new Random().Next(0, 9999).ToString("0000") + "-" + Properties.Resources.NamePicture + "." + pictureData.GetSmallestFormat();
+            this.UploadHttpClient(pictureData, namePicture);
         }
 
         public static Int32 OnWriteData(Byte[] buf, Int32 size, Int32 nmemb, Object extraData)
@@ -43,9 +34,9 @@ namespace NoelPush.Services
             return size * nmemb;
         }
 
-        private async void UploadHttpClient(Bitmap img, byte[] formBytes, ScreenshotData screenshotData)
+        private async void UploadHttpClient(PictureData pictureData, string namePicture)
         {
-            screenshotData.start_upload = DateTime.Now;
+            pictureData.screenshotData.start_upload = DateTime.Now;
 
             try
             {
@@ -55,14 +46,14 @@ namespace NoelPush.Services
 
                     using (var content = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
                     {
-                        content.Add(new StreamContent(new MemoryStream(formBytes)), "fichier", this.namePicture);
+                        content.Add(new StreamContent(new MemoryStream(pictureData.dataBytes)), "fichier", namePicture);
 
                         using (var message = await client.PostAsync("http://www.noelshack.com/api.php", content))
                         {
                             var reponse = await message.Content.ReadAsStringAsync();
 
-                            screenshotData.stop_upload = DateTime.Now;
-                            this.manager.Uploaded(img, this.CustomUrl(reponse), screenshotData, false);
+                            pictureData.screenshotData.stop_upload = DateTime.Now;
+                            this.manager.Uploaded(pictureData.picture, this.CustomUrl(reponse, namePicture), pictureData.screenshotData, false);
                         }
                     }
                 }
@@ -78,7 +69,7 @@ namespace NoelPush.Services
             }
         }
 
-        private string CustomUrl(string url)
+        private string CustomUrl(string url, string namePicture)
         {
             /* http://www.noelshack.com/2015-02-1420740001-noelpush.png
              * http://image.noelshack.com/fichiers/2015/02/1420740001-noelpush.png */
@@ -86,7 +77,7 @@ namespace NoelPush.Services
             url = url.Replace("www", "image");
             url = url.Replace(".com", ".com/fichiers");
             url = url.Replace("-", "/");
-            url = url.Replace("/" + this.namePicture.Replace("-", "/"), "-" + this.namePicture);
+            url = url.Replace("/" + namePicture.Replace("-", "/"), "-" + namePicture);
             return url;
         }
     }
