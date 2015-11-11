@@ -36,7 +36,7 @@ namespace NoelPush.Views
             this.NotifIcon = new NotifyIcon
             {
                 Icon = icon,
-                Text = Properties.Resources.SoftwareName + " β" + Properties.Resources.Version,
+                Text = Properties.Resources.SoftwareName,
                 ContextMenuStrip = this.NotifMenu
             };
 
