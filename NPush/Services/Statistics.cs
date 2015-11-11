@@ -36,7 +36,7 @@ namespace NoelPush.Services
 
         public static bool NewUpdate(string userId, string version)
         {
-            var url = "https://stats.noelpush.com/check_update";
+            var url = "https://www.noelpush.com/add_upload";
 
             var values = new Dictionary<string, string>
             {
