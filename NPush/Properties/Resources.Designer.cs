@@ -279,7 +279,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 1.
+        ///   Recherche une chaîne localisée semblable à 7.
         /// </summary>
         public static string Version {
             get {
