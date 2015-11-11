@@ -157,10 +157,10 @@
     <Compile Include="Services\Statistics.cs" />
     <Compile Include="Services\UpdatesManager.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
+    <Compile Include="ViewModels\Popup\PopupConnexionFailedViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupHistoriqueViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupUploadFailedViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupFirstRunViewModel.cs" />
-    <Compile Include="ViewModels\Popup\PopupConnexionFailedViewModel.cs" />
     <Compile Include="ViewModels\Popup\PopupUploadViewModel.cs" />
     <Compile Include="ViewModels\SelectorViewModel.cs" />
     <Compile Include="Views\Popup\PopupHistoriqueView.xaml.cs">
