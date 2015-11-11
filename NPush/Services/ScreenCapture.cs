@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
-
+using System.Windows.Media.Imaging;
 using NoelPush.Models;
 using NoelPush.Objects;
 using NoelPush.Views;
+using Size = System.Drawing.Size;
 
 
 namespace NoelPush.Services
@@ -45,14 +45,29 @@ namespace NoelPush.Services
                 return;
 
             screenshotData.img_size = rec;
-            var selection = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppArgb);
-            var screen = new Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
+
+            var screen = new Bitmap(this.Width, this.Height);
+            var selection = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);
 
             var g = Graphics.FromImage(selection);
                 g.CopyFromScreen(rec.Left + this.Left, rec.Top + this.Top, 0, 0, new Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
                 g.DrawImage(screen, 0, 0, rec, GraphicsUnit.Pixel);
 
-                Task.Factory.StartNew(() => manager.Captured(selection, screenshotData));
+            System.Windows.Application.Current.Dispatcher.Invoke(() => System.Windows.Clipboard.SetImage(CreateBitmapSourceFromBitmap(selection)));
+
+            Task.Factory.StartNew(() => manager.Captured(selection, screenshotData));
+        }
+
+        public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)
+        {
+            if (bitmap == null)
+                throw new ArgumentNullException("bitmap");
+
+            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                bitmap.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
         }
 
         private int Height

@@ -42,8 +42,7 @@ namespace NoelPush.Views
 
             this.ShowIcon();
 
-            this.DataContext = new NotifyIconViewModel();
-            (this.DataContext as NotifyIconViewModel).SubscribeToEvent(EnableCommands);
+            this.DataContext = new NotifyIconViewModel(EnableCommands);
         }
 
         public void ShowIcon()

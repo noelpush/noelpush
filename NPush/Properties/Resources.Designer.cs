@@ -79,6 +79,15 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à --file.
+        /// </summary>
+        public static string CommandFileName {
+            get {
+                return ResourceManager.GetString("CommandFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à --noup.
         /// </summary>
         public static string CommandLineNoUp {

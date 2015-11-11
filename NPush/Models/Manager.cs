@@ -3,9 +3,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using NLog;
@@ -13,20 +13,21 @@ using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
+using Clipboard = System.Windows.Forms.Clipboard;
 
 namespace NoelPush.Models
 {
     public class Manager
     {
         private readonly Logger logger;
-        private readonly bool noUpload;
+        private readonly bool CommandNoUpload;
+
         private readonly NotifyIconViewModel notifyIconViewModel;
         private readonly ScreenCapture screenCapture;
         private readonly UpdatesManager updatesManager;
 
         public string UserId { get; private set; }
         private Task captureScreenTask;
-        private CancellationTokenSource captureScreenTaskToken;
 
         private int pressCounter;
         private DateTime pressDateTime;
@@ -34,25 +35,28 @@ namespace NoelPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            logger = LogManager.GetCurrentClassLogger();
+            this.logger = LogManager.GetCurrentClassLogger();
 
             this.UserId = GetUserIdInRegistry();
 
-            screenCapture = new ScreenCapture(this);
-            updatesManager = new UpdatesManager();
+            this.screenCapture = new ScreenCapture(this);
             this.notifyIconViewModel = notifyIconViewModel;
 
             string[] args = Environment.GetCommandLineArgs();
-            noUpload = (args.Count() >= 2 && args[1] == Resources.CommandLineNoUp);
+            this.CommandNoUpload = (args.Count() >= 2 && args[1] == Resources.CommandLineNoUp);
 
             Shortcuts.OnKeyPress += Capture;
 
-            updatesManager.CheckUpdate();
+            this.updatesManager = new UpdatesManager();
+            this.updatesManager.CheckUpdate();
 
-            if (updatesManager.FirstRun)
+            if (this.updatesManager.FirstRun)
             {
-                ShowPopupFirstRun();
+                this.ShowPopupFirstRun();
             }
+
+            if ((args.Count() >= 2 && args[1] == Resources.CommandFileName && !string.IsNullOrEmpty(args[2])))
+                this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { start_date = DateTime.Now });
         }
 
         private string GetUserIdInRegistry()
@@ -104,29 +108,6 @@ namespace NoelPush.Models
         {
             notifyIconViewModel.EnableCommands(true);
             screenCapture.Canceled();
-            StopTask();
-        }
-
-        private void StopTask()
-        {
-            if (captureScreenTask == null)
-                return;
-
-            captureScreenTaskToken.Cancel();
-            try
-            {
-                captureScreenTask.Wait();
-            }
-            catch (Exception e)
-            {
-                logger.Error(e.Message);
-            }
-            finally
-            {
-                captureScreenTaskToken.Dispose();
-                captureScreenTaskToken = null;
-                captureScreenTask = null;
-            }
         }
 
         public void Capture()
@@ -169,22 +150,20 @@ namespace NoelPush.Models
 
         public void CaptureScreen(ScreenshotData data)
         {
-            screenCapture.CaptureScreen(data);
+            this.screenCapture.CaptureScreen(data);
         }
 
         public void CaptureRegion(ScreenshotData data)
         {
-            screenCapture.CaptureRegion(data);
+            this.screenCapture.CaptureRegion(data);
         }
 
         public void Captured(Bitmap img, ScreenshotData screenshotData)
         {
             this.pressCounter = 0;
-
             this.notifyIconViewModel.EnableCommands(false);
 
             var pictureData = new PictureData(img, screenshotData);
-
             new Uploader(this).Upload(pictureData);
         }
 

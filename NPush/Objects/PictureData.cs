@@ -71,7 +71,7 @@ namespace NoelPush.Objects
 
         public static Bitmap LoadImage(string path)
         {
-            var ms = new MemoryStream(File.ReadAllBytes(path)); // Don't use using!!
+            var ms = new MemoryStream(File.ReadAllBytes(path));
             return new Bitmap(Image.FromStream(ms));
         }
 

@@ -173,12 +173,15 @@
     <value>Veuillez vérifier votre connexion internet.</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="PopupUploadFailed1" xml:space="preserve">
     <value>Erreur durant l’envoi…</value>
   </data>
   <data name="PopupUploadFailed2" xml:space="preserve">
     <value>L’image était trop volumineuse.</value>
+  </data>
+  <data name="CommandFileName" xml:space="preserve">
+    <value>--file</value>
   </data>
 </root>

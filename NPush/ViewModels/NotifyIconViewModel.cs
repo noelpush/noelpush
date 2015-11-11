@@ -31,8 +31,10 @@ namespace NoelPush.ViewModels
         public event EnableCommandsEventHandler EnableCommandsEvent;
         public delegate void EnableCommandsEventHandler(bool enabled);
 
-        public NotifyIconViewModel()
+        public NotifyIconViewModel(EnableCommandsEventHandler eventHandler)
         {
+            this.EnableCommandsEvent += eventHandler;
+
             this.canScreen = true;
 
             this.PopupUploadDataContext = new PopupUploadViewModel();
@@ -45,11 +47,6 @@ namespace NoelPush.ViewModels
             this.PopupUploadFailed = new PopupUploadFailedView { DataContext = this.PopupUploadFailedDataContext };
 
             this.manager = new Manager(this);
-        }
-
-        public void SubscribeToEvent(EnableCommandsEventHandler eventHandler)
-        {
-            this.EnableCommandsEvent += eventHandler;
         }
 
         public void ShowPopupUpload(Bitmap img, int delay = 3000)
