@@ -49,18 +49,19 @@
                                     FontWeight="Bold"
                                     FontSize="17"
                                     Padding="0 6 0 0"
-                                    Margin="15 0 0 0" />
+                                    Margin="15 0 0 0" 
+                                    HorizontalAlignment="Left" />
 
                                 <TextBlock
                                     Grid.Row="1"
-                                    Grid.Column="1"
                                     Foreground="Black"
                                     Style="{x:Null}"
                                     Text="{x:Static properties:Resources.PopupUploadFailed2}"
                                     FontFamily="Calibri"
                                     FontSize="14.5"
                                     Padding="0 2 0 0"
-                                    Margin="15 0 0 0" />
+                                    Margin="15 0 0 0" 
+                                    HorizontalAlignment="Left" />
 
                             </Grid>
                         </Border>

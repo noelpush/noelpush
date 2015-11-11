@@ -46,6 +46,7 @@
                                     FontFamily="Calibri"
                                     FontWeight="DemiBold"
                                     FontSize="16"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="10 0 0 0" />
 
@@ -60,6 +61,7 @@
                                     FontFamily="Calibri"
                                     FontWeight="Normal"
                                     FontSize="14"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
                                     Margin="10 2 0 0" />
 

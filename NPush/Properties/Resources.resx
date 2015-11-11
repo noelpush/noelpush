@@ -184,4 +184,13 @@
   <data name="CommandFileName" xml:space="preserve">
     <value>--file</value>
   </data>
+  <data name="Historique" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="PopupHistorique1" xml:space="preserve">
+    <value>Lien de l’historique copié dans le presse-papier !</value>
+  </data>
+  <data name="PopupHistorique2" xml:space="preserve">
+    <value>Ouvrez-le dans votre navigateur préféré.</value>
+  </data>
 </root>

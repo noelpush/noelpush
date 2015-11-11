@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Windows.Threading;
 using NoelPush.ViewModels;
 
 namespace NoelPush.Views
@@ -10,7 +11,7 @@ namespace NoelPush.Views
     internal partial class NotifyIconView
     {
         private readonly NotifyIcon NotifIcon;
-        private ContextMenuStrip NotifMenu;
+        private readonly ContextMenuStrip NotifMenu;
 
         private bool IsOpen;
 
@@ -25,6 +26,7 @@ namespace NoelPush.Views
             this.NotifMenu.Items.Add(Properties.Resources.ScreenInProgress, null, this.ScreenInProgressAction);
             this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegionAction);
             this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreenAction);
+            this.NotifMenu.Items.Add(Properties.Resources.Historique, null, this.HistoriqueAction);
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.ExitAction);
 
             this.NotifMenu.Items[0].Visible = false;
@@ -43,6 +45,15 @@ namespace NoelPush.Views
             this.ShowIcon();
 
             this.DataContext = new NotifyIconViewModel(EnableCommands);
+        }
+
+        private void HistoriqueAction(object sender, EventArgs e)
+        {
+            var notifyIconViewModel = this.DataContext as NotifyIconViewModel;
+            if (notifyIconViewModel != null)
+            {
+                notifyIconViewModel.Historique();
+            }
         }
 
         public void ShowIcon()
@@ -120,14 +131,15 @@ namespace NoelPush.Views
 
         public void SetEnable(bool enabled)
         {
-            this.NotifIcon.ContextMenuStrip.Items[1].Enabled = enabled;
-            this.NotifIcon.ContextMenuStrip.Items[2].Enabled = enabled;
-
             // Show/Hide the upload info
             this.NotifMenu.Items[0].Visible = !enabled;
 
+            // Enable/Disable the capture buttons
+            this.NotifIcon.ContextMenuStrip.Items[1].Enabled = enabled;
+            this.NotifIcon.ContextMenuStrip.Items[2].Enabled = enabled;
+
             // Rename exit button
-            this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNoelPush;
+            this.NotifIcon.ContextMenuStrip.Items[4].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNoelPush;
         }
     }
 }

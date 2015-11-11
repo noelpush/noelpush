@@ -171,7 +171,7 @@ namespace NoelPush.Models
         {
             if (!error)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
+                Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(url));
                 this.notifyIconViewModel.EnableCommands(true);
                 this.notifyIconViewModel.ShowPopupUpload(img);
             }
@@ -184,6 +184,7 @@ namespace NoelPush.Models
             Statistics.Send(screenshotData);
         }
 
+        // Old method (--noup command line)
         public void Uploaded(Bitmap img)
         {
             string pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NoelPush\\";
@@ -196,7 +197,7 @@ namespace NoelPush.Models
             string filename = pathPictures + DateTime.Now.ToString("dd-mm-yyyy HHhmmmsss") + ".png";
             img.Save(filename, ImageFormat.Png);
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
+            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
 
             notifyIconViewModel.EnableCommands(true);
             notifyIconViewModel.ShowPopupUpload(img);

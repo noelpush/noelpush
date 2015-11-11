@@ -31,11 +31,6 @@ namespace NoelPush.ViewModels
             this.IsOpen.Value = false;
         }
 
-        public void HidePopup()
-        {
-            this.IsOpen.Value = false;
-        }
-
         private void UpdatePosition()
         {
             var height = Screen.PrimaryScreen.Bounds.Height - this.Height;

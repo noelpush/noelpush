@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
+using System.Windows.Threading;
 using NoelPush.Models;
 using NoelPush.Objects;
 using NoelPush.ViewModels.Popup;
@@ -13,6 +17,7 @@ namespace NoelPush.ViewModels
         private readonly bool canScreen;
 
         private readonly Manager manager;
+        private Timer timerHistorique;
 
         public PopupUploadView PopupUpload { get; private set; }
         public PopupUploadViewModel PopupUploadDataContext { get; private set; }
@@ -25,6 +30,9 @@ namespace NoelPush.ViewModels
 
         public PopupFirstRunView PopupFirstRun { get; private set; }
         public PopupFirstRunViewModel PopupFirstRunDataContext { get; private set; }
+
+        public PopupHistoriqueView PopupHistorique { get; private set; }
+        public PopupHistoriqueViewModel PopupHistoriqueDataContext { get; private set; }
 
         public delegate void TooltipMessageEventHandler(Bitmap img);
 
@@ -39,12 +47,15 @@ namespace NoelPush.ViewModels
 
             this.PopupUploadDataContext = new PopupUploadViewModel();
             this.PopupFirstRunDataContext = new PopupFirstRunViewModel();
+            this.PopupHistoriqueDataContext = new PopupHistoriqueViewModel();
             this.PopupUploadFailedDataContext = new PopupUploadFailedViewModel();
             this.PopupConnexionFailedDataContext = new PopupConnexionFailedViewModel();
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
             this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
+            this.PopupHistorique = new PopupHistoriqueView { DataContext = this.PopupHistoriqueDataContext };
             this.PopupUploadFailed = new PopupUploadFailedView { DataContext = this.PopupUploadFailedDataContext };
+            this.PopupConnexionFailed = new PopupConnexionFailedView { DataContext = this.PopupConnexionFailedDataContext };
 
             this.manager = new Manager(this);
         }
@@ -52,29 +63,26 @@ namespace NoelPush.ViewModels
         public void ShowPopupUpload(Bitmap img, int delay = 3000)
         {
             this.PopupUploadDataContext.ShowPopup(img, delay);
-            Thread.Sleep(delay);
-            this.PopupUploadDataContext.HidePopup();
         }
 
         public void ShowPopupUploadFailed(int delay = 3000)
         {
             this.PopupUploadFailedDataContext.ShowPopup(delay);
-            Thread.Sleep(delay);
-            this.PopupUploadFailedDataContext.HidePopup();
         }
 
         public void ShowPopupMessage(int delay = 11000)
         {
             this.PopupFirstRunDataContext.ShowPopup(delay);
-            Thread.Sleep(delay);
-            this.PopupFirstRunDataContext.HidePopup();
+        }
+
+        public void ShowPopupHistorique(int delay = 5000)
+        {
+            this.PopupHistoriqueDataContext.ShowPopup(delay);
         }
 
         public void ShowPopupConnexionFailed(int delay = 4000)
         {
             this.PopupConnexionFailedDataContext.ShowPopup(delay);
-            Thread.Sleep(delay);
-            this.PopupConnexionFailedDataContext.HidePopup();
         }
 
         public void EnableCommands(bool enabled)
@@ -85,6 +93,46 @@ namespace NoelPush.ViewModels
         private bool CanScreen
         {
             get { return this.canScreen; }
+        }
+
+        public void Historique()
+        {
+            var id = this.manager.UserId;
+
+            if (id.Length != 32)
+                return;
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    var urlToken = "http://www.noelpush.com/generate_login_token?uid=" + id;
+                    var token = client.GetStringAsync(urlToken);
+
+                    var urlHistorique = "https://www.noelpush.com/login?token=" + token.Result;
+                    Dispatcher.CurrentDispatcher.Invoke(() => Clipboard.SetText(urlHistorique));
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+
+                this.timerHistorique = new Timer();
+                this.timerHistorique.Interval = TimeSpan.FromMinutes(1).TotalMilliseconds;
+                this.timerHistorique.Elapsed += this.HistoriqueTimeElapsed;
+                this.timerHistorique.Enabled = true;
+            }
+
+            // Task + Dispatcher because it doesn't want without
+            Task.Factory.StartNew(() => Dispatcher.CurrentDispatcher.Invoke(() => this.ShowPopupHistorique()));
+        }
+
+        private void HistoriqueTimeElapsed(object sender, ElapsedEventArgs e)
+        {
+            const string link = "https://www.noelpush.com/login";
+
+            if (Clipboard.GetText().Contains(link))
+                Clipboard.SetText(string.Empty);
         }
 
         public void CaptureRegion()

@@ -115,6 +115,15 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Historique.
+        /// </summary>
+        public static string Historique {
+            get {
+                return ResourceManager.GetString("Historique", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
         public static System.Drawing.Icon icon {
@@ -194,6 +203,24 @@ namespace NoelPush.Properties {
         public static string PopupFirstRun2 {
             get {
                 return ResourceManager.GetString("PopupFirstRun2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Lien de l’historique copié dans le presse-papier !.
+        /// </summary>
+        public static string PopupHistorique1 {
+            get {
+                return ResourceManager.GetString("PopupHistorique1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Ouvrez-le dans votre navigateur préféré..
+        /// </summary>
+        public static string PopupHistorique2 {
+            get {
+                return ResourceManager.GetString("PopupHistorique2", resourceCulture);
             }
         }
         

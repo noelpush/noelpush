@@ -60,7 +60,8 @@
                                     FontWeight="Bold"
                                     FontSize="17"
                                     Padding="0 6 0 0"
-                                    Margin="0 0 0 0" />
+                                    Margin="0 0 0 0" 
+                                    HorizontalAlignment="Left" />
 
                                 <TextBlock
                                     Grid.Row="1"
@@ -71,7 +72,8 @@
                                     FontFamily="Calibri"
                                     FontSize="14.5"
                                     Padding="0 2 0 0"
-                                    Margin="0 0 0 0" />
+                                    Margin="0 0 0 0" 
+                                    HorizontalAlignment="Left" />
                             </Grid>
                         </Border>
                     </Grid>
