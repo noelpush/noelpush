@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using NLog;
@@ -13,7 +12,6 @@ using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
-using Clipboard = System.Windows.Forms.Clipboard;
 
 namespace NoelPush.Models
 {
@@ -27,6 +25,7 @@ namespace NoelPush.Models
         private readonly UpdatesManager updatesManager;
 
         public string UserId { get; private set; }
+        public string Version { get; private set; }
         private Task captureScreenTask;
 
         private int pressCounter;
@@ -38,6 +37,7 @@ namespace NoelPush.Models
             this.logger = LogManager.GetCurrentClassLogger();
 
             this.UserId = GetUserIdInRegistry();
+            this.Version = Resources.Version;
 
             this.screenCapture = new ScreenCapture(this);
             this.notifyIconViewModel = notifyIconViewModel;
@@ -47,7 +47,7 @@ namespace NoelPush.Models
 
             Shortcuts.OnKeyPress += Capture;
 
-            this.updatesManager = new UpdatesManager();
+            this.updatesManager = new UpdatesManager(this.UserId, this.Version);
             this.updatesManager.CheckUpdate();
 
             if (this.updatesManager.FirstRun)
@@ -181,7 +181,7 @@ namespace NoelPush.Models
             }
 
             screenshotData.url = url;
-            Statistics.Send(screenshotData);
+            Statistics.StatUpload(screenshotData);
         }
 
         // Old method (--noup command line)

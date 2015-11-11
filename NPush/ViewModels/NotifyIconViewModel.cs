@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Threading;
+using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
 using NoelPush.ViewModels.Popup;
@@ -14,6 +16,8 @@ namespace NoelPush.ViewModels
 {
     public class NotifyIconViewModel
     {
+        private Logger logger;
+
         private readonly bool canScreen;
 
         private readonly Manager manager;
@@ -41,6 +45,8 @@ namespace NoelPush.ViewModels
 
         public NotifyIconViewModel(EnableCommandsEventHandler eventHandler)
         {
+            this.logger = LogManager.GetCurrentClassLogger();
+
             this.EnableCommandsEvent += eventHandler;
 
             this.canScreen = true;
@@ -95,7 +101,7 @@ namespace NoelPush.ViewModels
             get { return this.canScreen; }
         }
 
-        public void Historique()
+        public async void Historique()
         {
             var id = this.manager.UserId;
 
@@ -104,18 +110,30 @@ namespace NoelPush.ViewModels
 
             using (var client = new HttpClient())
             {
+                string token = string.Empty;
+
                 try
                 {
-                    var urlToken = "http://www.noelpush.com/generate_login_token?uid=" + id;
-                    var token = client.GetStringAsync(urlToken);
+                    var values = new Dictionary<string, string> { { "uid", id } };
+                    var content = new FormUrlEncodedContent(values);
 
-                    var urlHistorique = "https://www.noelpush.com/login?token=" + token.Result;
-                    Dispatcher.CurrentDispatcher.Invoke(() => Clipboard.SetText(urlHistorique));
+                    var answer = await client.PostAsync("https://www.noelpush.com/generate_login_token?", content);
+                    token = await answer.Content.ReadAsStringAsync();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    this.logger.Error(e.Message);
                     return;
                 }
+
+                if (token.Length != 32)
+                    return;
+
+                var urlHistorique = "https://www.noelpush.com/login?token=" + token;
+                Dispatcher.CurrentDispatcher.Invoke(() => Clipboard.SetText(urlHistorique));
+
+                if (this.timerHistorique != null)
+                    this.timerHistorique.Dispose();
 
                 this.timerHistorique = new Timer();
                 this.timerHistorique.Interval = TimeSpan.FromMinutes(1).TotalMilliseconds;
@@ -131,8 +149,13 @@ namespace NoelPush.ViewModels
         {
             const string link = "https://www.noelpush.com/login";
 
-            if (Clipboard.GetText().Contains(link))
-                Clipboard.SetText(string.Empty);
+            Application.Current.Dispatcher.Invoke(() => {
+
+                if (Clipboard.GetText().Contains(link))
+                    Clipboard.SetText(string.Empty);
+            });
+
+            this.timerHistorique.Dispose();
         }
 
         public void CaptureRegion()

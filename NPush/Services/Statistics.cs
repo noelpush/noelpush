@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using NLog;
 using NoelPush.Objects;
+using System.Net.Http;
 
 namespace NoelPush.Services
 {
-    using System.Net.Http;
 
     static class Statistics
     {
-        public static void Send(ScreenshotData screenData)
+        public static void StatUpload(ScreenshotData screenData)
         {
-            var url = "http://stats.noelpush.com/upload";
+            var url = "https://stats.noelpush.com/upload";
 
             var values = new Dictionary<string, string>
             {
@@ -33,7 +34,21 @@ namespace NoelPush.Services
             SendRequest(url, values);
         }
 
-        private static async void SendRequest(string url, Dictionary<string, string> values)
+        public static bool NewUpdate(string userId, string version)
+        {
+            var url = "https://stats.noelpush.com/check_update";
+
+            var values = new Dictionary<string, string>
+            {
+                { "uid", userId },
+                { "version", version }
+            };
+
+            var answer = SendRequest(url, values);
+            return answer.Result == "1";
+        }
+
+        private static async Task<string> SendRequest(string url, Dictionary<string, string> values)
         {
             try
             {
@@ -41,13 +56,15 @@ namespace NoelPush.Services
                 {
                     var content = new FormUrlEncodedContent(values);
                     var response = await client.PostAsync(url, content);
-                    var responseString = await response.Content.ReadAsStringAsync();
+                    return await response.Content.ReadAsStringAsync();
                 }
             }
             catch (Exception e)
             {
                 LogManager.GetCurrentClassLogger().Error(e.Message);
             }
+
+            return string.Empty;
         }
     }
 }

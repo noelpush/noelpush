@@ -17,7 +17,7 @@ namespace NoelPush
 
             try
             {
-                using (var mgr = new UpdateManager(@"http://releases.noelpush.com/", "NoelPush"))
+                using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
                         onInitialInstall: v => this.InstallEvent(mgr),

@@ -8,14 +8,20 @@ using Squirrel;
 
 namespace NoelPush.Services
 {
-    class UpdatesManager
+    public class UpdatesManager
     {
         private readonly Timer timerUpdates;
         private readonly Logger logger;
         public bool FirstRun;
 
-        public UpdatesManager()
+        private readonly string UserId;
+        private readonly string Version;
+
+        public UpdatesManager(string userId, string version)
         {
+            this.UserId = userId;
+            this.Version = version;
+            
             this.FirstRun = false;
             this.logger = LogManager.GetCurrentClassLogger();
 
@@ -27,9 +33,9 @@ namespace NoelPush.Services
 
         public async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
         {
-            try 
+            try
             {
-                using (var mgr = new UpdateManager(@"http://releases.noelpush.com/", "NoelPush"))
+                using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
                           onFirstRun: () => this.FirstRun = true);

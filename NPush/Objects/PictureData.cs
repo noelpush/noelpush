@@ -12,9 +12,6 @@ namespace NoelPush.Objects
         public Bitmap picture { get; private set; }
         public ScreenshotData screenshotData { get; private set; }
 
-        public int sizePng { get; private set; }
-        public int sizeJpeg { get; private set; }
-
         public PictureData(Bitmap img, ScreenshotData screenshotData)
         {
             this.picture = img;
@@ -77,7 +74,7 @@ namespace NoelPush.Objects
 
         public string GetSmallestPicture(string pathPng, string pathJpeg)
         {
-            if (this.sizePng < 500000 || this.sizePng <= this.sizeJpeg)
+            if (this.screenshotData.png_size < 500000 || this.screenshotData.png_size <= this.screenshotData.jpeg_size)
                 return pathPng;
 
             return pathJpeg;
@@ -85,21 +82,10 @@ namespace NoelPush.Objects
 
         public string GetSmallestFormat()
         {
-            if (this.sizePng < 500000 || this.sizePng <= this.sizeJpeg)
+            if (this.screenshotData.png_size < 500000 || this.screenshotData.png_size <= this.screenshotData.jpeg_size)
                 return "png";
 
             return "jpeg";
-        }
-
-        public string GetPictureType()
-        {
-            if (this.sizePng < 500000)
-                return "png";
-
-            else if (this.sizeJpeg < this.sizePng)
-                return "jpeg";
-            else
-                return "png";
         }
     }
 }

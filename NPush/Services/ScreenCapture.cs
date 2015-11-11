@@ -8,7 +8,6 @@ using System.Windows.Media.Imaging;
 using NoelPush.Models;
 using NoelPush.Objects;
 using NoelPush.Views;
-using Size = System.Drawing.Size;
 
 
 namespace NoelPush.Services
@@ -50,7 +49,7 @@ namespace NoelPush.Services
             var selection = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);
 
             var g = Graphics.FromImage(selection);
-                g.CopyFromScreen(rec.Left + this.Left, rec.Top + this.Top, 0, 0, new Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
+                g.CopyFromScreen(rec.Left + this.Left, rec.Top + this.Top, 0, 0, new System.Drawing.Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
                 g.DrawImage(screen, 0, 0, rec, GraphicsUnit.Pixel);
 
             System.Windows.Application.Current.Dispatcher.Invoke(() => System.Windows.Clipboard.SetImage(CreateBitmapSourceFromBitmap(selection)));
