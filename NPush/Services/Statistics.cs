@@ -8,7 +8,6 @@ using System.Net.Http;
 
 namespace NoelPush.Services
 {
-
     static class Statistics
     {
         public static void StatUpload(ScreenshotData screenData)
@@ -41,9 +40,10 @@ namespace NoelPush.Services
             var values = new Dictionary<string, string>
             {
                 { "uid", userId },
-                { "version", version }
+                { "current_version", version }
             };
 
+            return true;
             var answer = SendRequest(url, values);
             return answer.Result == "1";
         }

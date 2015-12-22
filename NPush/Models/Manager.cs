@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Microsoft.Win32;
-using NLog;
 using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
@@ -17,15 +15,15 @@ namespace NoelPush.Models
 {
     public class Manager
     {
-        private readonly Logger logger;
         private readonly bool CommandNoUpload;
+
+        public string UserId { get; private set; }
+        public string Version { get; private set; }
 
         private readonly NotifyIconViewModel notifyIconViewModel;
         private readonly ScreenCapture screenCapture;
         private readonly UpdatesManager updatesManager;
 
-        public string UserId { get; private set; }
-        public string Version { get; private set; }
         private Task captureScreenTask;
 
         private int pressCounter;
@@ -34,9 +32,6 @@ namespace NoelPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            this.logger = LogManager.GetCurrentClassLogger();
-
-            this.UserId = GetUserIdInRegistry();
             this.Version = Resources.Version;
 
             this.screenCapture = new ScreenCapture(this);
@@ -47,7 +42,8 @@ namespace NoelPush.Models
 
             Shortcuts.OnKeyPress += Capture;
 
-            this.updatesManager = new UpdatesManager(this.UserId, this.Version);
+            var userId = Registry.GetUserIdInRegistry();
+            this.updatesManager = new UpdatesManager(userId, Resources.Version);
             this.updatesManager.CheckUpdate();
 
             if (this.updatesManager.FirstRun)
@@ -57,51 +53,6 @@ namespace NoelPush.Models
 
             if ((args.Count() >= 2 && args[1] == Resources.CommandFileName && !string.IsNullOrEmpty(args[2])))
                 this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { start_date = DateTime.Now });
-        }
-
-        private string GetUserIdInRegistry()
-        {
-            const string REGISTRY_KEY = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
-            const string REGISTY_VALUE = "ID";
-
-            try
-            {
-                var Key = Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0) as string;
-                if (Key != null)
-                {
-                    return Key;
-                }
-                else
-                {
-                    return this.WriteUserIdInRegistry();
-                }
-            }
-            catch (Exception e)
-            {
-                logger.Error(e.Message);
-            }
-
-            return "Undefined";
-        }
-
-
-        private string WriteUserIdInRegistry()
-        {
-            const string REGISTRY_FIRST_KEY = @"HKEY_CURRENT_USER\SOFTWARE\";
-            string REGISTY_FIRST_VALUE = "NoelPush";
-
-            const string REGISTRY_SECOND_KEY = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
-            string REGISTY_SECOND_VALUE = "ID";
-
-            string REGISTY_STRING = GenerateID();
-
-            if (Convert.ToInt32(Registry.GetValue(REGISTRY_FIRST_KEY, REGISTY_FIRST_VALUE, 0)) != 0)
-                return "Undefined";
-
-            Registry.SetValue(REGISTRY_FIRST_KEY, REGISTY_FIRST_VALUE, 0, RegistryValueKind.String);
-            Registry.SetValue(REGISTRY_SECOND_KEY, REGISTY_SECOND_VALUE, REGISTY_STRING, RegistryValueKind.String);
-
-            return REGISTY_STRING;
         }
 
         private void CancelScreen()

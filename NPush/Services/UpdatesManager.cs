@@ -56,6 +56,8 @@ namespace NoelPush.Services
                     }
                     mgr.Dispose();
                 }
+
+                Statistics.NewUpdate(this.UserId, this.Version);
             }
             catch (Exception e)
             {

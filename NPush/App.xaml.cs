@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows;
 using NLog;
+using NoelPush.Services;
 using Squirrel;
 
 namespace NoelPush
@@ -13,6 +14,11 @@ namespace NoelPush
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (!IsSingleInstance())
+            {
+                Environment.Exit(1);
+            }
+
             this.logger = LogManager.GetCurrentClassLogger();
 
             try
@@ -30,12 +36,12 @@ namespace NoelPush
                 this.logger.Error(ex.Message);
             }
 
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            var userId = Registry.GetUserIdInRegistry();
+            var version = NoelPush.Properties.Resources.Version;
 
-            if (!IsSingleInstance())
-            {
-                Environment.Exit(1);
-            }
+            Statistics.NewUpdate(userId, version);
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.OnStartup(e);
         }
