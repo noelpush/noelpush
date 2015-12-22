@@ -123,6 +123,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
@@ -179,6 +180,12 @@
     </Compile>
     <Compile Include="Views\SelectorView.xaml.cs">
       <DependentUpon>SelectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tools\CursorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Tools\CursorForm.Designer.cs">
+      <DependentUpon>CursorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Tools\SelectorForm.cs">
       <SubType>Form</SubType>
@@ -240,6 +247,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Tools\CursorForm.resx">
+      <DependentUpon>CursorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Tools\SelectorForm.resx">
       <DependentUpon>SelectorForm.cs</DependentUpon>

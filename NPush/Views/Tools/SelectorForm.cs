@@ -12,10 +12,26 @@ namespace NoelPush.Views.Tools
         private readonly Pen pen = new Pen(Color.FromArgb(100, 100, 100), 1);
         private readonly SolidBrush brush = new SolidBrush(Color.FromArgb(150, 255, 255, 255));
 
+        private Label LabelX;
+        private Label LabelY;
+        
         public SelectorForm()
         {
             this.DoubleBuffered = true;
             this.Paint += OnPaint;
+
+            this.LabelX = new Label();
+            this.LabelX.ForeColor = Color.Black;
+            this.LabelX.BackColor = Color.Transparent;
+            this.LabelX.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+
+            this.LabelY = new Label();
+            this.LabelY.ForeColor = Color.Black;
+            this.LabelY.BackColor = Color.Transparent;
+            this.LabelY.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+
+            this.Controls.Add(this.LabelX);
+            this.Controls.Add(this.LabelY);
         }
 
         internal void Initialize()
@@ -52,6 +68,15 @@ namespace NoelPush.Views.Tools
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
+        }
+
+        public void UpdateCursor(int x, int y)
+        {
+            this.LabelX.Text = x.ToString();
+            this.LabelX.Location = new Point(x + 10, y + 20);
+
+            this.LabelY.Text = y.ToString();
+            this.LabelY.Location = new Point(x + 10, y);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace NoelPush.Views
         private ScreenshotData data;
         public ScreenCapture ScreenCapture;
         public SelectorForm selectorForm;
+        public CursorForm cursorForm;
 
         public SelectorView(ScreenCapture screenCapture, Rectangle area)
         {
@@ -69,6 +70,8 @@ namespace NoelPush.Views
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            //this.selectorForm.UpdateCursor(e.X, e.Y);
+
             if (e.Button != MouseButtons.Left) return;
 
             this.selectorForm.End = new Point(e.X, e.Y);
