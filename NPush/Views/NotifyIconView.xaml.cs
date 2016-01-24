@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using NoelPush.ViewModels;
 
 namespace NoelPush.Views
@@ -29,6 +27,7 @@ namespace NoelPush.Views
             this.NotifMenu.Items.Add(Properties.Resources.Historique, null, this.HistoriqueAction);
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.ExitAction);
 
+            //this.NotifMenu.Items[1].Image = Bitmap.FromFile(@"");
             this.NotifMenu.Items[0].Visible = false;
             this.NotifMenu.Items[0].Enabled = false;
             this.NotifMenu.Items[0].Font = new Font(this.NotifMenu.Items[0].Font.FontFamily, this.NotifMenu.Items[0].Font.Size, System.Drawing.FontStyle.Bold);
