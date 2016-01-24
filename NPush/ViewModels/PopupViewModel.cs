@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Drawing;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 using NoelPush.Objects.ViewModel;
@@ -12,14 +13,16 @@ namespace NoelPush.ViewModels
 
         public ViewElement<bool> IsOpen { get; private set; }
         public ViewElement<Rect> Position { get; private set; }
+        public ViewElement<Bitmap> Picture { get; private set; }
 
-        public PopupViewModel()
+        public PopupViewModel(int width, int height)
         {
-            this.Height = 132;
-            this.Width = 128;
+            this.Height = height;
+            this.Width = width;
 
             this.Position = new ViewElement<Rect>();
             this.IsOpen = new ViewElement<bool> { Value = false };
+            this.Picture = new ViewElement<Bitmap>();
         }
 
         public virtual void ShowPopup(int delay = 3000)
@@ -29,6 +32,12 @@ namespace NoelPush.ViewModels
             this.IsOpen.Value = true;
             Thread.Sleep(delay);
             this.IsOpen.Value = false;
+        }
+
+        public void ShowPopup(int delay, Bitmap img)
+        {
+            this.Picture.Value = img;
+            this.ShowPopup(delay);
         }
 
         private void UpdatePosition()

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using NoelPush.ViewModels.Popup;
+using NoelPush.ViewModels;
 
 namespace NoelPush.Views.Popup
 {
@@ -12,7 +12,7 @@ namespace NoelPush.Views.Popup
 
         private void PopupView_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var dataContext = this.DataContext as PopupConnexionFailedViewModel;
+            var dataContext = this.DataContext as PopupViewModel;
 
             if (dataContext != null)
                 dataContext.IsOpen.Value = false;

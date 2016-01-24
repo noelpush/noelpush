@@ -9,7 +9,6 @@ using System.Windows.Threading;
 using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
-using NoelPush.ViewModels.Popup;
 using NoelPush.Views.Popup;
 
 namespace NoelPush.ViewModels
@@ -24,19 +23,19 @@ namespace NoelPush.ViewModels
         private Timer timerHistorique;
 
         public PopupUploadView PopupUpload { get; private set; }
-        public PopupUploadViewModel PopupUploadDataContext { get; private set; }
+        public PopupViewModel PopupUploadDataContext { get; private set; }
 
         public PopupUploadFailedView PopupUploadFailed { get; private set; }
-        public PopupUploadFailedViewModel PopupUploadFailedDataContext { get; private set; }
+        public PopupViewModel PopupUploadFailedDataContext { get; private set; }
 
         public PopupConnexionFailedView PopupConnexionFailed { get; private set; }
-        public PopupConnexionFailedViewModel PopupConnexionFailedDataContext { get; private set; }
+        public PopupViewModel PopupConnexionFailedDataContext { get; private set; }
 
         public PopupFirstRunView PopupFirstRun { get; private set; }
-        public PopupFirstRunViewModel PopupFirstRunDataContext { get; private set; }
+        public PopupViewModel PopupFirstRunDataContext { get; private set; }
 
         public PopupHistoriqueView PopupHistorique { get; private set; }
-        public PopupHistoriqueViewModel PopupHistoriqueDataContext { get; private set; }
+        public PopupViewModel PopupHistoriqueDataContext { get; private set; }
 
         public delegate void TooltipMessageEventHandler(Bitmap img);
 
@@ -51,11 +50,11 @@ namespace NoelPush.ViewModels
 
             this.canScreen = true;
 
-            this.PopupUploadDataContext = new PopupUploadViewModel();
-            this.PopupFirstRunDataContext = new PopupFirstRunViewModel();
-            this.PopupHistoriqueDataContext = new PopupHistoriqueViewModel();
-            this.PopupUploadFailedDataContext = new PopupUploadFailedViewModel();
-            this.PopupConnexionFailedDataContext = new PopupConnexionFailedViewModel();
+            this.PopupUploadDataContext = new PopupViewModel(323, 118);
+            this.PopupFirstRunDataContext = new PopupViewModel(323, 138);
+            this.PopupHistoriqueDataContext = new PopupViewModel(323, 118);
+            this.PopupUploadFailedDataContext = new PopupViewModel(323, 118);
+            this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118);
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
             this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
@@ -68,7 +67,7 @@ namespace NoelPush.ViewModels
 
         public void ShowPopupUpload(Bitmap img, int delay = 3000)
         {
-            this.PopupUploadDataContext.ShowPopup(img, delay);
+            this.PopupUploadDataContext.ShowPopup(delay, img);
         }
 
         public void ShowPopupUploadFailed(int delay = 3000)
