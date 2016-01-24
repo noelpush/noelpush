@@ -2,9 +2,7 @@
 using System.Windows.Forms;
 using NoelPush.Objects;
 using NoelPush.Services;
-using NoelPush.ViewModels;
 using NoelPush.Views.Tools;
-using Point = System.Drawing.Point;
 
 namespace NoelPush.Views
 {
@@ -18,7 +16,6 @@ namespace NoelPush.Views
 
         public SelectorView(ScreenCapture screenCapture, Rectangle area)
         {
-            this.DataContext = new SelectorViewModel();
             this.ScreenCapture = screenCapture;
 
             this.selectorForm = new SelectorForm
@@ -52,7 +49,7 @@ namespace NoelPush.Views
             this.upload = upload;
             this.data = data;
             this.selectorForm.Initialize();
-            this.selectorForm.ShowDialog();
+            this.selectorForm.Show();
         }
 
         internal void Hiding()

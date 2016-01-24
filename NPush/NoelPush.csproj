@@ -158,7 +158,6 @@
     <Compile Include="Services\Statistics.cs" />
     <Compile Include="Services\UpdatesManager.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
-    <Compile Include="ViewModels\SelectorViewModel.cs" />
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">
       <DependentUpon>PopupFirstRunView.xaml</DependentUpon>
     </Compile>
