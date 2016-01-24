@@ -32,7 +32,7 @@
             <Border>
                 <StackPanel Width="305" Height="80">
                     <Grid Margin="5 15 0 0">
-                        <Border CornerRadius="5" Background="White">
+                        <Border CornerRadius="4" Background="#282828">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="27" />
@@ -53,7 +53,7 @@
                                 <TextBlock
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Foreground="Black"
+                                    Foreground="#EEEEEE"
                                     Style="{x:Null}"
                                     Text="{x:Static properties:Resources.PopupUpload1}"
                                     FontFamily="Calibri"
@@ -66,7 +66,7 @@
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="1"
-                                    Foreground="Black"
+                                    Foreground="#EEEEEE"
                                     Style="{x:Null}"
                                     Text="{x:Static properties:Resources.PopupUpload2}"
                                     FontFamily="Calibri"
