@@ -28,6 +28,9 @@ namespace NoelPush.ViewModels
         public PopupUploadFailedView PopupUploadFailed { get; private set; }
         public PopupViewModel PopupUploadFailedDataContext { get; private set; }
 
+        public PopupPictureTooLargeView PopupPictureTooLarge { get; private set; }
+        public PopupViewModel PopupPictureTooLargeDataContext { get; private set; }
+
         public PopupConnexionFailedView PopupConnexionFailed { get; private set; }
         public PopupViewModel PopupConnexionFailedDataContext { get; private set; }
 
@@ -54,6 +57,7 @@ namespace NoelPush.ViewModels
             this.PopupFirstRunDataContext = new PopupViewModel(323, 138);
             this.PopupHistoriqueDataContext = new PopupViewModel(323, 118);
             this.PopupUploadFailedDataContext = new PopupViewModel(323, 118);
+            this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 118);
             this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118);
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
@@ -61,6 +65,7 @@ namespace NoelPush.ViewModels
             this.PopupHistorique = new PopupHistoriqueView { DataContext = this.PopupHistoriqueDataContext };
             this.PopupUploadFailed = new PopupUploadFailedView { DataContext = this.PopupUploadFailedDataContext };
             this.PopupConnexionFailed = new PopupConnexionFailedView { DataContext = this.PopupConnexionFailedDataContext };
+            this.PopupPictureTooLarge = new PopupPictureTooLargeView() { DataContext = this.PopupPictureTooLargeDataContext };
 
             this.manager = new Manager(this);
         }
@@ -73,6 +78,11 @@ namespace NoelPush.ViewModels
         public void ShowPopupUploadFailed(int delay = 3000)
         {
             this.PopupUploadFailedDataContext.ShowPopup(delay);
+        }
+
+        public void ShowPopupPictureTooLarge(int delay = 3000)
+        {
+            this.PopupPictureTooLargeDataContext.ShowPopup(delay);
         }
 
         public void ShowPopupMessage(int delay = 11000)

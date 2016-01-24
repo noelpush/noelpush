@@ -168,6 +168,12 @@ namespace NoelPush.Models
             notifyIconViewModel.ShowPopupUploadFailed();
         }
 
+        internal void UploadPictureTooLarge()
+        {
+            notifyIconViewModel.EnableCommands(true);
+            notifyIconViewModel.ShowPopupPictureTooLarge();
+        }
+
         internal void ConnexionFailed()
         {
             notifyIconViewModel.ShowPopupConnexionFailed();

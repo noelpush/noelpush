@@ -68,7 +68,7 @@ namespace NoelPush.Services
                 this.logger.Error(e.Message);
 
                 if (e.Message == "A task was canceled.")
-                    this.manager.UploadFailed();
+                    this.manager.UploadPictureTooLarge();
                 else
                     this.manager.ConnexionFailed();
             }

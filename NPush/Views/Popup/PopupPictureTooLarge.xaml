@@ -1,0 +1,74 @@
+﻿<Popup x:Class="NoelPush.Views.Popup.PopupPictureTooLargeView"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+       xmlns:converters="clr-namespace:NoelPush.Converters"
+       xmlns:properties="clr-namespace:NoelPush.Properties"
+       mc:Ignorable="d"
+       d:DesignHeight="300" 
+       d:DesignWidth="300"
+       x:Name="Popup"
+       AllowsTransparency="True"
+       PopupAnimation="Fade"
+       Margin="0"
+       Width="320"
+       Height="80"
+       Placement="Absolute"
+       IsEnabled="True"
+       MouseDown="PopupView_OnMouseDown"
+       PlacementRectangle="{Binding Position.Value}"
+       IsOpen="{Binding IsOpen.Value}">
+
+    <Popup.Resources>
+        <converters:BitmapToImageSourceConverter x:Key="BitmapToImageSourceConverter" />
+    </Popup.Resources>
+
+    <Border>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="15" Direction="235" ShadowDepth="2" Opacity=".3" Color="Black" />
+        </Border.Effect>
+        <Grid>
+            <Border>
+                <StackPanel Width="305" Height="80">
+                    <Grid Margin="5 15 0 0">
+                        <Border CornerRadius="4" Background="#282828">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27" />
+                                    <RowDefinition Height="26" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Foreground="#EEEEEE"
+                                    Style="{x:Null}"
+                                    Text="{x:Static properties:Resources.PopupPictureTooLarge1}"
+                                    FontFamily="Calibri"
+                                    FontWeight="Bold"
+                                    FontSize="17"
+                                    Padding="0 6 0 0"
+                                    Margin="15 0 0 0" 
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Foreground="#EEEEEE"
+                                    Style="{x:Null}"
+                                    Text="{x:Static properties:Resources.PopupPictureTooLarge2}"
+                                    FontFamily="Calibri"
+                                    FontSize="14.5"
+                                    Padding="0 2 0 0"
+                                    Margin="15 0 0 0" 
+                                    HorizontalAlignment="Left" />
+
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Popup>

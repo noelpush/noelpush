@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace NoelPush.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
     /// </summary>
@@ -222,6 +225,24 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Erreur durant l’envoi….
+        /// </summary>
+        public static string PopupPictureTooLarge1 {
+            get {
+                return ResourceManager.GetString("PopupPictureTooLarge1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à L’image était trop volumineuse..
+        /// </summary>
+        public static string PopupPictureTooLarge2 {
+            get {
+                return ResourceManager.GetString("PopupPictureTooLarge2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Image envoyée !.
         /// </summary>
         public static string PopupUpload1 {
@@ -249,7 +270,7 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à L’image était trop volumineuse..
+        ///   Recherche une chaîne localisée semblable à L&apos;image n&apos;a pas pu être envoyée..
         /// </summary>
         public static string PopupUploadFailed2 {
             get {

@@ -168,6 +168,9 @@
     <Compile Include="Views\Popup\PopupConnexionFailedView.xaml.cs">
       <DependentUpon>PopupConnexionFailedView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Popup\PopupPictureTooLarge.xaml.cs">
+      <DependentUpon>PopupPictureTooLarge.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Popup\PopupUploadFailedView.xaml.cs">
       <DependentUpon>PopupUploadFailedView.xaml</DependentUpon>
     </Compile>
@@ -209,6 +212,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Popup\PopupConnexionFailedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Popup\PopupPictureTooLarge.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
