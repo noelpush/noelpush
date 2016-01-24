@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
@@ -20,7 +23,6 @@ namespace NoelPush.ViewModels
         private readonly bool canScreen;
 
         private readonly Manager manager;
-        private Timer timerHistorique;
 
         public PopupUploadView PopupUpload { get; private set; }
         public PopupViewModel PopupUploadDataContext { get; private set; }
@@ -37,9 +39,6 @@ namespace NoelPush.ViewModels
         public PopupFirstRunView PopupFirstRun { get; private set; }
         public PopupViewModel PopupFirstRunDataContext { get; private set; }
 
-        public PopupHistoriqueView PopupHistorique { get; private set; }
-        public PopupViewModel PopupHistoriqueDataContext { get; private set; }
-
         public delegate void TooltipMessageEventHandler(Bitmap img);
 
         public event EnableCommandsEventHandler EnableCommandsEvent;
@@ -55,17 +54,15 @@ namespace NoelPush.ViewModels
 
             this.PopupUploadDataContext = new PopupViewModel(323, 118);
             this.PopupFirstRunDataContext = new PopupViewModel(323, 138);
-            this.PopupHistoriqueDataContext = new PopupViewModel(323, 118);
             this.PopupUploadFailedDataContext = new PopupViewModel(323, 118);
             this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 118);
             this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118);
 
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
             this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
-            this.PopupHistorique = new PopupHistoriqueView { DataContext = this.PopupHistoriqueDataContext };
             this.PopupUploadFailed = new PopupUploadFailedView { DataContext = this.PopupUploadFailedDataContext };
             this.PopupConnexionFailed = new PopupConnexionFailedView { DataContext = this.PopupConnexionFailedDataContext };
-            this.PopupPictureTooLarge = new PopupPictureTooLargeView() { DataContext = this.PopupPictureTooLargeDataContext };
+            this.PopupPictureTooLarge = new PopupPictureTooLargeView { DataContext = this.PopupPictureTooLargeDataContext };
 
             this.manager = new Manager(this);
         }
@@ -88,11 +85,6 @@ namespace NoelPush.ViewModels
         public void ShowPopupMessage(int delay = 11000)
         {
             this.PopupFirstRunDataContext.ShowPopup(delay);
-        }
-
-        public void ShowPopupHistorique(int delay = 5000)
-        {
-            this.PopupHistoriqueDataContext.ShowPopup(delay);
         }
 
         public void ShowPopupConnexionFailed(int delay = 4000)
@@ -139,32 +131,43 @@ namespace NoelPush.ViewModels
                     return;
 
                 var urlHistorique = "https://www.noelpush.com/login?token=" + token;
-                Dispatcher.CurrentDispatcher.Invoke(() => Clipboard.SetText(urlHistorique));
-
-                if (this.timerHistorique != null)
-                    this.timerHistorique.Dispose();
-
-                this.timerHistorique = new Timer();
-                this.timerHistorique.Interval = TimeSpan.FromMinutes(1).TotalMilliseconds;
-                this.timerHistorique.Elapsed += this.HistoriqueTimeElapsed;
-                this.timerHistorique.Enabled = true;
+                this.OpenInBrowser(urlHistorique);
             }
-
-            // Task + Dispatcher because it doesn't want without
-            Task.Factory.StartNew(() => Dispatcher.CurrentDispatcher.Invoke(() => this.ShowPopupHistorique()));
         }
 
-        private void HistoriqueTimeElapsed(object sender, ElapsedEventArgs e)
+        private void OpenInBrowser(string url)
         {
-            const string link = "https://www.noelpush.com/login";
+            // Open in a navigator if the process is launched
 
-            Application.Current.Dispatcher.Invoke(() => {
+            var processList = Process.GetProcesses();
+            var browsers1 = new[] { "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
 
-                if (Clipboard.GetText().Contains(link))
-                    Clipboard.SetText(string.Empty);
-            });
+            for (var i = 0; i < browsers1.Count(); i++)
+            {
+                if (processList.Any(proc => proc.ProcessName == browsers1[i]))
+                {
+                    Process.Start(browsers1[i], url);
+                    return;
+                }
+            }
 
-            this.timerHistorique.Dispose();
+            // Else check if a navigator is pinned in taskbar
+            var taskbar = Directory.GetFiles(@"C:\Users\choco\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar");
+
+            var browsers2 = new[] { "google chrome", "chromium", "firefox", "edge", "internet explorer", "opera", "safari" };
+            var browsers3 = new[] { "chrome", "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
+
+            for (var i = 0; i < browsers2.Count(); i++)
+            {
+                if (taskbar.Any(t => t.ToLower().Contains(browsers2[i] + ".lnk")))
+                {
+                    Process.Start(browsers3[i], url);
+                    return;
+                }
+            }
+
+            // Else open with the default navigator
+            Process.Start(url);
         }
 
         public void CaptureRegion()

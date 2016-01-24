@@ -159,9 +159,6 @@
     <Compile Include="Services\UpdatesManager.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="ViewModels\SelectorViewModel.cs" />
-    <Compile Include="Views\Popup\PopupHistoriqueView.xaml.cs">
-      <DependentUpon>PopupHistoriqueView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">
       <DependentUpon>PopupFirstRunView.xaml</DependentUpon>
     </Compile>
@@ -203,10 +200,6 @@
       <DependentUpon>NotifyIconView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Popup\PopupHistoriqueView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\Popup\PopupFirstRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

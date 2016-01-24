@@ -33,7 +33,7 @@ namespace NoelPush.Services
             return size * nmemb;
         }
 
-        private async void UploadHttpClient(PictureData pictureData, string namePicture)
+        private async void UploadHttpClient(PictureData pictureData, string namePicture, bool retry = true)
         {
             pictureData.screenshotData.start_upload = DateTime.Now;
 
@@ -53,7 +53,11 @@ namespace NoelPush.Services
 
                             if (!reponse.Contains("http://www.noelshack.com"))
                             {
-                                this.manager.UploadFailed();
+                                if (retry)
+                                    this.UploadHttpClient(pictureData, namePicture, false);
+                                else
+                                    this.manager.UploadFailed();
+
                                 return;
                             }
 
