@@ -74,7 +74,7 @@ namespace NoelPush.Objects
 
         public string GetSmallestPicture(string pathPng, string pathJpeg)
         {
-            if (this.screenshotData.png_size < 500000 || this.screenshotData.png_size <= this.screenshotData.jpeg_size)
+            if (this.screenshotData.png_size <= this.screenshotData.jpeg_size)
                 return pathPng;
 
             return pathJpeg;
@@ -82,7 +82,7 @@ namespace NoelPush.Objects
 
         public string GetSmallestFormat()
         {
-            if (this.screenshotData.png_size < 500000 || this.screenshotData.png_size <= this.screenshotData.jpeg_size)
+            if (this.screenshotData.png_size <= this.screenshotData.jpeg_size)
                 return "png";
 
             return "jpeg";
