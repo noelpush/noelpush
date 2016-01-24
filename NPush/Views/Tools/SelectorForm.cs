@@ -61,8 +61,8 @@ namespace NoelPush.Views.Tools
             return new Rectangle(
                 Math.Min(this.Start.X, this.End.X),
                 Math.Min(this.Start.Y, this.End.Y),
-                Math.Abs(this.End.X - this.Start.X),
-                Math.Abs(this.End.Y - this.Start.Y)
+                Math.Abs(this.End.X - this.Start.X) + 1,
+                Math.Abs(this.End.Y - this.Start.Y) + 1
             );
         }
 
