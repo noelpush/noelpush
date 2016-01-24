@@ -199,4 +199,10 @@
   <data name="PopupPictureTooLarge2" xml:space="preserve">
     <value>L’image était trop volumineuse.</value>
   </data>
+  <data name="PopupCopy1" xml:space="preserve">
+    <value>Image copiée !</value>
+  </data>
+  <data name="PopupCopy2" xml:space="preserve">
+    <value>Image copiée dans le presse-papier.</value>
+  </data>
 </root>

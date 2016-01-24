@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using NoelPush.Objects;
 using NoelPush.Properties;
@@ -52,7 +53,7 @@ namespace NoelPush.Models
             }
 
             if ((args.Count() >= 2 && args[1] == Resources.CommandFileName && !string.IsNullOrEmpty(args[2])))
-                this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { start_date = DateTime.Now });
+                this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { start_date = DateTime.Now }, true);
         }
 
         private void CancelScreen()
@@ -61,7 +62,7 @@ namespace NoelPush.Models
             screenCapture.Canceled();
         }
 
-        public void Capture()
+        public void Capture(bool upload = true)
         {
             DateTime date = DateTime.Now;
             this.pressCounter++;
@@ -84,7 +85,7 @@ namespace NoelPush.Models
                 this.screenshotData.third_press_date = DateTime.MinValue;
 
                 this.pressDateTime = DateTime.Now;
-                this.CaptureRegion(this.screenshotData);
+                this.CaptureRegion(this.screenshotData, upload);
             }
 
             // Third press
@@ -94,28 +95,36 @@ namespace NoelPush.Models
                 this.screenshotData.third_press_date = DateTime.Now;
 
                 this.CancelScreen();
-                this.CaptureScreen(screenshotData);
+                this.CaptureScreen(screenshotData, upload);
                 this.pressCounter = 0;
             }
         }
 
-        public void CaptureScreen(ScreenshotData data)
+        public void CaptureScreen(ScreenshotData data, bool upload = true)
         {
-            this.screenCapture.CaptureScreen(data);
+            this.screenCapture.CaptureScreen(data, upload);
         }
 
-        public void CaptureRegion(ScreenshotData data)
+        public void CaptureRegion(ScreenshotData data, bool upload = true)
         {
-            this.screenCapture.CaptureRegion(data);
+            this.screenCapture.CaptureRegion(data, upload);
         }
 
-        public void Captured(Bitmap img, ScreenshotData screenshotData)
+        public void Captured(Bitmap img, ScreenshotData screenshotData, bool upload)
         {
             this.pressCounter = 0;
-            this.notifyIconViewModel.EnableCommands(false);
 
-            var pictureData = new PictureData(img, screenshotData);
-            new Uploader(this).Upload(pictureData);
+            if (upload)
+            {
+                this.notifyIconViewModel.EnableCommands(false);
+                var pictureData = new PictureData(img, screenshotData);
+                new Uploader(this).Upload(pictureData);
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() => Clipboard.SetImage(CreateBitmapSourceFromBitmap(img)));
+                this.notifyIconViewModel.ShowPopupCopy(img);
+            }
         }
 
         public void Uploaded(Bitmap img, string url, ScreenshotData screenshotData, bool error)
@@ -133,6 +142,18 @@ namespace NoelPush.Models
 
             screenshotData.url = url;
             Statistics.StatUpload(screenshotData);
+        }
+
+        public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)
+        {
+            if (bitmap == null)
+                throw new ArgumentNullException("bitmap");
+
+            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                bitmap.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
         }
 
         // Old method (--noup command line)

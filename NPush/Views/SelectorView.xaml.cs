@@ -10,6 +10,7 @@ namespace NoelPush.Views
 {
     internal partial class SelectorView
     {
+        private bool upload;
         private ScreenshotData data;
         public ScreenCapture ScreenCapture;
         public SelectorForm selectorForm;
@@ -46,11 +47,12 @@ namespace NoelPush.Views
             this.InitializeComponent();
         }
 
-        public void Showing(ScreenshotData data)
+        public void Showing(ScreenshotData data, bool upload)
         {
+            this.upload = upload;
             this.data = data;
             this.selectorForm.Initialize();
-            this.selectorForm.Show();
+            this.selectorForm.ShowDialog();
         }
 
         internal void Hiding()
@@ -83,7 +85,7 @@ namespace NoelPush.Views
             if (e.Button != MouseButtons.Left) return;
 
             this.Hiding();
-            this.ScreenCapture.BuildImg(this.selectorForm.getRectangle(), this.data);
+            this.ScreenCapture.BuildImg(this.selectorForm.getRectangle(), this.data, this.upload);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)

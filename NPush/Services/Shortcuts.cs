@@ -13,8 +13,7 @@ namespace NoelPush.Services
         private static readonly LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
 
-        public delegate void KeyPressHandler();
-
+        public delegate void KeyPressHandler(bool shift);
         public static event KeyPressHandler OnKeyPress;
 
         static Shortcuts()
@@ -36,12 +35,17 @@ namespace NoelPush.Services
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if ((nCode >= 0) && (wParam == (IntPtr) WM_KEYDOWN) && ((Keys)Marshal.ReadInt32(lParam) == Keys.PrintScreen))
+            if ((nCode >= 0) && (wParam == (IntPtr)WM_KEYDOWN) && ((Keys)Marshal.ReadInt32(lParam) == Keys.PrintScreen))
             {
-                OnKeyPress();
+                var shift = (GetKeyState((int)Keys.RShiftKey) < 0 || GetKeyState((int)Keys.LShiftKey) < 0);
+                OnKeyPress(!shift);
             }
+
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
+
+        [DllImport("user32.dll")]
+        private static extern short GetKeyState(int keyId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook,

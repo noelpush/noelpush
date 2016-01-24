@@ -189,6 +189,24 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Image copiée !.
+        /// </summary>
+        public static string PopupCopy1 {
+            get {
+                return ResourceManager.GetString("PopupCopy1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Image copiée dans le presse-papier..
+        /// </summary>
+        public static string PopupCopy2 {
+            get {
+                return ResourceManager.GetString("PopupCopy2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à NoelPush vient d’être installé !.
         /// </summary>
         public static string PopupFirstRun1 {

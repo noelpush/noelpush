@@ -25,18 +25,18 @@ namespace NoelPush.Services
             this.selector = new SelectorView(this, area);
         }
 
-        public void CaptureRegion(ScreenshotData data)
+        public void CaptureRegion(ScreenshotData data, bool upload)
         {
-            this.selector.Showing(data);
+            this.selector.Showing(data, upload);
         }
 
-        public void CaptureScreen(ScreenshotData data)
+        public void CaptureScreen(ScreenshotData data, bool upload)
         {
             var rectangle = new Rectangle(0, 0, this.Width, this.Height);
-            this.BuildImg(rectangle, data);
+            this.BuildImg(rectangle, data, upload);
         }
 
-        public void BuildImg(Rectangle rec, ScreenshotData screenshotData)
+        public void BuildImg(Rectangle rec, ScreenshotData screenshotData, bool upload)
         {
             screenshotData.start_date = DateTime.Now;
 
@@ -52,21 +52,7 @@ namespace NoelPush.Services
                 g.CopyFromScreen(rec.Left + this.Left, rec.Top + this.Top, 0, 0, new System.Drawing.Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
                 g.DrawImage(screen, 0, 0, rec, GraphicsUnit.Pixel);
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() => System.Windows.Clipboard.SetImage(CreateBitmapSourceFromBitmap(selection)));
-
-            Task.Factory.StartNew(() => manager.Captured(selection, screenshotData));
-        }
-
-        public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)
-        {
-            if (bitmap == null)
-                throw new ArgumentNullException("bitmap");
-
-            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                bitmap.GetHbitmap(),
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
+            Task.Factory.StartNew(() => manager.Captured(selection, screenshotData, upload));
         }
 
         private int Height

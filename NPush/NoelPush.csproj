@@ -171,6 +171,9 @@
     <Compile Include="Views\Popup\PopupUploadFailedView.xaml.cs">
       <DependentUpon>PopupUploadFailedView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Popup\PopupUploadCopied.xaml.cs">
+      <DependentUpon>PopupUploadCopied.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Popup\PopupUploadView.xaml.cs">
       <DependentUpon>PopupUploadView.xaml</DependentUpon>
     </Compile>
@@ -213,6 +216,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Popup\PopupUploadFailedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Popup\PopupUploadCopied.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

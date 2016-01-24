@@ -5,10 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows;
-using System.Windows.Threading;
 using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
@@ -26,6 +22,9 @@ namespace NoelPush.ViewModels
 
         public PopupUploadView PopupUpload { get; private set; }
         public PopupViewModel PopupUploadDataContext { get; private set; }
+
+        public PopupCopyView PopupCopy { get; private set; }
+        public PopupViewModel PopupCopyDataContext { get; private set; }
 
         public PopupUploadFailedView PopupUploadFailed { get; private set; }
         public PopupViewModel PopupUploadFailedDataContext { get; private set; }
@@ -52,12 +51,14 @@ namespace NoelPush.ViewModels
 
             this.canScreen = true;
 
+            this.PopupCopyDataContext = new PopupViewModel(323, 118);
             this.PopupUploadDataContext = new PopupViewModel(323, 118);
             this.PopupFirstRunDataContext = new PopupViewModel(323, 138);
             this.PopupUploadFailedDataContext = new PopupViewModel(323, 118);
             this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 118);
             this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118);
 
+            this.PopupCopy = new PopupCopyView { DataContext = this.PopupCopyDataContext };
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
             this.PopupFirstRun = new PopupFirstRunView { DataContext = this.PopupFirstRunDataContext };
             this.PopupUploadFailed = new PopupUploadFailedView { DataContext = this.PopupUploadFailedDataContext };
@@ -70,6 +71,11 @@ namespace NoelPush.ViewModels
         public void ShowPopupUpload(Bitmap img, int delay = 3000)
         {
             this.PopupUploadDataContext.ShowPopup(delay, img);
+        }
+
+        public void ShowPopupCopy(Bitmap img, int delay = 3000)
+        {
+            this.PopupCopyDataContext.ShowPopup(delay, img);
         }
 
         public void ShowPopupUploadFailed(int delay = 3000)
