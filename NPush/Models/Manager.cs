@@ -33,6 +33,7 @@ namespace NoelPush.Models
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
             this.Version = Resources.Version;
+            this.UserId = Registry.GetUserIdInRegistry();
 
             this.screenCapture = new ScreenCapture(this);
             this.notifyIconViewModel = notifyIconViewModel;
@@ -42,8 +43,7 @@ namespace NoelPush.Models
 
             Shortcuts.OnKeyPress += Capture;
 
-            var userId = Registry.GetUserIdInRegistry();
-            this.updatesManager = new UpdatesManager(userId, Resources.Version);
+            this.updatesManager = new UpdatesManager(this.UserId, this.Version);
             this.updatesManager.CheckUpdate();
 
             if (this.updatesManager.FirstRun)
