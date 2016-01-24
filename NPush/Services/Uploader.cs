@@ -19,7 +19,6 @@ namespace NoelPush.Services
             this.logger = LogManager.GetCurrentClassLogger();
 
             this.manager = manager;
-
         }
 
         public void Upload(PictureData pictureData)
@@ -51,6 +50,12 @@ namespace NoelPush.Services
                         using (var message = await client.PostAsync("http://www.noelshack.com/api.php", content))
                         {
                             var reponse = await message.Content.ReadAsStringAsync();
+
+                            if (!reponse.Contains("http://www.noelshack.com"))
+                            {
+                                this.manager.UploadFailed();
+                                return;
+                            }
 
                             pictureData.screenshotData.stop_upload = DateTime.Now;
                             this.manager.Uploaded(pictureData.picture, this.CustomUrl(reponse, namePicture), pictureData.screenshotData, false);
