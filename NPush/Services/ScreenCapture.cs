@@ -40,7 +40,7 @@ namespace NoelPush.Services
         {
             screenshotData.start_date = DateTime.Now;
 
-            if (rec.Width <= 0 || rec.Height <= 0)
+            if (rec.Width <= 1 || rec.Height <= 1)
                 return;
 
             screenshotData.img_size = rec;
