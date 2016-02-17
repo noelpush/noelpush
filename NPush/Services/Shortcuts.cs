@@ -11,20 +11,20 @@ namespace NoelPush.Services
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
         private static readonly LowLevelKeyboardProc _proc = HookCallback;
-        private static IntPtr _hookID = IntPtr.Zero;
+        private static readonly IntPtr hookID = IntPtr.Zero;
 
         public delegate void KeyPressHandler(bool shift);
         public static event KeyPressHandler OnKeyPress;
 
         static Shortcuts()
         {
-            _hookID = SetHook(_proc);
+            hookID = SetHook(_proc);
         }
 
         private static IntPtr SetHook(LowLevelKeyboardProc proc)
         {
-            using (Process curProcess = Process.GetCurrentProcess())
-            using (ProcessModule curModule = curProcess.MainModule)
+            using (var curProcess = Process.GetCurrentProcess())
+            using (var curModule = curProcess.MainModule)
             {
                 return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
                     GetModuleHandle(curModule.ModuleName), 0);
@@ -41,7 +41,7 @@ namespace NoelPush.Services
                 OnKeyPress(!shift);
             }
 
-            return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            return CallNextHookEx(hookID, nCode, wParam, lParam);
         }
 
         [DllImport("user32.dll")]

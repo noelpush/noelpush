@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
@@ -16,16 +12,10 @@ namespace NoelPush.Models
 {
     public class Manager
     {
-        private readonly bool CommandNoUpload;
-
         public string UserId { get; private set; }
         public string Version { get; private set; }
 
         private readonly NotifyIconViewModel notifyIconViewModel;
-        private readonly ScreenCapture screenCapture;
-        private readonly UpdatesManager updatesManager;
-
-        private Task captureScreenTask;
 
         private int pressCounter;
         private DateTime pressDateTime;
@@ -33,33 +23,21 @@ namespace NoelPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
+            this.UserId = RegistryManager.GetUserIdFromRegistry();
             this.Version = Resources.Version;
-            this.UserId = Registry.GetUserIdInRegistry();
 
-            this.screenCapture = new ScreenCapture(this);
             this.notifyIconViewModel = notifyIconViewModel;
-
-            string[] args = Environment.GetCommandLineArgs();
-            this.CommandNoUpload = (args.Count() >= 2 && args[1] == Resources.CommandLineNoUp);
 
             Shortcuts.OnKeyPress += Capture;
 
-            this.updatesManager = new UpdatesManager(this.UserId, this.Version);
-            this.updatesManager.CheckUpdate();
-
-            if (this.updatesManager.FirstRun)
-            {
+            UpdatesManager.Initialize(this.UserId, this.Version);
+            UpdatesManager.CheckUpdate();
+            if (UpdatesManager.FirstRun)
                 this.ShowPopupFirstRun();
-            }
 
+            var args = Environment.GetCommandLineArgs();
             if ((args.Count() >= 2 && args[1] == Resources.CommandFileName && !string.IsNullOrEmpty(args[2])))
-                this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { start_date = DateTime.Now }, true);
-        }
-
-        private void CancelScreen()
-        {
-            notifyIconViewModel.EnableCommands(true);
-            screenCapture.Canceled();
+                this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
         }
 
         public void Capture(bool upload = true)
@@ -73,16 +51,16 @@ namespace NoelPush.Models
                 this.screenshotData = new ScreenshotData(this.UserId);
 
                 this.pressCounter = 1;
-                this.CancelScreen();
+                this.CancelCapture();
                 this.pressDateTime = DateTime.Now;
             }
 
                 // Second press
             else if (this.pressCounter == 2)
             {
-                this.screenshotData.mode = 1;
-                this.screenshotData.second_press_date = DateTime.Now;
-                this.screenshotData.third_press_date = DateTime.MinValue;
+                this.screenshotData.Mode = 1;
+                this.screenshotData.SecondPressDate = DateTime.Now;
+                this.screenshotData.ThirdPressDate = DateTime.MinValue;
 
                 this.pressDateTime = DateTime.Now;
                 this.CaptureRegion(this.screenshotData, upload);
@@ -91,23 +69,35 @@ namespace NoelPush.Models
             // Third press
             if (this.pressCounter == 3)
             {
-                this.screenshotData.mode = 2;
-                this.screenshotData.third_press_date = DateTime.Now;
+                this.screenshotData.Mode = 2;
+                this.screenshotData.ThirdPressDate = DateTime.Now;
 
-                this.CancelScreen();
-                this.CaptureScreen(screenshotData, upload);
+                this.CancelCapture();
+                this.CaptureScreen(this.screenshotData, upload);
                 this.pressCounter = 0;
             }
         }
 
-        public void CaptureScreen(ScreenshotData data, bool upload = true)
+        public void CaptureScreen(ScreenshotData data, bool upload)
         {
-            this.screenCapture.CaptureScreen(data, upload);
+            var capture = ScreenCapture.CaptureScreen(ref data);
+
+            if (capture != null)
+                this.Captured(capture, data, upload);
         }
 
-        public void CaptureRegion(ScreenshotData data, bool upload = true)
+        public void CaptureRegion(ScreenshotData data, bool upload)
         {
-            this.screenCapture.CaptureRegion(data, upload);
+            var capture = ScreenCapture.CaptureRegion(ref data);
+
+            if (capture != null)
+                this.Captured(capture, data, upload);
+        }
+
+        private void CancelCapture()
+        {
+            notifyIconViewModel.EnableCommands(true);
+            ScreenCapture.CancelCapture();
         }
 
         public void Captured(Bitmap img, ScreenshotData screenshotData, bool upload)
@@ -140,7 +130,7 @@ namespace NoelPush.Models
                 this.UploadFailed();
             }
 
-            screenshotData.url = url;
+            screenshotData.uRL = url;
             Statistics.StatUpload(screenshotData);
         }
 
@@ -154,33 +144,6 @@ namespace NoelPush.Models
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-        }
-
-        // Old method (--noup command line)
-        public void Uploaded(Bitmap img)
-        {
-            string pathPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\NoelPush\\";
-
-            if (!Directory.Exists(pathPictures))
-            {
-                Directory.CreateDirectory(pathPictures);
-            }
-
-            string filename = pathPictures + DateTime.Now.ToString("dd-mm-yyyy HHhmmmsss") + ".png";
-            img.Save(filename, ImageFormat.Png);
-
-            Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(filename));
-
-            notifyIconViewModel.EnableCommands(true);
-            notifyIconViewModel.ShowPopupUpload(img);
-        }
-
-        private void ShowPopupFirstRun()
-        {
-            // Task + Dispatcher because it doesn't want to start without.......
-            Task.Factory.StartNew(() =>
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                    notifyIconViewModel.ShowPopupMessage()));
         }
 
         internal void UploadFailed()
@@ -200,18 +163,9 @@ namespace NoelPush.Models
             notifyIconViewModel.ShowPopupConnexionFailed();
         }
 
-        public string GenerateID()
+        private void ShowPopupFirstRun()
         {
-            var random = new Random();
-            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            string password = string.Empty;
-
-            for (int i = 0; i < 32; i++)
-            {
-                password += alphabet[random.Next(0, alphabet.Length) - 1];
-            }
-
-            return password;
+            notifyIconViewModel.ShowPopupMessage();
         }
     }
 }

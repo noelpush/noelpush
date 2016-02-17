@@ -30,8 +30,8 @@ namespace NoelPush.Objects
 
             this.CreateImage(pathPng, pathJpeg);
 
-            this.screenshotData.png_size = (int)(new FileInfo(pathPng)).Length;
-            this.screenshotData.jpeg_size = (int)(new FileInfo(pathJpeg)).Length;
+            this.screenshotData.PngSize = (int)(new FileInfo(pathPng)).Length;
+            this.screenshotData.JpegSize = (int)(new FileInfo(pathJpeg)).Length;
 
             var smallestPath = this.GetSmallestPicture(pathPng, pathJpeg);
 
@@ -74,7 +74,7 @@ namespace NoelPush.Objects
 
         public string GetSmallestPicture(string pathPng, string pathJpeg)
         {
-            if (this.screenshotData.png_size <= this.screenshotData.jpeg_size)
+            if (this.screenshotData.PngSize <= this.screenshotData.JpegSize)
                 return pathPng;
 
             return pathJpeg;
@@ -82,7 +82,7 @@ namespace NoelPush.Objects
 
         public string GetSmallestFormat()
         {
-            if (this.screenshotData.png_size <= this.screenshotData.jpeg_size)
+            if (this.screenshotData.PngSize <= this.screenshotData.JpegSize)
                 return "png";
 
             return "jpeg";

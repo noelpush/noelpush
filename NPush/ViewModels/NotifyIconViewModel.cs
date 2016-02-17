@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
@@ -14,8 +16,6 @@ namespace NoelPush.ViewModels
 {
     public class NotifyIconViewModel
     {
-        private Logger logger;
-
         private readonly bool canScreen;
 
         private readonly Manager manager;
@@ -45,18 +45,16 @@ namespace NoelPush.ViewModels
 
         public NotifyIconViewModel(EnableCommandsEventHandler eventHandler)
         {
-            this.logger = LogManager.GetCurrentClassLogger();
-
             this.EnableCommandsEvent += eventHandler;
 
             this.canScreen = true;
 
-            this.PopupCopyDataContext = new PopupViewModel(323, 118);
-            this.PopupUploadDataContext = new PopupViewModel(323, 118);
-            this.PopupFirstRunDataContext = new PopupViewModel(323, 138);
-            this.PopupUploadFailedDataContext = new PopupViewModel(323, 118);
-            this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 118);
-            this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118);
+            this.PopupCopyDataContext = new PopupViewModel(323, 118, 3000);
+            this.PopupUploadDataContext = new PopupViewModel(323, 118, 3000);
+            this.PopupFirstRunDataContext = new PopupViewModel(323, 138, 3000);
+            this.PopupUploadFailedDataContext = new PopupViewModel(323, 118, 4000);
+            this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 118, 4000);
+            this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118, 4000);
 
             this.PopupCopy = new PopupCopyView { DataContext = this.PopupCopyDataContext };
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };
@@ -68,34 +66,48 @@ namespace NoelPush.ViewModels
             this.manager = new Manager(this);
         }
 
-        public void ShowPopupUpload(Bitmap img, int delay = 3000)
+        // Task + Dispatcher because it allows and optimises the displaying.......
+        private void ShowPopup(PopupViewModel viewModel)
         {
-            this.PopupUploadDataContext.ShowPopup(delay, img);
+            Task.Factory.StartNew(() =>
+                Dispatcher.CurrentDispatcher.Invoke(viewModel.ShowPopup));
         }
 
-        public void ShowPopupCopy(Bitmap img, int delay = 3000)
+        private void ShowPopup(PopupViewModel viewModel, Bitmap img)
         {
-            this.PopupCopyDataContext.ShowPopup(delay, img);
+            Task.Factory.StartNew(() =>
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                    viewModel.ShowPopup(img)));
         }
 
-        public void ShowPopupUploadFailed(int delay = 3000)
+        public void ShowPopupUpload(Bitmap img)
         {
-            this.PopupUploadFailedDataContext.ShowPopup(delay);
+            this.ShowPopup(PopupUploadDataContext, img);
         }
 
-        public void ShowPopupPictureTooLarge(int delay = 3000)
+        public void ShowPopupCopy(Bitmap img)
         {
-            this.PopupPictureTooLargeDataContext.ShowPopup(delay);
+            this.ShowPopup(PopupCopyDataContext, img);
         }
 
-        public void ShowPopupMessage(int delay = 11000)
+        public void ShowPopupUploadFailed()
         {
-            this.PopupFirstRunDataContext.ShowPopup(delay);
+            this.ShowPopup(PopupUploadFailedDataContext);
         }
 
-        public void ShowPopupConnexionFailed(int delay = 4000)
+        public void ShowPopupPictureTooLarge()
         {
-            this.PopupConnexionFailedDataContext.ShowPopup(delay);
+            this.ShowPopup(PopupPictureTooLargeDataContext);
+        }
+
+        public void ShowPopupMessage()
+        {
+            this.ShowPopup(PopupFirstRunDataContext);
+        }
+
+        public void ShowPopupConnexionFailed()
+        {
+            this.ShowPopup(PopupConnexionFailedDataContext);
         }
 
         public void EnableCommands(bool enabled)
@@ -129,7 +141,7 @@ namespace NoelPush.ViewModels
                 }
                 catch (Exception e)
                 {
-                    this.logger.Error(e.Message);
+                    LogManager.GetCurrentClassLogger().Error(e.Message);
                     return;
                 }
 
@@ -158,7 +170,8 @@ namespace NoelPush.ViewModels
             }
 
             // Else check if a navigator is pinned in taskbar
-            var taskbar = Directory.GetFiles(@"C:\Users\choco\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar");
+            var taskbarPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar";
+            var taskbar = Directory.GetFiles(taskbarPath);
 
             var browsers2 = new[] { "google chrome", "chromium", "firefox", "edge", "internet explorer", "opera", "safari" };
             var browsers3 = new[] { "chrome", "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
@@ -180,28 +193,28 @@ namespace NoelPush.ViewModels
         {
             var screenshotData = new ScreenshotData(this.manager.UserId)
             {
-                mode = 1,
-                first_press_date = DateTime.MinValue,
-                second_press_date = DateTime.MinValue,
-                third_press_date = DateTime.MinValue
+                Mode = 1,
+                FirstPressDate = DateTime.MinValue,
+                SecondPressDate = DateTime.MinValue,
+                ThirdPressDate = DateTime.MinValue
             };
 
             if (this.CanScreen)
-                this.manager.CaptureRegion(screenshotData);
+                this.manager.CaptureRegion(screenshotData, true);
         }
 
         public void CaptureScreen()
         {
             var screenshotData = new ScreenshotData(this.manager.UserId)
             {
-                mode = 2,
-                first_press_date = DateTime.MinValue,
-                second_press_date = DateTime.MinValue,
-                third_press_date = DateTime.MinValue
+                Mode = 2,
+                FirstPressDate = DateTime.MinValue,
+                SecondPressDate = DateTime.MinValue,
+                ThirdPressDate = DateTime.MinValue
             };
 
             if (this.CanScreen)
-                this.manager.CaptureScreen(screenshotData);
+                this.manager.CaptureScreen(screenshotData, true);
         }
 
         public void Exit()

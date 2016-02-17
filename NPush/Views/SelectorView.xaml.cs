@@ -1,97 +1,71 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using NoelPush.Objects;
-using NoelPush.Services;
 using NoelPush.Views.Tools;
 
 namespace NoelPush.Views
 {
-    internal partial class SelectorView
+    public static partial class SelectorView
     {
-        private bool upload;
-        private ScreenshotData data;
-        public ScreenCapture ScreenCapture;
-        public SelectorForm selectorForm;
-        public CursorForm cursorForm;
-
-        public SelectorView(ScreenCapture screenCapture, Rectangle area)
+        public static void Initialize(Rectangle area)
         {
-            this.ScreenCapture = screenCapture;
+            SelectorForm.Instance.Initialize(area);
 
-            this.selectorForm = new SelectorForm
-            {
-                ShowInTaskbar = false,
-                Size = new Size(1, 1),
-                WindowState =  FormWindowState.Normal,
-                FormBorderStyle = FormBorderStyle.None,
-                Left = area.Left,
-                Top = area.Top,
-                Width = area.Width,
-                Height = area.Height,
-                Cursor = Cursors.Cross,
-                TopMost = true,
-                Opacity = 0.2f,
-                BackColor = Color.FromArgb(255, 255, 254),
-                TransparencyKey = Color.FromArgb(255, 255, 254),
-                StartPosition = FormStartPosition.Manual
-            };
-
-            this.selectorForm.MouseDown += OnMouseDown;
-            this.selectorForm.MouseMove += OnMouseMove;
-            this.selectorForm.MouseUp += OnMouseUp;
-            this.selectorForm.KeyDown += OnKeyDown;
-
-            this.InitializeComponent();
+            SelectorForm.Instance.MouseDown += OnMouseDown;
+            SelectorForm.Instance.MouseMove += OnMouseMove;
+            SelectorForm.Instance.MouseUp += OnMouseUp;
+            SelectorForm.Instance.KeyDown += OnKeyDown;
         }
 
-        public void Showing(ScreenshotData data, bool upload)
+        public static Rectangle Showing()
         {
-            this.upload = upload;
-            this.data = data;
-            this.selectorForm.Initialize();
-            this.selectorForm.Show();
+            SelectorForm.Instance.Initialize();
+            SelectorForm.Instance.ShowDialog();
+
+            return SelectorForm.Instance.getRectangle();
         }
 
-        internal void Hiding()
+        internal static void Hiding()
         {
-            this.selectorForm.CleanDraw = true;
-            this.selectorForm.Refresh();
-            this.selectorForm.CleanDraw = false;
+            SelectorForm.Instance.CleanDraw = true;
+            SelectorForm.Instance.Refresh();
+            SelectorForm.Instance.CleanDraw = false;
 
-            this.selectorForm.Hide();
+            SelectorForm.Instance.Hide();
         }
 
-        private void OnMouseDown(object sender, MouseEventArgs e)
+        private static void OnMouseDown(object sender, MouseEventArgs e)
         {
-            this.selectorForm.Start = new Point(e.X, e.Y);
-            this.selectorForm.End = new Point(e.X, e.Y);
+            SelectorForm.Instance.Start = new Point(e.X, e.Y);
+            SelectorForm.Instance.End = new Point(e.X, e.Y);
         }
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
-        {
-            //this.selectorForm.UpdateCursor(e.X, e.Y);
-
-            if (e.Button != MouseButtons.Left) return;
-
-            this.selectorForm.End = new Point(e.X, e.Y);
-            this.selectorForm.Invalidate();
-        }
-
-        private void OnMouseUp(object sender, MouseEventArgs e)
+        private static void OnMouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
 
-            this.Hiding();
-            this.ScreenCapture.BuildImg(this.selectorForm.getRectangle(), this.data, this.upload);
+            SelectorForm.Instance.End = new Point(e.X, e.Y);
+            SelectorForm.Instance.Invalidate();
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        private static void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+
+            Hiding();
+        }
+
+        // Cancel action if escape is pressed
+        private static void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-                this.Hiding();
+            {
+                SelectorForm.Instance.Start = Point.Empty;
+                SelectorForm.Instance.End = Point.Empty;
+                Hiding();
+            }
         }
 
-        public void Connect(int connectionId, object target) {}
+        public static void Connect(int connectionId, object target) { }
     }
 
 }

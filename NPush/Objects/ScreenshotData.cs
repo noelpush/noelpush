@@ -6,28 +6,28 @@ namespace NoelPush.Objects
 {
     public class ScreenshotData
     {
-        public string userId { get; set; }
-        public string version { get; set; }
+        public string UserId { get; set; }
+        public string Version { get; set; }
 
-        public string url { get; set; }
-        public int mode { get; set; }
+        public string uRL { get; set; }
+        public int Mode { get; set; }
 
-        public int png_size { get; set; }
-        public int jpeg_size { get; set; }
-        public Rectangle img_size { get; set; }
+        public int PngSize { get; set; }
+        public int JpegSize { get; set; }
+        public Rectangle ImgSize { get; set; }
 
-        public DateTime start_date { get; set; }
-        public DateTime start_upload { get; set; }
-        public DateTime stop_upload { get; set; }
-        public DateTime first_press_date { get; set; }
-        public DateTime second_press_date { get; set; }
-        public DateTime third_press_date { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime StartUpload { get; set; }
+        public DateTime StopUpload { get; set; }
+        public DateTime FirstPressDate { get; set; }
+        public DateTime SecondPressDate { get; set; }
+        public DateTime ThirdPressDate { get; set; }
 
         public ScreenshotData(string userId)
         {
-            this.userId = userId;
-            this.version = Resources.Version;
-            this.first_press_date = DateTime.Now;
+            this.UserId = userId;
+            this.Version = Resources.Version;
+            this.FirstPressDate = DateTime.Now;
         }
     }
 }

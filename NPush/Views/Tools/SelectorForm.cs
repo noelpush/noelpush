@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace NoelPush.Views.Tools
 {
-    sealed class SelectorForm : Form
+    public sealed class SelectorForm : Form
     {
         public bool CleanDraw;
         public Point Start { get; set; }
@@ -12,26 +12,49 @@ namespace NoelPush.Views.Tools
         private readonly Pen pen = new Pen(Color.FromArgb(100, 100, 100), 1);
         private readonly SolidBrush brush = new SolidBrush(Color.FromArgb(150, 255, 255, 255));
 
-        private Label LabelX;
-        private Label LabelY;
-        
-        public SelectorForm()
+        private static object mutex = new object();
+        private static SelectorForm instance;
+
+        private SelectorForm()
         {
             this.DoubleBuffered = true;
             this.Paint += OnPaint;
 
-            this.LabelX = new Label();
-            this.LabelX.ForeColor = Color.Black;
-            this.LabelX.BackColor = Color.Transparent;
-            this.LabelX.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            this.ShowInTaskbar = false;
+            this.Size = new Size(1, 1);
+            this.WindowState = FormWindowState.Normal;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Cursor = Cursors.Cross;
+            this.TopMost = true;
+            this.Opacity = 0.2f;
+            this.BackColor = Color.FromArgb(255, 255, 254);
+            this.TransparencyKey = Color.FromArgb(255, 255, 254);
+            this.StartPosition = FormStartPosition.Manual;
+        }
 
-            this.LabelY = new Label();
-            this.LabelY.ForeColor = Color.Black;
-            this.LabelY.BackColor = Color.Transparent;
-            this.LabelY.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+        public void Initialize(Rectangle area)
+        {
+            this.Left = area.Left;
+            this.Top = area.Top;
+            this.Width = area.Width;
+            this.Height = area.Height;
+        }
 
-            this.Controls.Add(this.LabelX);
-            this.Controls.Add(this.LabelY);
+        public static SelectorForm Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (mutex)
+                    {
+                        if (instance == null)
+                            instance = new SelectorForm();
+                    }
+                }
+
+                return instance;
+            }
         }
 
         internal void Initialize()
@@ -61,22 +84,13 @@ namespace NoelPush.Views.Tools
             return new Rectangle(
                 Math.Min(this.Start.X, this.End.X),
                 Math.Min(this.Start.Y, this.End.Y),
-                Math.Abs(this.End.X - this.Start.X) + 1,
-                Math.Abs(this.End.Y - this.Start.Y) + 1
+                Math.Abs(this.End.X - this.Start.X),
+                Math.Abs(this.End.Y - this.Start.Y)
             );
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-        }
-
-        public void UpdateCursor(int x, int y)
-        {
-            this.LabelX.Text = x.ToString();
-            this.LabelX.Location = new Point(x + 10, y + 20);
-
-            this.LabelY.Text = y.ToString();
-            this.LabelY.Location = new Point(x + 10, y);
         }
     }
 }

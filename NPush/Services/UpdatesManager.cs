@@ -8,37 +8,35 @@ using Squirrel;
 
 namespace NoelPush.Services
 {
-    public class UpdatesManager
+    public static class UpdatesManager
     {
-        private readonly Timer timerUpdates;
-        private readonly Logger logger;
-        public bool FirstRun;
+        private static Timer timerUpdates;
+        public static bool FirstRun;
 
-        private readonly string UserId;
-        private readonly string Version;
+        private static string UserId;
+        private static string Version;
 
-        public UpdatesManager(string userId, string version)
+        public static void Initialize(string userId, string version)
         {
-            this.UserId = userId;
-            this.Version = version;
+            UserId = userId;
+            Version = version;
             
-            this.FirstRun = false;
-            this.logger = LogManager.GetCurrentClassLogger();
+            FirstRun = false;
 
-            this.timerUpdates = new Timer();
-            this.timerUpdates.Interval = TimeSpan.FromMinutes(10).TotalMilliseconds;
-            this.timerUpdates.Elapsed += this.CheckUpdate;
-            this.timerUpdates.Enabled = true;
+            timerUpdates = new Timer();
+            timerUpdates.Interval = TimeSpan.FromMinutes(10).TotalMilliseconds;
+            timerUpdates.Elapsed += CheckUpdate;
+            timerUpdates.Enabled = true;
         }
 
-        public async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
+        public static async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
         {
             try
             {
                 using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
                 {
                     SquirrelAwareApp.HandleEvents(
-                          onFirstRun: () => this.FirstRun = true);
+                          onFirstRun: () => FirstRun = true);
 
                     var updates = await mgr.CheckForUpdate();
 
@@ -57,11 +55,11 @@ namespace NoelPush.Services
                     mgr.Dispose();
                 }
 
-                Statistics.NewUpdate(this.UserId, this.Version);
+                Statistics.NewUpdate(UserId, Version);
             }
             catch (Exception e)
             {
-                this.logger.Error(e.Message);
+                LogManager.GetCurrentClassLogger().Error(e.Message);
             }
         }
     }

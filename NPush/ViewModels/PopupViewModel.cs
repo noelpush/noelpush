@@ -8,36 +8,38 @@ namespace NoelPush.ViewModels
 {
     public class PopupViewModel
     {
-        protected int Height;
         protected int Width;
+        protected int Height;
+        private readonly int Delay;
 
         public ViewElement<bool> IsOpen { get; private set; }
         public ViewElement<Rect> Position { get; private set; }
         public ViewElement<Bitmap> Picture { get; private set; }
 
-        public PopupViewModel(int width, int height)
+        public PopupViewModel(int width, int height, int delay)
         {
             this.Height = height;
             this.Width = width;
+            this.Delay = delay;
 
             this.Position = new ViewElement<Rect>();
             this.IsOpen = new ViewElement<bool> { Value = false };
             this.Picture = new ViewElement<Bitmap>();
         }
 
-        public virtual void ShowPopup(int delay = 3000)
+        public virtual void ShowPopup()
         {
             this.UpdatePosition();
 
             this.IsOpen.Value = true;
-            Thread.Sleep(delay);
+            Thread.Sleep(this.Delay);
             this.IsOpen.Value = false;
         }
 
-        public void ShowPopup(int delay, Bitmap img)
+        public void ShowPopup(Bitmap img)
         {
             this.Picture.Value = img;
-            this.ShowPopup(delay);
+            this.ShowPopup();
         }
 
         private void UpdatePosition()

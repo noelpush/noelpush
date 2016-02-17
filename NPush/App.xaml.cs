@@ -36,7 +36,7 @@ namespace NoelPush
                 this.logger.Error(ex.Message);
             }
 
-            var userId = Registry.GetUserIdInRegistry();
+            var userId = RegistryManager.GetUserIdFromRegistry();
             var version = NoelPush.Properties.Resources.Version;
 
             Statistics.NewUpdate(userId, version);

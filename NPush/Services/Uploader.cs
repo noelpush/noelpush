@@ -35,7 +35,7 @@ namespace NoelPush.Services
 
         private async void UploadHttpClient(PictureData pictureData, string namePicture, bool retry = true)
         {
-            pictureData.screenshotData.start_upload = DateTime.Now;
+            pictureData.screenshotData.StartUpload = DateTime.Now;
 
             try
             {
@@ -61,7 +61,7 @@ namespace NoelPush.Services
                                 return;
                             }
 
-                            pictureData.screenshotData.stop_upload = DateTime.Now;
+                            pictureData.screenshotData.StopUpload = DateTime.Now;
                             this.manager.Uploaded(pictureData.picture, this.CustomUrl(reponse, namePicture), pictureData.screenshotData, false);
                         }
                     }
