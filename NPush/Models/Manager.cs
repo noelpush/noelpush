@@ -24,16 +24,16 @@ namespace NoelPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            this.UserId = RegistryManager.GetUserIdFromRegistry();
+            this.UserId = RegistryService.GetUserIdFromRegistry();
             this.Version = Resources.Version;
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            Shortcuts.OnKeyPress += Capture;
+            ShortcutService.OnKeyPress += Capture;
 
-            UpdatesManager.Initialize(this.UserId, this.Version);
-            UpdatesManager.CheckUpdate();
-            if (UpdatesManager.FirstRun)
+            UpdatesService.Initialize(this.UserId, this.Version);
+            UpdatesService.CheckUpdate();
+            if (UpdatesService.FirstRun)
                 this.ShowPopupFirstRun();
 
             var args = Environment.GetCommandLineArgs();
@@ -109,7 +109,7 @@ namespace NoelPush.Models
             {
                 this.notifyIconViewModel.EnableCommands(false);
                 var pictureData = new PictureData(img, screenshotData);
-                new Uploader(this).Upload(pictureData);
+                new UploaderService(this).Upload(pictureData);
             }
             else
             {
@@ -132,7 +132,7 @@ namespace NoelPush.Models
             }
 
             screenshotData.uRL = url;
-            Statistics.StatUpload(screenshotData);
+            StatisticService.StatUpload(screenshotData);
         }
 
         public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)

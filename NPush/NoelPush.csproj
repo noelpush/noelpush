@@ -151,12 +151,12 @@
     <Compile Include="Objects\ViewModel\StringExtension.cs" />
     <Compile Include="Objects\ViewModel\ViewElement.cs" />
     <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
-    <Compile Include="Services\RegistryManager.cs" />
-    <Compile Include="Services\Shortcuts.cs" />
+    <Compile Include="Services\RegistryService.cs" />
+    <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Models\Manager.cs" />
-    <Compile Include="Services\ScreenCapture.cs" />
-    <Compile Include="Services\Statistics.cs" />
-    <Compile Include="Services\UpdatesManager.cs" />
+    <Compile Include="Services\CaptureService.cs" />
+    <Compile Include="Services\StatisticService.cs" />
+    <Compile Include="Services\UpdatesService.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">
       <DependentUpon>PopupFirstRunView.xaml</DependentUpon>
@@ -196,7 +196,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Uploader.cs" />
+    <Compile Include="Services\UploaderService.cs" />
     <Compile Include="ViewModels\NotifyIconViewModel.cs" />
     <Compile Include="Views\NotifyIconView.xaml.cs">
       <DependentUpon>NotifyIconView.xaml</DependentUpon>

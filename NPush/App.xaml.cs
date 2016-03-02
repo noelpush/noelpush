@@ -36,10 +36,10 @@ namespace NoelPush
                 this.logger.Error(ex.Message);
             }
 
-            var userId = RegistryManager.GetUserIdFromRegistry();
+            var userId = RegistryService.GetUserIdFromRegistry();
             var version = NoelPush.Properties.Resources.Version;
 
-            Statistics.NewUpdate(userId, version);
+            StatisticService.NewUpdate(userId, version);
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 

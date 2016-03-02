@@ -10,13 +10,13 @@ using NoelPush.Objects;
 
 namespace NoelPush.Services
 {
-    internal class Uploader
+    internal class UploaderService
     {
         private readonly Logger logger;
         private readonly Manager manager;
         private static readonly Regex Pattern = new Regex(@"www\.noelshack\.com\/(\d+)-(\d+)-(.+)");
 
-        public Uploader(Manager manager)
+        public UploaderService(Manager manager)
         {
             this.logger = LogManager.GetCurrentClassLogger();
 

@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace NoelPush.Services
 {
-    static class Statistics
+    static class StatisticService
     {
         public static void StatUpload(ScreenshotData screenData)
         {

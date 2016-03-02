@@ -4,7 +4,7 @@ using NLog;
 
 namespace NoelPush.Services
 {
-    static class RegistryManager
+    static class RegistryService
     {
         public static string GetUserIdFromRegistry()
         {

@@ -8,7 +8,7 @@ using Squirrel;
 
 namespace NoelPush.Services
 {
-    public static class UpdatesManager
+    public static class UpdatesService
     {
         private static Timer timerUpdates;
         public static bool FirstRun;
@@ -55,7 +55,7 @@ namespace NoelPush.Services
                     mgr.Dispose();
                 }
 
-                Statistics.NewUpdate(UserId, Version);
+                StatisticService.NewUpdate(UserId, Version);
             }
             catch (Exception e)
             {

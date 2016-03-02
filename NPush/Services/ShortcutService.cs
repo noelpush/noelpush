@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace NoelPush.Services
 {
-    public sealed class Shortcuts
+    public sealed class ShortcutService
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
@@ -16,7 +16,7 @@ namespace NoelPush.Services
         public delegate void KeyPressHandler(bool shift);
         public static event KeyPressHandler OnKeyPress;
 
-        static Shortcuts()
+        static ShortcutService()
         {
             hookID = SetHook(_proc);
         }
