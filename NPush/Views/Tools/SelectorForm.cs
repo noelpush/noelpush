@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
 using Color = System.Drawing.Color;
 using Pen = System.Drawing.Pen;
 using Point = System.Drawing.Point;
