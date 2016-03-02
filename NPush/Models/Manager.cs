@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
@@ -55,7 +56,7 @@ namespace NoelPush.Models
                 this.pressDateTime = DateTime.Now;
             }
 
-                // Second press
+            // Second press
             else if (this.pressCounter == 2)
             {
                 this.screenshotData.Mode = 1;
@@ -63,7 +64,7 @@ namespace NoelPush.Models
                 this.screenshotData.ThirdPressDate = DateTime.MinValue;
 
                 this.pressDateTime = DateTime.Now;
-                this.CaptureRegion(this.screenshotData, upload);
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.screenshotData, upload)));
             }
 
             // Third press
@@ -73,7 +74,7 @@ namespace NoelPush.Models
                 this.screenshotData.ThirdPressDate = DateTime.Now;
 
                 this.CancelCapture();
-                this.CaptureScreen(this.screenshotData, upload);
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureScreen(this.screenshotData, upload)));
                 this.pressCounter = 0;
             }
         }
