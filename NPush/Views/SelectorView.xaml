@@ -12,6 +12,6 @@
     Title="SelectorView">
 
     <Grid>
-
+        <TextBlock Name="Alpha" Foreground="DarkRed" Text="130" FontWeight="Bold" FontSize="18" />
     </Grid>
 </Window>

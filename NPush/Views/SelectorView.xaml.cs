@@ -4,7 +4,7 @@ using NoelPush.Views.Tools;
 
 namespace NoelPush.Views
 {
-    public static partial class SelectorView
+    public partial class SelectorView
     {
         public static void Initialize(Rectangle area)
         {
@@ -60,10 +60,19 @@ namespace NoelPush.Views
                 SelectorForm.Instance.End = Point.Empty;
                 Hiding();
             }
+
+            // Tempo colorize
+            else if (e.KeyCode == Keys.Add)
+            {
+                SelectorForm.Instance.Colorize(5);
+            }
+            else if (e.KeyCode == Keys.Subtract)
+            {
+                SelectorForm.Instance.Colorize(-5);
+            }
         }
 
         public static void Connect(int connectionId, object target) { }
     }
-
 }
 

@@ -1,6 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+
+using Color = System.Drawing.Color;
+using Pen = System.Drawing.Pen;
+using Point = System.Drawing.Point;
+
 
 namespace NoelPush.Views.Tools
 {
@@ -102,6 +110,27 @@ namespace NoelPush.Views.Tools
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
+        }
+
+        // Tempo colorize
+        public void Colorize(int alpha)
+        {
+            alpha += this.brush.Color.A;
+
+            if (alpha < 0) alpha = 0;
+            if (alpha > 255) alpha = 255;
+
+            this.brush.Color = Color.FromArgb(alpha, 0, 0, 0);
+            this.Draw();
+
+            var label = new System.Windows.Forms.Label();
+            label.Text = alpha.ToString();
+            label.ForeColor = Color.FromArgb(255, 190, 0, 0);
+            label.Width = 30;
+            label.Height = 15;
+
+            this.Controls.Clear();
+            this.Controls.Add(label);
         }
     }
 }
