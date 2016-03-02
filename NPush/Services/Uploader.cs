@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
@@ -12,7 +13,8 @@ namespace NoelPush.Services
     internal class Uploader
     {
         private readonly Logger logger;
-        private Manager manager;
+        private readonly Manager manager;
+        private static readonly Regex Pattern = new Regex(@"www\.noelshack\.com\/(\d+)-(\d+)-(.+)");
 
         public Uploader(Manager manager)
         {
@@ -62,7 +64,7 @@ namespace NoelPush.Services
                             }
 
                             pictureData.screenshotData.StopUpload = DateTime.Now;
-                            this.manager.Uploaded(pictureData.picture, this.CustomUrl(reponse, namePicture), pictureData.screenshotData, false);
+                            this.manager.Uploaded(pictureData.picture, this.CustomUrl(reponse), pictureData.screenshotData, false);
                         }
                     }
                 }
@@ -85,16 +87,12 @@ namespace NoelPush.Services
             }
         }
 
-        private string CustomUrl(string url, string namePicture)
+        private string CustomUrl(string url)
         {
             /* http://www.noelshack.com/2015-02-1420740001-noelpush.png
              * http://image.noelshack.com/fichiers/2015/02/1420740001-noelpush.png */
 
-            url = url.Replace("www", "image");
-            url = url.Replace(".com", ".com/fichiers");
-            url = url.Replace("-", "/");
-            url = url.Replace("/" + namePicture.Replace("-", "/"), "-" + namePicture);
-            return url;
+            return Pattern.Replace(url, "image.noelshack.com/fichiers/$1/$2/$3");
         }
     }
 }
