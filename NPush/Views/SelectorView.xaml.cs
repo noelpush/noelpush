@@ -16,20 +16,16 @@ namespace NoelPush.Views
             SelectorForm.Instance.KeyDown += OnKeyDown;
         }
 
-        public static Rectangle Showing()
+        public static Rectangle Showing(Bitmap background)
         {
-            SelectorForm.Instance.Initialize();
+            SelectorForm.Instance.Initialize(background);
             SelectorForm.Instance.ShowDialog();
 
-            return SelectorForm.Instance.getRectangle();
+            return SelectorForm.Instance.GetRectangle();
         }
 
         internal static void Hiding()
         {
-            SelectorForm.Instance.CleanDraw = true;
-            SelectorForm.Instance.Refresh();
-            SelectorForm.Instance.CleanDraw = false;
-
             SelectorForm.Instance.Hide();
         }
 
@@ -37,6 +33,7 @@ namespace NoelPush.Views
         {
             SelectorForm.Instance.Start = new Point(e.X, e.Y);
             SelectorForm.Instance.End = new Point(e.X, e.Y);
+            SelectorForm.Instance.Draw();
         }
 
         private static void OnMouseMove(object sender, MouseEventArgs e)
@@ -44,7 +41,7 @@ namespace NoelPush.Views
             if (e.Button != MouseButtons.Left) return;
 
             SelectorForm.Instance.End = new Point(e.X, e.Y);
-            SelectorForm.Instance.Invalidate();
+            SelectorForm.Instance.Draw();
         }
 
         private static void OnMouseUp(object sender, MouseEventArgs e)

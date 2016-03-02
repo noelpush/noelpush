@@ -6,30 +6,28 @@ namespace NoelPush.Views.Tools
 {
     public sealed class SelectorForm : Form
     {
-        public bool CleanDraw;
         public Point Start { get; set; }
         public Point End { get; set; }
-        private readonly Pen pen = new Pen(Color.FromArgb(100, 100, 100), 1);
-        private readonly SolidBrush brush = new SolidBrush(Color.FromArgb(150, 255, 255, 255));
+        private readonly Pen pen = new Pen(Color.FromArgb(255, Color.DimGray), 1);
+        private readonly SolidBrush brush = new SolidBrush(Color.FromArgb(130, Color.Black));
 
-        private static object mutex = new object();
+        private Bitmap background;
+        private BufferedGraphics buffer;
+
+        private static readonly object Mutex = new object();
         private static SelectorForm instance;
 
         private SelectorForm()
         {
-            this.DoubleBuffered = true;
-            this.Paint += OnPaint;
-
             this.ShowInTaskbar = false;
-            this.Size = new Size(1, 1);
-            this.WindowState = FormWindowState.Normal;
             this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.Manual;
+            this.Top = 0;
+            this.Left = 0;
             this.Cursor = Cursors.Cross;
             this.TopMost = true;
-            this.Opacity = 0.2f;
-            this.BackColor = Color.FromArgb(255, 255, 254);
-            this.TransparencyKey = Color.FromArgb(255, 255, 254);
-            this.StartPosition = FormStartPosition.Manual;
+
+            this.Shown += this.Draw;
         }
 
         public void Initialize(Rectangle area)
@@ -46,7 +44,7 @@ namespace NoelPush.Views.Tools
             {
                 if (instance == null)
                 {
-                    lock (mutex)
+                    lock (Mutex)
                     {
                         if (instance == null)
                             instance = new SelectorForm();
@@ -57,36 +55,49 @@ namespace NoelPush.Views.Tools
             }
         }
 
-        internal void Initialize()
+        internal void Initialize(Bitmap background)
         {
+            this.background = background;
+
+            this.buffer = BufferedGraphicsManager.Current.Allocate(
+                this.CreateGraphics(),
+                new Rectangle(Left, Top, Width, Height)
+                );
+
             this.Start = Point.Empty;
             this.End = Point.Empty;
-
-            this.CreateGraphics().Clear(this.BackColor);
-
-            this.CleanDraw = true;
-            this.Refresh();
-            this.CleanDraw = false;
         }
 
-        private void OnPaint(object sender, PaintEventArgs e)
+        public void Draw()
         {
-            e.Graphics.Clear(this.BackColor);
-            e.Graphics.FillRectangle(this.brush, this.getRectangle());
-            e.Graphics.DrawRectangle(this.pen, this.getRectangle());
+            var rectangle = this.GetRectangle();
 
-            if (this.CleanDraw)
-                e.Graphics.Clear(this.BackColor);
+            this.buffer.Graphics.Clear(Color.Transparent);
+            this.buffer.Graphics.DrawImage(this.background, Point.Empty);
+
+            var region = new Region();
+
+            region.Xor(rectangle);
+
+            this.buffer.Graphics.FillRegion(brush, region);
+            this.buffer.Graphics.DrawRectangle(pen, rectangle);
+
+            this.buffer.Render();
         }
 
-        public Rectangle getRectangle()
+        private void Draw(object sender, EventArgs eventArgs)
+        {
+            this.Draw();
+        }
+
+        public Rectangle GetRectangle()
         {
             return new Rectangle(
-                Math.Min(this.Start.X, this.End.X),
-                Math.Min(this.Start.Y, this.End.Y),
-                Math.Abs(this.End.X - this.Start.X),
-                Math.Abs(this.End.Y - this.Start.Y)
-            );
+                Math.Min(Start.X, End.X),
+                Math.Min(Start.Y, End.Y),
+                Math.Abs(End.X - Start.X),
+                Math.Abs(End.Y - Start.Y)
+                );
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)

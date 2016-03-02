@@ -19,17 +19,18 @@ namespace NoelPush.Services
 
         public static Bitmap CaptureRegion(ref ScreenshotData data)
         {
-            var rectangle = SelectorView.Showing();
-            return BuildImg(rectangle, ref data);
+            var background = CaptureScreen(ref data);
+            var rectangle = SelectorView.Showing(background);
+            return BuildImg(ref data, rectangle, background);
         }
 
         public static Bitmap CaptureScreen(ref ScreenshotData data)
         {
             var rectangle = new Rectangle(0, 0, Width, Height);
-            return BuildImg(rectangle, ref data);
+            return BuildImg(ref data, rectangle);
         }
 
-        private static Bitmap BuildImg(Rectangle rec, ref ScreenshotData screenshotData)
+        private static Bitmap BuildImg(ref ScreenshotData screenshotData, Rectangle rec, Bitmap background = null)
         {
             screenshotData.StartDate = DateTime.Now;
 
@@ -38,11 +39,11 @@ namespace NoelPush.Services
 
             screenshotData.ImgSize = rec;
 
-            var screen = new Bitmap(Width, Height);
+            var screen = background ?? new Bitmap(Width, Height);
             var selection = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);
 
             var g = Graphics.FromImage(selection);
-            g.CopyFromScreen(rec.Left + Left, rec.Top + Top, 0, 0, new System.Drawing.Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
+            g.CopyFromScreen(rec.Left + Left, rec.Top + Top, 0, 0, new Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
             g.DrawImage(screen, 0, 0, rec, GraphicsUnit.Pixel);
 
             return selection;
