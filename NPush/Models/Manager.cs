@@ -81,7 +81,7 @@ namespace NoelPush.Models
 
         public void CaptureScreen(ScreenshotData data, bool upload)
         {
-            var capture = ScreenCapture.CaptureScreen(ref data);
+            var capture = CaptureService.CaptureScreen(ref data);
 
             if (capture != null)
                 this.Captured(capture, data, upload);
@@ -89,7 +89,7 @@ namespace NoelPush.Models
 
         public void CaptureRegion(ScreenshotData data, bool upload)
         {
-            var capture = ScreenCapture.CaptureRegion(ref data);
+            var capture = CaptureService.CaptureRegion(ref data);
 
             if (capture != null)
                 this.Captured(capture, data, upload);
@@ -98,7 +98,7 @@ namespace NoelPush.Models
         private void CancelCapture()
         {
             notifyIconViewModel.EnableCommands(true);
-            ScreenCapture.CancelCapture();
+            CaptureService.CancelCapture();
         }
 
         public void Captured(Bitmap img, ScreenshotData screenshotData, bool upload)
@@ -132,7 +132,7 @@ namespace NoelPush.Models
             }
 
             screenshotData.uRL = url;
-            StatisticService.StatUpload(screenshotData);
+            StatisticsService.StatUpload(screenshotData);
         }
 
         public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)

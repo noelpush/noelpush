@@ -14,12 +14,10 @@ namespace NoelPush.Services
     {
         private readonly Logger logger;
         private readonly Manager manager;
-        private static readonly Regex Pattern = new Regex(@"www\.noelshack\.com\/(\d+)-(\d+)-(.+)");
 
         public UploaderService(Manager manager)
         {
             this.logger = LogManager.GetCurrentClassLogger();
-
             this.manager = manager;
         }
 
@@ -92,6 +90,7 @@ namespace NoelPush.Services
             /* http://www.noelshack.com/2015-02-1420740001-noelpush.png
              * http://image.noelshack.com/fichiers/2015/02/1420740001-noelpush.png */
 
+            var Pattern = new Regex(@"www\.noelshack\.com\/(\d+)-(\d+)-(.+)");
             return Pattern.Replace(url, "image.noelshack.com/fichiers/$1/$2/$3");
         }
     }

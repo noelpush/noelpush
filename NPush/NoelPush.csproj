@@ -123,9 +123,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -155,7 +155,7 @@
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\CaptureService.cs" />
-    <Compile Include="Services\StatisticService.cs" />
+    <Compile Include="Services\StatisticsService.cs" />
     <Compile Include="Services\UpdatesService.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">

@@ -71,8 +71,6 @@ namespace NoelPush.Views
                 SelectorForm.Instance.Colorize(-5);
             }
         }
-
-        public static void Connect(int connectionId, object target) { }
     }
 }
 

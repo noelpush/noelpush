@@ -8,9 +8,9 @@ using NoelPush.Views;
 
 namespace NoelPush.Services
 {
-    public static class ScreenCapture
+    public static class CaptureService
     {
-        static ScreenCapture()
+        static CaptureService()
         {
             var area = new Rectangle(Left, Top, Width, Height);
 

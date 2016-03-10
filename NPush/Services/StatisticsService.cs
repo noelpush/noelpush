@@ -8,11 +8,11 @@ using System.Net.Http;
 
 namespace NoelPush.Services
 {
-    static class StatisticService
+    static class StatisticsService
     {
         public static void StatUpload(ScreenshotData screenData)
         {
-            var url = "https://www.noelpush.com/add_upload";
+            const string url = "https://www.noelpush.com/add_upload";
 
             var values = new Dictionary<string, string>
             {
@@ -35,7 +35,7 @@ namespace NoelPush.Services
 
         public static bool NewUpdate(string userId, string version)
         {
-            var url = "https://stats.noelpush.com/check_update";
+            const string url = "https://stats.noelpush.com/check_update";
 
             var values = new Dictionary<string, string>
             {
