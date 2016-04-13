@@ -10,6 +10,9 @@ using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
 
+using Application = System.Windows.Application;
+using Clipboard = System.Windows.Clipboard;
+
 namespace NoelPush.Models
 {
     public class Manager
