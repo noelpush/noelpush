@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using NoelPush.Objects;
@@ -29,7 +30,8 @@ namespace NoelPush.Models
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            ShortcutService.OnKeyPress += Capture;
+            ShortcutService.RegisterShortcut(ShortcutKeys.None, Keys.PrintScreen);
+            ShortcutService.HotKeyPressed += Capture;
 
             UpdatesService.Initialize(this.UserId, this.Version);
             UpdatesService.CheckUpdate();
@@ -39,6 +41,14 @@ namespace NoelPush.Models
             var args = Environment.GetCommandLineArgs();
             if ((args.Count() >= 2 && args[1] == Resources.CommandFileName && !string.IsNullOrEmpty(args[2])))
                 this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
+        }
+
+        private void Capture(object sender, ShortcutEventArgs e)
+        {
+            if (e.Modifiers == (ShortcutKeys.None) && e.Key == (Keys.PrintScreen))
+            {
+                this.Capture();
+            }
         }
 
         public void Capture(bool upload = true)
