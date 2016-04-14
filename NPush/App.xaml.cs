@@ -1,5 +1,11 @@
-﻿using System;
+﻿// ReSharper disable RedundantArgumentName
+
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using NLog;
 using NoelPush.Services;
@@ -23,20 +29,20 @@ namespace NoelPush
 
             try
             {
-                using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
-                {
-                    SquirrelAwareApp.HandleEvents(
-                        onInitialInstall: v => this.InstallEvent(mgr),
-                        onAppUpdate: v => this.UpdateEvent(mgr),
-                        onAppUninstall: v => this.UninstallEvent(mgr));
-                }
+                SquirrelAwareApp.HandleEvents(
+                    onInitialInstall: v => InstallEvent(),
+                    onAppUpdate: v => UpdateEvent(),
+                    onAppUninstall: v => UninstallEvent()
+                );
+
+                UpdateApp();
             }
             catch (Exception ex)
             {
                 this.logger.Error(ex.Message);
             }
 
-            var userId = RegistryService.GetUserIdFromRegistry();
+            var userId = RegistryService.GetUserId();
             var version = NoelPush.Properties.Resources.Version;
 
             StatisticsService.NewUpdate(userId, version);
@@ -72,28 +78,57 @@ namespace NoelPush
 
             return false;
         }
-        
 
-        private void InstallEvent(UpdateManager mgr)
+        public async Task UpdateApp()
         {
-            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu, false);
-            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup, false);
-            mgr.CreateUninstallerRegistryEntry();
+            using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
+            {
+                var updates = await mgr.CheckForUpdate();
+                if (updates.ReleasesToApply.Any())
+                {
+                    var lastVersion = updates.ReleasesToApply.OrderBy(x => x.Version).Last();
+                    await mgr.DownloadReleases(new[] { lastVersion });
+                    await mgr.ApplyReleases(updates);
+                    await mgr.UpdateApp();
+
+                    MessageBox.Show("The application has been updated - please close and restart.");
+                }
+                else
+                {
+                    MessageBox.Show("No Updates are available at this time.");
+                }
+            }
         }
 
-        private void UpdateEvent(UpdateManager mgr)
+        private static void InstallEvent()
         {
-            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu, true);
-            mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup, true);
-            mgr.RemoveUninstallerRegistryEntry();
-            mgr.CreateUninstallerRegistryEntry();
+            var exePath = Assembly.GetEntryAssembly().Location;
+            string appName = Path.GetFileName(exePath);
+
+            using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
+            {
+                mgr.CreateShortcutsForExecutable(appName, ShortcutLocation.StartMenu | ShortcutLocation.Startup | ShortcutLocation.AppRoot, false);
+                mgr.CreateUninstallerRegistryEntry();
+            }
+
         }
 
-        private void UninstallEvent(UpdateManager mgr)
+        private static void UpdateEvent()
         {
-            mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu);
-            mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup);
-            mgr.RemoveUninstallerRegistryEntry();
+            using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
+            {
+                mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu | ShortcutLocation.Startup | ShortcutLocation.AppRoot, false, null, null);
+            }
+        }
+
+        private static void UninstallEvent()
+        {
+            using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
+            {
+                mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu);
+                mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup);
+                mgr.RemoveUninstallerRegistryEntry();
+            }
         }
     }
 }
