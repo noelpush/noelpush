@@ -12,7 +12,7 @@ namespace NoelPush.Services
     {
         public static void StatUpload(ScreenshotData screenData)
         {
-            const string url = "https://www.noelpush.com/add_upload";
+            const string url = "https://noelpush.com/add_upload";
 
             var values = new Dictionary<string, string>
             {

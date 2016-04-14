@@ -136,7 +136,7 @@ namespace NoelPush.ViewModels
                     var values = new Dictionary<string, string> { { "uid", id } };
                     var content = new FormUrlEncodedContent(values);
 
-                    var answer = await client.PostAsync("https://www.noelpush.com/generate_login_token?", content);
+                    var answer = await client.PostAsync("https://noelpush.com/generate_login_token?", content);
                     token = await answer.Content.ReadAsStringAsync();
                 }
                 catch (Exception e)
@@ -148,7 +148,7 @@ namespace NoelPush.ViewModels
                 if (token.Length != 32)
                     return;
 
-                var urlHistorique = "https://www.noelpush.com/login?token=" + token;
+                var urlHistorique = "https://noelpush.com/login?token=" + token;
                 this.OpenInBrowser(urlHistorique);
             }
         }
