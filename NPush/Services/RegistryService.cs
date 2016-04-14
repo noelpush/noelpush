@@ -51,19 +51,21 @@ namespace NoelPush.Services
 
         private static void WriteShell(string type)
         {
-            var REGISTRY_PATH = string.Format("HKEY_CLASSES_ROOT\\{0}\\shell\\NoelPush", type);
+            // Todo - Fix wrong paths
+
+            var REGISTRY_PATH = string.Format("HKEY_CURRENT_USER\\Software\\Classes\\{0}\\shell\\NoelPush", type);
 
             const string REGISTY_FIRST_NAME = "";
-            const string REGISTY_FIRST_VALUE = "Héberger avec NoelPush";
+            const string REGISTY_FIRST_VALUE = "Envoyer sur NoelShack";
 
             const string REGISTY_SECOND_NAME = "Icon";
-            const string REGISTY_SECOND_VALUE = @"C:\Users\choco\Documents\GitHub\NoelPush\Output\Debug\NoelPush.exe";
+            const string REGISTY_SECOND_VALUE = @"C:\Users\lbaudin\AppData\Local\NoelPush\app-7.0.0\NoelPush.exe"; 
 
             const string REGISTY_THIRD_NAME = "Position";
             const string REGISTY_THIRD_VALUE = "top";
 
             const string REGISTY_FOURTH_NAME = "";
-            const string REGISTY_FOURTH_VALUE = "\"C:\\Users\\Choco\\Documents\\GitHub\\NoelPush\\Output\\Debug\\NoelPush.exe\" --file \"%1\"";
+            const string REGISTY_FOURTH_VALUE = "\"C:\\Users\\lbaudin\\AppData\\Local\\NoelPush\\app-7.0.0\\NoelPush.exe\" --file \"%1\"";
 
             Registry.SetValue(REGISTRY_PATH, REGISTY_FIRST_NAME, REGISTY_FIRST_VALUE, RegistryValueKind.String);
             Registry.SetValue(REGISTRY_PATH, REGISTY_SECOND_NAME, REGISTY_SECOND_VALUE, RegistryValueKind.String);
