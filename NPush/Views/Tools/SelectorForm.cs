@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.IO;
+
+using NoelPush.Properties;
+
 using Color = System.Drawing.Color;
 using Pen = System.Drawing.Pen;
 using Point = System.Drawing.Point;
@@ -28,8 +32,9 @@ namespace NoelPush.Views.Tools
             this.StartPosition = FormStartPosition.Manual;
             this.Top = 0;
             this.Left = 0;
-            this.Cursor = Cursors.Cross;
             this.TopMost = true;
+            using (var cursorStream = new MemoryStream(Resources.crosscustom))
+                this.Cursor = new Cursor(cursorStream);
 
             this.Shown += this.Draw;
         }
