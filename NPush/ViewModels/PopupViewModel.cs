@@ -1,8 +1,10 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 using NoelPush.Objects.ViewModel;
+using NoelPush.Services;
 
 namespace NoelPush.ViewModels
 {
@@ -34,6 +36,11 @@ namespace NoelPush.ViewModels
             this.IsOpen.Value = true;
             Thread.Sleep(this.Delay);
             this.IsOpen.Value = false;
+
+            if (CommandService.IsShellMode)
+            {
+                Environment.Exit(1);
+            }
         }
 
         public void ShowPopup(Bitmap img)

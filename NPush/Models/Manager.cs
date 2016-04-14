@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
@@ -24,7 +24,7 @@ namespace NoelPush.Models
 
         private int pressCounter;
         private DateTime pressDateTime;
-        public ScreenshotData screenshotData;
+        public ScreenshotData ScreenData;
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
@@ -37,13 +37,15 @@ namespace NoelPush.Models
             ShortcutService.HotKeyPressed += Capture;
 
             UpdatesService.Initialize(this.UserId, this.Version);
-            UpdatesService.CheckUpdate();
             if (UpdatesService.FirstRun)
                 this.ShowPopupFirstRun();
 
-            var args = Environment.GetCommandLineArgs();
-            if ((args.Count() >= 2 && args[1] == Resources.CommandFileName && !string.IsNullOrEmpty(args[2])))
-                this.Captured(new Bitmap(Image.FromFile(args[2])), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
+            if (CommandService.IsShellMode)
+            {
+                var file = CommandService.GetFileName;
+                if (!string.IsNullOrEmpty(file))
+                    this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
+            }
         }
 
         private void Capture(object sender, ShortcutEventArgs e)
@@ -62,7 +64,7 @@ namespace NoelPush.Models
             // First press or bad time
             if (this.pressCounter <= 1 || (this.pressCounter > 1 && date > this.pressDateTime.AddMilliseconds(400)))
             {
-                this.screenshotData = new ScreenshotData(this.UserId);
+                this.ScreenData = new ScreenshotData(this.UserId);
 
                 this.pressCounter = 1;
                 this.CancelCapture();
@@ -72,22 +74,22 @@ namespace NoelPush.Models
             // Second press
             else if (this.pressCounter == 2)
             {
-                this.screenshotData.Mode = 1;
-                this.screenshotData.SecondPressDate = DateTime.Now;
-                this.screenshotData.ThirdPressDate = DateTime.MinValue;
+                this.ScreenData.Mode = 1;
+                this.ScreenData.SecondPressDate = DateTime.Now;
+                this.ScreenData.ThirdPressDate = DateTime.MinValue;
 
                 this.pressDateTime = DateTime.Now;
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.screenshotData, upload)));
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
             }
 
             // Third press
             if (this.pressCounter == 3)
             {
-                this.screenshotData.Mode = 2;
-                this.screenshotData.ThirdPressDate = DateTime.Now;
+                this.ScreenData.Mode = 2;
+                this.ScreenData.ThirdPressDate = DateTime.Now;
 
                 this.CancelCapture();
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureScreen(this.screenshotData, upload)));
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureScreen(this.ScreenData, upload)));
                 this.pressCounter = 0;
             }
         }

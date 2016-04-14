@@ -152,6 +152,7 @@
     <Compile Include="Objects\ViewModel\ViewElement.cs" />
     <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
     <Compile Include="Services\RegistryService.cs" />
+    <Compile Include="Services\CommandService.cs" />
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\CaptureService.cs" />
