@@ -70,6 +70,8 @@ namespace NoelPush.Views.Tools
 
             this.Start = Point.Empty;
             this.End = Point.Empty;
+
+            this.Focus();
         }
 
         public void Draw()
