@@ -45,7 +45,7 @@ namespace NoelPush.Services
 
         public static void WriteShell()
         {
-            WriteShell("pngfile");
+            WriteShell("pngfile"); 
             WriteShell("jpegfile");
         }
 

@@ -28,7 +28,7 @@ namespace NoelPush.Models
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
-            this.UserId = RegistryService.GetUserIdFromRegistry();
+            this.UserId = RegistryService.GetUserId();
             this.Version = Resources.Version;
 
             this.notifyIconViewModel = notifyIconViewModel;
