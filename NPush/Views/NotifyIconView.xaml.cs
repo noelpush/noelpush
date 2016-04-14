@@ -36,6 +36,7 @@ namespace NoelPush.Views
             {
                 Icon = icon,
                 Text = Properties.Resources.SoftwareName,
+                //Text = Application.ExecutablePath.Substring(0, Math.Min(Application.ExecutablePath.Length, 63)),
                 ContextMenuStrip = this.NotifMenu
             };
 

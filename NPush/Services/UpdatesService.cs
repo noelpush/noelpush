@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Timers;
+
 using NLog;
 using Squirrel;
 
@@ -15,20 +15,22 @@ namespace NoelPush.Services
         private static Timer timerUpdates;
         public static bool FirstRun;
 
-        private static string UserId;
-        private static string Version;
+        private static string userId;
+        private static string version;
 
-        public static void Initialize(string userId, string version)
+        public static void Initialize(string id, string v)
         {
-            UserId = userId;
-            Version = version;
-            
+            userId = id;
+            version = v;
+
             FirstRun = false;
 
             timerUpdates = new Timer();
             timerUpdates.Interval = TimeSpan.FromMinutes(10).TotalMilliseconds;
             timerUpdates.Elapsed += CheckUpdate;
             timerUpdates.Enabled = true;
+
+            CheckUpdate();
         }
 
         public static async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
@@ -37,8 +39,7 @@ namespace NoelPush.Services
             {
                 using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
                 {
-                    SquirrelAwareApp.HandleEvents(
-                          onFirstRun: () => FirstRun = true);
+                    SquirrelAwareApp.HandleEvents(onFirstRun: () => FirstRun = true);
 
                     var updates = await mgr.CheckForUpdate();
 
@@ -57,7 +58,7 @@ namespace NoelPush.Services
                     mgr.Dispose();
                 }
 
-                StatisticsService.NewUpdate(UserId, Version);
+                StatisticsService.NewUpdate(userId, version);
             }
             catch (Exception e)
             {
@@ -65,40 +66,25 @@ namespace NoelPush.Services
             }
         }
 
-        public static async Task UpdateApp()
-        {
-            using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
-            {
-                var updates = await mgr.CheckForUpdate();
-                if (updates.ReleasesToApply.Any())
-                {
-                    var lastVersion = updates.ReleasesToApply.OrderBy(x => x.Version).Last();
-                    await mgr.DownloadReleases(new[] { lastVersion });
-                    await mgr.ApplyReleases(updates);
-                    await mgr.UpdateApp();
-                }
-                mgr.Dispose();
-            }
-        }
-
         public static void InstallEvent()
         {
             var exePath = Assembly.GetEntryAssembly().Location;
-            string appName = Path.GetFileName(exePath);
+            var appName = Path.GetFileName(exePath);
 
             using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
             {
-                mgr.CreateShortcutsForExecutable(appName, ShortcutLocation.StartMenu | ShortcutLocation.Startup | ShortcutLocation.AppRoot, false);
+                mgr.CreateShortcutsForExecutable(appName, ShortcutLocation.StartMenu | ShortcutLocation.Startup, false);
                 mgr.CreateUninstallerRegistryEntry();
+                mgr.Dispose();
             }
-
         }
 
         public static void UpdateEvent()
         {
             using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
             {
-                mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu | ShortcutLocation.Startup | ShortcutLocation.AppRoot, false, null, null);
+                mgr.CreateShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu | ShortcutLocation.Startup, false);
+                mgr.Dispose();
             }
         }
 
@@ -109,6 +95,7 @@ namespace NoelPush.Services
                 mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.StartMenu);
                 mgr.RemoveShortcutsForExecutable("NoelPush.exe", ShortcutLocation.Startup);
                 mgr.RemoveUninstallerRegistryEntry();
+                mgr.Dispose();
             }
         }
     }
