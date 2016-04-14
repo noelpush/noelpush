@@ -38,9 +38,9 @@ namespace NoelPush.Views
 
         private static void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left) return;
+            if (e.Button == MouseButtons.Left)
+                SelectorForm.Instance.End = new Point(e.X, e.Y);
 
-            SelectorForm.Instance.End = new Point(e.X, e.Y);
             SelectorForm.Instance.Draw();
         }
 

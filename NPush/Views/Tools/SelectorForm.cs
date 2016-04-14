@@ -20,7 +20,7 @@ namespace NoelPush.Views.Tools
         private readonly SolidBrush brush = new SolidBrush(Color.FromArgb(130, Color.Black));
 
         private Bitmap background;
-        private BufferedGraphics buffer;
+        private static BufferedGraphics buffer;
 
         private static readonly object Mutex = new object();
         private static SelectorForm instance;
@@ -68,7 +68,7 @@ namespace NoelPush.Views.Tools
         {
             this.background = background;
 
-            this.buffer = BufferedGraphicsManager.Current.Allocate(
+            buffer = BufferedGraphicsManager.Current.Allocate(
                 this.CreateGraphics(),
                 new Rectangle(Left, Top, Width, Height)
                 );
@@ -83,17 +83,26 @@ namespace NoelPush.Views.Tools
         {
             var rectangle = this.GetRectangle();
 
-            this.buffer.Graphics.Clear(Color.Transparent);
-            this.buffer.Graphics.DrawImage(this.background, Point.Empty);
+            buffer.Graphics.Clear(Color.Transparent);
+            buffer.Graphics.DrawImage(this.background, Point.Empty);
 
             var region = new Region();
 
             region.Xor(rectangle);
 
-            this.buffer.Graphics.FillRegion(brush, region);
-            this.buffer.Graphics.DrawRectangle(pen, rectangle);
+            buffer.Graphics.FillRegion(brush, region);
+            buffer.Graphics.DrawRectangle(pen, rectangle);
 
-            this.buffer.Render();
+            var position = MousePosition;
+
+            if (position.Y > Height - 30) position.Y -= 50;
+
+            buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.Black, position.X + 1 - 40, position.Y + 20 + 1);
+            buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.White, position.X - 40, position.Y + 20);
+            buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.Black, position.X + 15 + 1, position.Y + 20 + 1);
+            buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.White, position.X + 15, position.Y + 20);
+
+            buffer.Render();
         }
 
         private void Draw(object sender, EventArgs eventArgs)
@@ -126,7 +135,7 @@ namespace NoelPush.Views.Tools
             this.brush.Color = Color.FromArgb(alpha, 0, 0, 0);
             this.Draw();
 
-            var label = new System.Windows.Forms.Label();
+            var label = new Label();
             label.Text = alpha.ToString();
             label.ForeColor = Color.FromArgb(255, 190, 0, 0);
             label.Width = 30;
