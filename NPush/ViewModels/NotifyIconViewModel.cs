@@ -6,12 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Threading;
 using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
-using NoelPush.Services;
 using NoelPush.Views.Popup;
 
 namespace NoelPush.ViewModels

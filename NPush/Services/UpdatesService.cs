@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Timers;
 
 using NLog;
@@ -33,8 +35,25 @@ namespace NoelPush.Services
             CheckUpdate();
         }
 
-        public static async void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
+        public static void CheckUpdate(object sender = null, ElapsedEventArgs elapsed = null)
         {
+            const string url = "https://noelpush.com/check_update";
+
+            var values = new Dictionary<string, string>
+            {
+                { "uid", userId },
+                { "current_version", version }
+            };
+
+            RequestService.SendRequest(url, values).ContinueWith(Update);
+        }
+
+        private static async void Update(Task<string> result)
+        {
+
+          if (result.Result == null || result.Result != "1")
+                return;
+
             try
             {
                 using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
@@ -57,8 +76,6 @@ namespace NoelPush.Services
                     }
                     mgr.Dispose();
                 }
-
-                StatisticsService.NewUpdate(userId, version);
             }
             catch (Exception e)
             {

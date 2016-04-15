@@ -29,11 +29,6 @@ namespace NoelPush
 
             this.logger = LogManager.GetCurrentClassLogger();
 
-            var userId = RegistryService.GetUserId();
-            var version = NoelPush.Properties.Resources.Version;
-
-            StatisticsService.NewUpdate(userId, version);
-
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.OnStartup(e);

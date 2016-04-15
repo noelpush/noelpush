@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading.Tasks;
-using NLog;
 using NoelPush.Objects;
-using System.Net.Http;
 
 namespace NoelPush.Services
 {
     static class StatisticsService
     {
-        public static void StatUpload(ScreenshotData screenData)
+        public static async void StatUpload(ScreenshotData screenData)
         {
             const string url = "https://noelpush.com/add_upload";
 
@@ -30,41 +27,7 @@ namespace NoelPush.Services
                 { "third_press_delay", (screenData.ThirdPressDate == DateTime.MinValue ? -1 : (int)(screenData.ThirdPressDate - screenData.SecondPressDate).TotalMilliseconds).ToString(CultureInfo.InvariantCulture) },
             };
 
-            SendRequest(url, values);
-        }
-
-        public static bool NewUpdate(string userId, string version)
-        {
-            const string url = "https://stats.noelpush.com/check_update";
-
-            var values = new Dictionary<string, string>
-            {
-                { "uid", userId },
-                { "current_version", version }
-            };
-
-            return true;
-            var answer = SendRequest(url, values);
-            return answer.Result == "1";
-        }
-
-        private static async Task<string> SendRequest(string url, Dictionary<string, string> values)
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    var content = new FormUrlEncodedContent(values);
-                    var response = await client.PostAsync(url, content);
-                    return await response.Content.ReadAsStringAsync();
-                }
-            }
-            catch (Exception e)
-            {
-                LogManager.GetCurrentClassLogger().Error(e.Message);
-            }
-
-            return string.Empty;
+            await RequestService.SendRequest(url, values);
         }
     }
 }
