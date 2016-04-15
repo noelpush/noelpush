@@ -93,14 +93,14 @@ namespace NoelPush.Views.Tools
             buffer.Graphics.FillRegion(brush, region);
             buffer.Graphics.DrawRectangle(pen, rectangle);
 
-            var position = MousePosition;
+            //var position = MousePosition;
 
-            if (position.Y > Height - 30) position.Y -= 50;
+            //if (position.Y > Height - 30) position.Y -= 50;
 
-            buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.Black, position.X + 1 - 40, position.Y + 20 + 1);
-            buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.White, position.X - 40, position.Y + 20);
-            buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.Black, position.X + 15 + 1, position.Y + 20 + 1);
-            buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.White, position.X + 15, position.Y + 20);
+            //buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.Black, position.X + 1 - 40, position.Y + 20 + 1);
+            //buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.White, position.X - 40, position.Y + 20);
+            //buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.Black, position.X + 15 + 1, position.Y + 20 + 1);
+            //buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.White, position.X + 15, position.Y + 20);
 
             buffer.Render();
         }
