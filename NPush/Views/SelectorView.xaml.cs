@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -58,17 +59,19 @@ namespace NoelPush.Views
             SelectorForm.Instance.Draw();
         }
 
-        private static void ClipCursor()
-        {
-            var currentScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
-            System.Windows.Forms.Cursor.Clip = currentScreen.Bounds;
-        }
-
         private static void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
 
+            SelectorForm.Instance.End = new Point(e.X + 1, e.Y + 1);
+
             Hiding();
+        }
+
+        private static void ClipCursor()
+        {
+            var currentScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+            System.Windows.Forms.Cursor.Clip = currentScreen.Bounds;
         }
 
         // Cancel action if escape is pressed
