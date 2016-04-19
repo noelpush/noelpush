@@ -8,14 +8,15 @@ namespace NoelPush.Objects
 {
     public class PictureData
     {
-        public byte[] dataBytes { get; private set; }
-        public Bitmap picture { get; private set; }
+        public byte[] DataBytes { get; private set; }
+        public Bitmap Picture { get; private set; }
         public ScreenshotData screenshotData { get; private set; }
 
         public PictureData(Bitmap img, ScreenshotData screenshotData)
         {
-            this.picture = img;
+            this.Picture = img;
             this.screenshotData = screenshotData;
+            this.screenshotData.ImgSize = new Rectangle(Point.Empty, this.Picture.Size);
 
             this.Initialize();
         }
@@ -35,7 +36,7 @@ namespace NoelPush.Objects
 
             var smallestPath = this.GetSmallestPicture(pathPng, pathJpeg);
 
-            this.dataBytes = File.ReadAllBytes(smallestPath);
+            this.DataBytes = File.ReadAllBytes(smallestPath);
 
             this.DeleteImage(pathPng, pathJpeg);
         }
@@ -48,10 +49,10 @@ namespace NoelPush.Objects
             var myEncoderParameters = new EncoderParameters(1);
             myEncoderParameters.Param[0] = new EncoderParameter(myEncoder, 90L);
 
-            this.picture.Save(pathJpeg, jpgEncoder, myEncoderParameters);
+            this.Picture.Save(pathJpeg, jpgEncoder, myEncoderParameters);
 
             // Png
-            this.picture.Save(pathPng, ImageFormat.Png);
+            this.Picture.Save(pathPng, ImageFormat.Png);
         }
 
         private void DeleteImage(string pathPng, string pathJpeg)

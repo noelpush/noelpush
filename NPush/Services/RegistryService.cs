@@ -62,14 +62,14 @@ namespace NoelPush.Services
 
             var registryPath = string.Format("HKEY_CURRENT_USER\\Software\\Classes\\{0}\\shell\\NoelPush", type);
 
-            string registyFirstName = "";
-            string registyFirstValue = "Envoyer sur NoelShack";
+            var registyFirstName = "";
+            var registyFirstValue = "Envoyer sur NoelShack";
 
-            string registySecondName = "Icon";
-            string registySecondValue = executablePath;
+            var registySecondName = "Icon";
+            var registySecondValue = executablePath;
 
-            string registyFourthName = "";
-            string registyFourthValue = executablePath + " --file \"%1\"";
+            var registyFourthName = "";
+            var registyFourthValue = executablePath + " --file \"%1\"";
 
             Registry.SetValue(registryPath, registyFirstName, registyFirstValue, RegistryValueKind.String);
             Registry.SetValue(registryPath, registySecondName, registySecondValue, RegistryValueKind.String);

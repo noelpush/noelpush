@@ -48,7 +48,7 @@ namespace NoelPush.Models
 
         public void Capture(bool upload = true)
         {
-            DateTime date = DateTime.Now;
+            var date = DateTime.Now;
             this.pressCounter++;
 
             // First press or bad time

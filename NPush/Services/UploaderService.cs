@@ -45,7 +45,7 @@ namespace NoelPush.Services
 
                     using (var content = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
                     {
-                        content.Add(new StreamContent(new MemoryStream(pictureData.dataBytes)), "fichier", namePicture);
+                        content.Add(new StreamContent(new MemoryStream(pictureData.DataBytes)), "fichier", namePicture);
 
                         using (var message = await client.PostAsync("http://www.noelshack.com/api.php", content))
                         {
@@ -62,7 +62,7 @@ namespace NoelPush.Services
                             }
 
                             pictureData.screenshotData.StopUpload = DateTime.Now;
-                            this.manager.Uploaded(pictureData.picture, this.CustomUrl(reponse), pictureData.screenshotData, false);
+                            this.manager.Uploaded(pictureData.Picture, this.CustomUrl(reponse), pictureData.screenshotData, false);
                         }
                     }
                 }
