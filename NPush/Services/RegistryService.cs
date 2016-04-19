@@ -1,6 +1,11 @@
 ﻿using System;
+using System.IO;
+
 using Microsoft.Win32;
 using NLog;
+
+using Squirrel;
+
 
 namespace NoelPush.Services
 {
@@ -51,26 +56,24 @@ namespace NoelPush.Services
 
         private static void WriteShell(string type)
         {
-            // Todo - Fix wrong paths
+            var executablePath = AppDomain.CurrentDomain.BaseDirectory + "\\NoelPush.exe";
+            if (!File.Exists(executablePath))
+                return;
 
-            var REGISTRY_PATH = string.Format("HKEY_CURRENT_USER\\Software\\Classes\\{0}\\shell\\NoelPush", type);
+            var registryPath = string.Format("HKEY_CURRENT_USER\\Software\\Classes\\{0}\\shell\\NoelPush", type);
 
-            const string REGISTY_FIRST_NAME = "";
-            const string REGISTY_FIRST_VALUE = "Envoyer sur NoelShack";
+            string registyFirstName = "";
+            string registyFirstValue = "Envoyer sur NoelShack";
 
-            const string REGISTY_SECOND_NAME = "Icon";
-            const string REGISTY_SECOND_VALUE = @"C:\Users\lbaudin\AppData\Local\NoelPush\app-7.0.0\NoelPush.exe"; 
+            string registySecondName = "Icon";
+            string registySecondValue = executablePath;
 
-            const string REGISTY_THIRD_NAME = "Position";
-            const string REGISTY_THIRD_VALUE = "top";
+            string registyFourthName = "";
+            string registyFourthValue = executablePath + " --file \"%1\"";
 
-            const string REGISTY_FOURTH_NAME = "";
-            const string REGISTY_FOURTH_VALUE = "\"C:\\Users\\lbaudin\\AppData\\Local\\NoelPush\\app-7.0.0\\NoelPush.exe\" --file \"%1\"";
-
-            Registry.SetValue(REGISTRY_PATH, REGISTY_FIRST_NAME, REGISTY_FIRST_VALUE, RegistryValueKind.String);
-            Registry.SetValue(REGISTRY_PATH, REGISTY_SECOND_NAME, REGISTY_SECOND_VALUE, RegistryValueKind.String);
-            Registry.SetValue(REGISTRY_PATH, REGISTY_THIRD_NAME, REGISTY_THIRD_VALUE, RegistryValueKind.String);
-            Registry.SetValue(REGISTRY_PATH + "\\command", REGISTY_FOURTH_NAME, REGISTY_FOURTH_VALUE, RegistryValueKind.String);
+            Registry.SetValue(registryPath, registyFirstName, registyFirstValue, RegistryValueKind.String);
+            Registry.SetValue(registryPath, registySecondName, registySecondValue, RegistryValueKind.String);
+            Registry.SetValue(registryPath + "\\command", registyFourthName, registyFourthValue, RegistryValueKind.String);
         }
 
         public static string GenerateID()

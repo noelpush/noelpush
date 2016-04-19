@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using NoelPush.Objects;
-using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
 
@@ -30,6 +27,8 @@ namespace NoelPush.Models
         {
             this.UserId = RegistryService.GetUserId();
             this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
+
+            RegistryService.WriteShell();
 
             this.notifyIconViewModel = notifyIconViewModel;
 
