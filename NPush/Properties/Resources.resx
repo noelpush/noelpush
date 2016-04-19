@@ -172,9 +172,6 @@
   <data name="PopupConnexionFailed2" xml:space="preserve">
     <value>Veuillez vérifier votre connexion internet.</value>
   </data>
-  <data name="Version" xml:space="preserve">
-    <value>8</value>
-  </data>
   <data name="PopupUploadFailed1" xml:space="preserve">
     <value>Erreur durant l’envoi…</value>
   </data>

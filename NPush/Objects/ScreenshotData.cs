@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows;
 using NoelPush.Properties;
 
 namespace NoelPush.Objects
@@ -26,7 +27,7 @@ namespace NoelPush.Objects
         public ScreenshotData(string userId)
         {
             this.UserId = userId;
-            this.Version = Resources.Version;
+            this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
             this.FirstPressDate = DateTime.Now;
         }
     }

@@ -333,14 +333,5 @@ namespace NoelPush.Properties {
                 return ResourceManager.GetString("SoftwareName", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à 8.
-        /// </summary>
-        public static string Version {
-            get {
-                return ResourceManager.GetString("Version", resourceCulture);
-            }
-        }
     }
 }

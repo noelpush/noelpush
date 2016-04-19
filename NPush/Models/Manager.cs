@@ -29,7 +29,7 @@ namespace NoelPush.Models
         public Manager(NotifyIconViewModel notifyIconViewModel)
         {
             this.UserId = RegistryService.GetUserId();
-            this.Version = Resources.Version;
+            this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
 
             this.notifyIconViewModel = notifyIconViewModel;
 
