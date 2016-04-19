@@ -49,12 +49,12 @@ namespace NoelPush.ViewModels
 
             this.canScreen = true;
 
-            this.PopupCopyDataContext = new PopupViewModel(323, 118, 3000);
-            this.PopupUploadDataContext = new PopupViewModel(323, 118, 3000);
-            this.PopupFirstRunDataContext = new PopupViewModel(323, 138, 3000);
-            this.PopupUploadFailedDataContext = new PopupViewModel(323, 118, 4000);
-            this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 118, 4000);
-            this.PopupConnexionFailedDataContext = new PopupViewModel(323, 118, 4000);
+            this.PopupCopyDataContext = new PopupViewModel(323, 75, 3000);
+            this.PopupUploadDataContext = new PopupViewModel(323, 75, 3000);
+            this.PopupFirstRunDataContext = new PopupViewModel(323, 95, 3000);
+            this.PopupUploadFailedDataContext = new PopupViewModel(323, 75, 4000);
+            this.PopupPictureTooLargeDataContext = new PopupViewModel(323, 75, 4000);
+            this.PopupConnexionFailedDataContext = new PopupViewModel(323, 75, 4000);
 
             this.PopupCopy = new PopupCopyView { DataContext = this.PopupCopyDataContext };
             this.PopupUpload = new PopupUploadView { DataContext = this.PopupUploadDataContext };

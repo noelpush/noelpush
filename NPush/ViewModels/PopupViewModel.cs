@@ -12,7 +12,7 @@ namespace NoelPush.ViewModels
     {
         protected int Width;
         protected int Height;
-        private readonly int Delay;
+        private readonly int delay;
 
         public ViewElement<bool> IsOpen { get; private set; }
         public ViewElement<Rect> Position { get; private set; }
@@ -22,7 +22,7 @@ namespace NoelPush.ViewModels
         {
             this.Height = height;
             this.Width = width;
-            this.Delay = delay;
+            this.delay = delay;
 
             this.Position = new ViewElement<Rect>();
             this.IsOpen = new ViewElement<bool> { Value = false };
@@ -34,7 +34,7 @@ namespace NoelPush.ViewModels
             this.UpdatePosition();
 
             this.IsOpen.Value = true;
-            Thread.Sleep(this.Delay);
+            Thread.Sleep(this.delay);
             this.IsOpen.Value = false;
 
             if (CommandService.IsShellMode)
@@ -51,8 +51,10 @@ namespace NoelPush.ViewModels
 
         private void UpdatePosition()
         {
-            var height = Screen.PrimaryScreen.Bounds.Height - this.Height;
-            var width = Screen.PrimaryScreen.Bounds.Width - this.Width;
+            var currentScreen = Screen.FromPoint(Cursor.Position);
+
+            var width = currentScreen.Bounds.X + currentScreen.WorkingArea.Width - this.Width;
+            var height = currentScreen.Bounds.Y + currentScreen.WorkingArea.Height - this.Height;
 
             this.Position.Value = new Rect(width, height, 0, 0);
         }
