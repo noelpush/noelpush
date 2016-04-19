@@ -65,8 +65,8 @@ namespace NoelPush.Views
             if (e.Button != MouseButtons.Left) return;
 
             // Bugfix Lines on bottom and right aren’t selected #26
-            var x = e.X == MonitorService.CurrentWidth  - 1 ? MonitorService.CurrentWidth  : e.X;
-            var y = e.Y == MonitorService.CurrentHeight - 1 ? MonitorService.CurrentHeight : e.Y;
+            var x = e.X == MonitorService.CurrentWidth + MonitorService.CurrentLeft - 1 ? MonitorService.CurrentWidth + MonitorService.CurrentLeft : e.X;
+            var y = e.Y == MonitorService.CurrentHeight + MonitorService.CurrentTop - 1 ? MonitorService.CurrentHeight + MonitorService.CurrentTop : e.Y;
 
             SelectorForm.Instance.End = new Point(x, y);
 
