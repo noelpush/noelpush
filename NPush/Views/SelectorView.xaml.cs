@@ -1,6 +1,12 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Input;
+
 using NoelPush.Views.Tools;
+
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
+
 
 namespace NoelPush.Views
 {
@@ -44,9 +50,18 @@ namespace NoelPush.Views
         private static void OnMouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
+            {
                 SelectorForm.Instance.End = new Point(e.X, e.Y);
+                ClipCursor();
+            }
 
             SelectorForm.Instance.Draw();
+        }
+
+        private static void ClipCursor()
+        {
+            var currentScreen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+            System.Windows.Forms.Cursor.Clip = currentScreen.Bounds;
         }
 
         private static void OnMouseUp(object sender, MouseEventArgs e)
