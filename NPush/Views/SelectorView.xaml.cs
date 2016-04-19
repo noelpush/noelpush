@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 
+using NoelPush.Services;
 using NoelPush.Views.Tools;
 
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -63,7 +64,11 @@ namespace NoelPush.Views
         {
             if (e.Button != MouseButtons.Left) return;
 
-            SelectorForm.Instance.End = new Point(e.X + 1, e.Y + 1);
+            // Bugfix Lines on bottom and right aren’t selected #26
+            var x = e.X == MonitorService.CurrentWidth  - 1 ? MonitorService.CurrentWidth  : e.X;
+            var y = e.Y == MonitorService.CurrentHeight - 1 ? MonitorService.CurrentHeight : e.Y;
+
+            SelectorForm.Instance.End = new Point(x, y);
 
             Hiding();
         }
