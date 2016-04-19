@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Media;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using NoelPush.Helpers;
 using NoelPush.Objects;
+using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
 
@@ -32,6 +36,8 @@ namespace NoelPush.Models
 
             this.notifyIconViewModel = notifyIconViewModel;
 
+            ShortcutService2.RegisterShortcut(ShortcutKeys.Control, Keys.PrintScreen);
+            ShortcutService2.HotKeyPressed += Capture;
             ShortcutService.OnKeyPress += Capture;
 
             UpdatesService.Initialize(this.UserId, this.Version);
@@ -44,6 +50,11 @@ namespace NoelPush.Models
                 if (!string.IsNullOrEmpty(file))
                     this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
             }
+        }
+
+        private void Capture(object sender, ShortcutEventArgs e)
+        {
+            this.Capture();
         }
 
         public void Capture(bool upload = true)
@@ -69,7 +80,17 @@ namespace NoelPush.Models
                 this.ScreenData.ThirdPressDate = DateTime.MinValue;
 
                 this.pressDateTime = DateTime.Now;
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
+
+                if (FullScreenHelper.IsFullScreen)
+                {
+                    new SoundPlayer(Resources.notif2).Play();
+                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureFullScreen(this.ScreenData, upload)));
+                    this.pressCounter = 0;
+                }
+                else
+                {
+                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
+                }
             }
 
             // Third press
@@ -84,6 +105,14 @@ namespace NoelPush.Models
             }
         }
 
+        public void CaptureRegion(ScreenshotData data, bool upload)
+        {
+            var capture = CaptureService.CaptureRegion(ref data);
+
+            if (capture != null)
+                this.Captured(capture, data, upload);
+        }
+
         public void CaptureScreen(ScreenshotData data, bool upload)
         {
             var capture = CaptureService.CaptureScreen(ref data);
@@ -92,9 +121,9 @@ namespace NoelPush.Models
                 this.Captured(capture, data, upload);
         }
 
-        public void CaptureRegion(ScreenshotData data, bool upload)
+        private void CaptureFullScreen(ScreenshotData data, bool upload)
         {
-            var capture = CaptureService.CaptureRegion(ref data);
+            var capture = CaptureService.CaptureFullScreen(ref data);
 
             if (capture != null)
                 this.Captured(capture, data, upload);

@@ -143,6 +143,8 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="Events\EnableCommandsEventHandler.cs" />
+    <Compile Include="Helpers\FullScreenHelper.cs" />
+    <Compile Include="Helpers\Win32Helper.cs" />
     <Compile Include="Objects\PictureData.cs" />
     <Compile Include="Objects\ViewModel\CommandViewModel.cs" />
     <Compile Include="Objects\ViewModel\IViewModel.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\CaptureService.cs" />
+    <Compile Include="Services\ShortcutService2.cs" />
     <Compile Include="Services\StatisticsService.cs" />
     <Compile Include="Services\UpdatesService.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
@@ -305,6 +308,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\crosscustom2.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\notif3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\notif2.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

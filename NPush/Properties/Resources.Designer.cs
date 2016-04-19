@@ -191,6 +191,24 @@ namespace NoelPush.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.IO.UnmanagedMemoryStream semblable à System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream notif2 {
+            get {
+                return ResourceManager.GetStream("notif2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.IO.UnmanagedMemoryStream semblable à System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream notif3 {
+            get {
+                return ResourceManager.GetStream("notif3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Erreur durant l’envoi….
         /// </summary>
         public static string PopupConnexionFailed1 {
