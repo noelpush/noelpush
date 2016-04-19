@@ -33,8 +33,7 @@ namespace NoelPush.Models
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            ShortcutService.RegisterShortcut(ShortcutKeys.None, Keys.PrintScreen);
-            ShortcutService.HotKeyPressed += Capture;
+            ShortcutService.OnKeyPress += Capture;
 
             UpdatesService.Initialize(this.UserId, this.Version);
             if (UpdatesService.FirstRun)
@@ -45,14 +44,6 @@ namespace NoelPush.Models
                 var file = CommandService.GetFileName;
                 if (!string.IsNullOrEmpty(file))
                     this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
-            }
-        }
-
-        private void Capture(object sender, ShortcutEventArgs e)
-        {
-            if (e.Modifiers == (ShortcutKeys.None) && e.Key == (Keys.PrintScreen))
-            {
-                this.Capture();
             }
         }
 
