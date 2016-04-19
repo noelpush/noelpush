@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+
+using NoelPush.Services;
 using NoelPush.ViewModels;
 
 namespace NoelPush.Views
@@ -41,10 +43,16 @@ namespace NoelPush.Views
             };
 
             this.NotifIcon.MouseClick += OnClick;
+            UpdatesService.RestartAppEvent += RestartAppEvent;
 
             this.ShowIcon();
 
             this.DataContext = new NotifyIconViewModel(EnableCommands);
+        }
+
+        private void RestartAppEvent()
+        {
+            this.HideIcon();
         }
 
         private void HistoriqueAction(object sender, EventArgs e)

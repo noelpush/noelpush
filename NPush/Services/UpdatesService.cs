@@ -20,6 +20,8 @@ namespace NoelPush.Services
         private static string userId;
         private static string version;
 
+        public static Action RestartAppEvent;
+
         public static void Initialize(string id, string v)
         {
             userId = id;
@@ -72,6 +74,7 @@ namespace NoelPush.Services
                         var latestExe = Path.Combine(mgr.RootAppDirectory, string.Concat("app-", lastVersion.Version), "NoelPush.exe");
                         mgr.Dispose();
 
+                        RestartAppEvent();
                         UpdateManager.RestartApp(latestExe);
                     }
                     mgr.Dispose();
