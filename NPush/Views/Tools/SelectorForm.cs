@@ -68,9 +68,11 @@ namespace NoelPush.Views.Tools
         {
             this.background = background;
 
+            var left = 0;
+
             buffer = BufferedGraphicsManager.Current.Allocate(
                 this.CreateGraphics(),
-                new Rectangle(Left, Top, Width, Height)
+                new Rectangle(left, Top, Width, Height)
                 );
 
             this.Start = Point.Empty;

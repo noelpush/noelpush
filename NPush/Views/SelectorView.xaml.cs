@@ -9,15 +9,15 @@ namespace NoelPush.Views
         public static void Initialize(Rectangle area)
         {
             SelectorForm.Instance.Initialize(area);
-
-            SelectorForm.Instance.MouseDown += OnMouseDown;
-            SelectorForm.Instance.MouseMove += OnMouseMove;
-            SelectorForm.Instance.MouseUp += OnMouseUp;
-            SelectorForm.Instance.KeyDown += OnKeyDown;
         }
 
         public static Rectangle Showing(Bitmap background)
         {
+            SelectorForm.Instance.MouseDown += OnMouseDown;
+            SelectorForm.Instance.MouseMove += OnMouseMove;
+            SelectorForm.Instance.MouseUp += OnMouseUp;
+            SelectorForm.Instance.KeyDown += OnKeyDown;
+
             SelectorForm.Instance.Initialize(background);
             SelectorForm.Instance.ShowDialog();
 
@@ -26,6 +26,11 @@ namespace NoelPush.Views
 
         internal static void Hiding()
         {
+            SelectorForm.Instance.MouseDown -= OnMouseDown;
+            SelectorForm.Instance.MouseMove -= OnMouseMove;
+            SelectorForm.Instance.MouseUp -= OnMouseUp;
+            SelectorForm.Instance.KeyDown -= OnKeyDown;
+
             SelectorForm.Instance.Hide();
         }
 
