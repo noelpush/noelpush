@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Windows.Forms;
 using NoelPush.Objects;
 using NoelPush.Views;
 
@@ -17,8 +16,7 @@ namespace NoelPush.Services
 
         static void InitializeSelector()
         {
-            var area = new Rectangle(Left, Top, Width, Height);
-            SelectorView.Initialize(area);
+            SelectorView.Initialize();
         }
 
         public static Bitmap CaptureRegion(ref ScreenshotData data)
@@ -34,7 +32,7 @@ namespace NoelPush.Services
         {
             InitializeSelector();
 
-            var rectangle = new Rectangle(0, 0, Width, Height);
+            var rectangle = new Rectangle(0, 0, MonitorService.VirtualWidth, MonitorService.VirtualHeight);
             return BuildImg(ref data, rectangle);
         }
 
@@ -47,34 +45,14 @@ namespace NoelPush.Services
 
             screenshotData.ImgSize = rec;
 
-            var screen = background ?? new Bitmap(Width, Height);
+            var screen = background ?? new Bitmap(MonitorService.VirtualWidth, MonitorService.VirtualHeight);
             var selection = new Bitmap(rec.Width, rec.Height, PixelFormat.Format32bppRgb);
 
             var g = Graphics.FromImage(selection);
-            g.CopyFromScreen(rec.Left + Left, rec.Top + Top, 0, 0, new Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
+            g.CopyFromScreen(rec.Left + MonitorService.VirtualLeft, rec.Top + MonitorService.VirtualTop, 0, 0, new Size(rec.Width, rec.Height), CopyPixelOperation.SourceCopy);
             g.DrawImage(screen, 0, 0, rec, GraphicsUnit.Pixel);
 
             return selection;
-        }
-
-        private static int Height
-        {
-            get { return SystemInformation.VirtualScreen.Height; }
-        }
-
-        private static int Width
-        {
-            get { return SystemInformation.VirtualScreen.Width; }
-        }
-
-        private static int Top
-        {
-            get { return SystemInformation.VirtualScreen.Top; }
-        }
-
-        private static int Left
-        {
-            get { return SystemInformation.VirtualScreen.Left; }
         }
 
         public static void CancelCapture()

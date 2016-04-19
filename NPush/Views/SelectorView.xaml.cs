@@ -6,9 +6,9 @@ namespace NoelPush.Views
 {
     public partial class SelectorView
     {
-        public static void Initialize(Rectangle area)
+        public static void Initialize()
         {
-            SelectorForm.Instance.Initialize(area);
+            SelectorForm.Instance.Initialize();
         }
 
         public static Rectangle Showing(Bitmap background)

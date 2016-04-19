@@ -151,6 +151,7 @@
     <Compile Include="Objects\ViewModel\StringExtension.cs" />
     <Compile Include="Objects\ViewModel\ViewElement.cs" />
     <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Services\MonitorService.cs" />
     <Compile Include="Services\RegistryService.cs" />
     <Compile Include="Services\CommandService.cs" />
     <Compile Include="Services\RequestService.cs" />

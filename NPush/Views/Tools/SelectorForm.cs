@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 
 using NoelPush.Properties;
+using NoelPush.Services;
 
 using Color = System.Drawing.Color;
 using Pen = System.Drawing.Pen;
@@ -39,12 +40,12 @@ namespace NoelPush.Views.Tools
             this.Shown += this.Draw;
         }
 
-        public void Initialize(Rectangle area)
+        public void Initialize()
         {
-            this.Left = area.Left;
-            this.Top = area.Top;
-            this.Width = area.Width;
-            this.Height = area.Height;
+            this.Left = MonitorService.VirtualLeft;
+            this.Top = MonitorService.VirtualTop;
+            this.Width = MonitorService.VirtualWidth;
+            this.Height = MonitorService.VirtualHeight;
         }
 
         public static SelectorForm Instance
@@ -68,12 +69,8 @@ namespace NoelPush.Views.Tools
         {
             this.background = background;
 
-            var left = 0;
-
-            buffer = BufferedGraphicsManager.Current.Allocate(
-                this.CreateGraphics(),
-                new Rectangle(left, Top, Width, Height)
-                );
+            var rectangle = new Rectangle(0, MonitorService.VirtualTop, MonitorService.VirtualWidth, MonitorService.VirtualHeight);
+            buffer = BufferedGraphicsManager.Current.Allocate(this.CreateGraphics(), rectangle);
 
             this.Start = Point.Empty;
             this.End = Point.Empty;
@@ -95,16 +92,24 @@ namespace NoelPush.Views.Tools
             buffer.Graphics.FillRegion(brush, region);
             buffer.Graphics.DrawRectangle(pen, rectangle);
 
-            //var position = MousePosition;
-
-            //if (position.Y > Height - 30) position.Y -= 50;
-
-            //buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.Black, position.X + 1 - 40, position.Y + 20 + 1);
-            //buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.White, position.X - 40, position.Y + 20);
-            //buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.Black, position.X + 15 + 1, position.Y + 20 + 1);
-            //buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.White, position.X + 15, position.Y + 20);
+            //DrawCoordinates();
 
             buffer.Render();
+        }
+
+        private void DrawCoordinates()
+        {
+            var position = MousePosition;
+
+            if (position.Y > Height - 30) position.Y -= 50;
+
+            buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.Black, position.X + 1 - 40, position.Y + 20 + 1);
+            buffer.Graphics.DrawString("X: " + position.X, new Font("Verdana", 9), Brushes.White, position.X - 40, position.Y + 20);
+            buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.Black, position.X + 15 + 1, position.Y + 20 + 1);
+            buffer.Graphics.DrawString("Y: " + position.Y, new Font("Verdana", 9), Brushes.White, position.X + 15, position.Y + 20);
+
+            var brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
+            buffer.Graphics.FillRectangle(brush, position.X - 60, position.Y + 15, 150, 20);
         }
 
         private void Draw(object sender, EventArgs eventArgs)
@@ -119,7 +124,7 @@ namespace NoelPush.Views.Tools
                 Math.Min(Start.Y, End.Y),
                 Math.Abs(End.X - Start.X),
                 Math.Abs(End.Y - Start.Y)
-                );
+            );
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
