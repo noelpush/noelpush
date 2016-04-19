@@ -12,13 +12,19 @@ namespace NoelPush.Services
     {
         static CaptureService()
         {
-            var area = new Rectangle(Left, Top, Width, Height);
+            InitializeSelector();
+        }
 
+        static void InitializeSelector()
+        {
+            var area = new Rectangle(Left, Top, Width, Height);
             SelectorView.Initialize(area);
         }
 
         public static Bitmap CaptureRegion(ref ScreenshotData data)
         {
+            InitializeSelector();
+
             var background = CaptureScreen(ref data);
             var rectangle = SelectorView.Showing(background);
             return BuildImg(ref data, rectangle, background);
@@ -26,6 +32,8 @@ namespace NoelPush.Services
 
         public static Bitmap CaptureScreen(ref ScreenshotData data)
         {
+            InitializeSelector();
+
             var rectangle = new Rectangle(0, 0, Width, Height);
             return BuildImg(ref data, rectangle);
         }
