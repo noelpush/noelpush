@@ -28,7 +28,7 @@ namespace NoelPush.Services
             FirstRun = false;
 
             timerUpdates = new Timer();
-            timerUpdates.Interval = TimeSpan.FromMinutes(10).TotalMilliseconds;
+            timerUpdates.Interval = TimeSpan.FromMinutes(5).TotalMilliseconds;
             timerUpdates.Elapsed += CheckUpdate;
             timerUpdates.Enabled = true;
 
