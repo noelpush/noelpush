@@ -31,12 +31,12 @@ namespace NoelPush.Models
             this.UserId = RegistryService.GetUserId();
             this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
 
-            // Disabled for R13
+            // Disabled for R14
             //RegistryService.WriteShell();
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            // Disabled for R13
+            // Disabled for R14
             //ShortcutService2.RegisterShortcut(ShortcutKeys.Control, Keys.PrintScreen);
             //ShortcutService2.HotKeyPressed += Capture;
             ShortcutService.OnKeyPress += Capture;
