@@ -34,6 +34,8 @@ namespace NoelPush.Services
             timerUpdates.Elapsed += CheckUpdate;
             timerUpdates.Enabled = true;
 
+            SquirrelAwareApp.HandleEvents(onFirstRun: () => FirstRun = true);
+
             CheckUpdate();
         }
 
@@ -52,16 +54,13 @@ namespace NoelPush.Services
 
         private static async void Update(Task<string> result)
         {
-
-          if (result.Result == null || result.Result != "1")
+            if (result.Result == null || result.Result != "1")
                 return;
 
             try
             {
                 using (var mgr = new UpdateManager(@"https://releases.noelpush.com/", "NoelPush"))
                 {
-                    SquirrelAwareApp.HandleEvents(onFirstRun: () => FirstRun = true);
-
                     var updates = await mgr.CheckForUpdate();
 
                     if (updates.ReleasesToApply.Any())
