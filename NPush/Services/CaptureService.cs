@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Media;
+
 using NoelPush.Helpers;
 using NoelPush.Objects;
-using NoelPush.Properties;
 using NoelPush.Views;
 
 

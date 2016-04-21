@@ -4,8 +4,6 @@ using System.IO;
 using Microsoft.Win32;
 using NLog;
 
-using Squirrel;
-
 
 namespace NoelPush.Services
 {
@@ -13,13 +11,13 @@ namespace NoelPush.Services
     {
         public static string GetUserId()
         {
-            const string REGISTRY_KEY = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
-            const string REGISTY_VALUE = "ID";
+            const string registryKey = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
+            const string registyValue = "ID";
 
             try
             {
-                var Key = Registry.GetValue(REGISTRY_KEY, REGISTY_VALUE, 0) as string;
-                return Key ?? WriteUserId();
+                var key = Registry.GetValue(registryKey, registyValue, 0) as string;
+                return key ?? WriteUserId();
             }
             catch (Exception e)
             {
@@ -31,21 +29,21 @@ namespace NoelPush.Services
 
         private static string WriteUserId()
         {
-            const string REGISTRY_FIRST_KEY = @"HKEY_CURRENT_USER\SOFTWARE\";
-            const string REGISTY_FIRST_VALUE = "NoelPush";
+            const string registryFirstKey = @"HKEY_CURRENT_USER\SOFTWARE\";
+            const string registyFirstValue = "NoelPush";
 
-            const string REGISTRY_SECOND_KEY = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
-            const string REGISTY_SECOND_VALUE = "ID";
+            const string registrySecondKey = @"HKEY_CURRENT_USER\SOFTWARE\NoelPush";
+            const string registySecondValue = "ID";
 
-            var REGISTY_STRING = GenerateID();
+            var registyString = GenerateId();
 
-            if (Convert.ToInt32(Registry.GetValue(REGISTRY_FIRST_KEY, REGISTY_FIRST_VALUE, 0)) != 0)
+            if (Convert.ToInt32(Registry.GetValue(registryFirstKey, registyFirstValue, 0)) != 0)
                 return "Undefined";
 
-            Registry.SetValue(REGISTRY_FIRST_KEY, REGISTY_FIRST_VALUE, 0, RegistryValueKind.String);
-            Registry.SetValue(REGISTRY_SECOND_KEY, REGISTY_SECOND_VALUE, REGISTY_STRING, RegistryValueKind.String);
+            Registry.SetValue(registryFirstKey, registyFirstValue, 0, RegistryValueKind.String);
+            Registry.SetValue(registrySecondKey, registySecondValue, registyString, RegistryValueKind.String);
 
-            return REGISTY_STRING;
+            return registyString;
         }
 
         public static void WriteShell()
@@ -76,7 +74,7 @@ namespace NoelPush.Services
             Registry.SetValue(registryPath + "\\command", registyFourthName, registyFourthValue, RegistryValueKind.String);
         }
 
-        public static string GenerateID()
+        public static string GenerateId()
         {
             var random = new Random();
             const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

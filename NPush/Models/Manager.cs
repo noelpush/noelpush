@@ -2,10 +2,9 @@
 using System.Drawing;
 using System.Media;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using NoelPush.Helpers;
+
 using NoelPush.Objects;
 using NoelPush.Properties;
 using NoelPush.Services;
@@ -28,7 +27,7 @@ namespace NoelPush.Models
         public ScreenshotData ScreenData;
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
-        {
+        { 
             this.UserId = RegistryService.GetUserId();
             this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
 
