@@ -32,12 +32,14 @@ namespace NoelPush.Models
             this.UserId = RegistryService.GetUserId();
             this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
 
-            RegistryService.WriteShell();
+            // Disabled for R13
+            //RegistryService.WriteShell();
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            ShortcutService2.RegisterShortcut(ShortcutKeys.Control, Keys.PrintScreen);
-            ShortcutService2.HotKeyPressed += Capture;
+            // Disabled for R13
+            //ShortcutService2.RegisterShortcut(ShortcutKeys.Control, Keys.PrintScreen);
+            //ShortcutService2.HotKeyPressed += Capture;
             ShortcutService.OnKeyPress += Capture;
 
             UpdatesService.Initialize(this.UserId, this.Version);
@@ -81,7 +83,8 @@ namespace NoelPush.Models
 
                 this.pressDateTime = DateTime.Now;
 
-                if (FullScreenHelper.IsFullScreen)
+                // Disabled for R13
+                if (false) //(FullScreenHelper.IsFullScreen)
                 {
                     new SoundPlayer(Resources.notif2).Play();
                     Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureFullScreen(this.ScreenData, upload)));
