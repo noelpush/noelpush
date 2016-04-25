@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using System.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 using NoelPush.Objects;
-using NoelPush.Properties;
 using NoelPush.Services;
 using NoelPush.ViewModels;
 
@@ -31,12 +29,11 @@ namespace NoelPush.Models
             this.UserId = RegistryService.GetUserId();
             this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString();
 
-            // Disabled for R14
-            //RegistryService.WriteShell();
+            RegistryService.WriteShell();
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            // Disabled for R14
+            // Disabled for R15
             //ShortcutService2.RegisterShortcut(ShortcutKeys.Control, Keys.PrintScreen);
             //ShortcutService2.HotKeyPressed += Capture;
             ShortcutService.OnKeyPress += Capture;
@@ -49,14 +46,15 @@ namespace NoelPush.Models
             {
                 var file = CommandService.GetFileName;
                 if (!string.IsNullOrEmpty(file))
-                    this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now }, true);
+                    this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now, Mode = 3 }, true);
             }
         }
 
-        private void Capture(object sender, ShortcutEventArgs e)
-        {
-            this.Capture();
-        }
+        // Disabled for R15
+        //private void Capture(object sender, ShortcutEventArgs e)
+        //{
+        //    this.Capture();
+        //}
 
         public void Capture(bool upload = true)
         {
@@ -82,17 +80,15 @@ namespace NoelPush.Models
 
                 this.pressDateTime = DateTime.Now;
 
-                // Disabled for R13
-                if (false) //(FullScreenHelper.IsFullScreen)
-                {
-                    new SoundPlayer(Resources.notif2).Play();
-                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureFullScreen(this.ScreenData, upload)));
-                    this.pressCounter = 0;
-                }
-                else
-                {
-                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
-                }
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
+
+                // Disabled for R15
+                //if (FullScreenHelper.IsFullScreen)
+                //{
+                //    new SoundPlayer(Resources.notif2).Play();
+                //    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureFullScreen(this.ScreenData, upload)));
+                //    this.pressCounter = 0;
+                //}
             }
 
             // Third press
