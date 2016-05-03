@@ -33,9 +33,6 @@ namespace NoelPush.Models
 
             this.notifyIconViewModel = notifyIconViewModel;
 
-            // Disabled for R15
-            //ShortcutService2.RegisterShortcut(ShortcutKeys.Control, Keys.PrintScreen);
-            //ShortcutService2.HotKeyPressed += Capture;
             ShortcutService.OnKeyPress += Capture;
 
             UpdatesService.Initialize(this.UserId, this.Version);
@@ -49,12 +46,6 @@ namespace NoelPush.Models
                     this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now, Mode = 3 }, true);
             }
         }
-
-        // Disabled for R15
-        //private void Capture(object sender, ShortcutEventArgs e)
-        //{
-        //    this.Capture();
-        //}
 
         public void Capture(bool upload = true)
         {
@@ -81,14 +72,6 @@ namespace NoelPush.Models
                 this.pressDateTime = DateTime.Now;
 
                 Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
-
-                // Disabled for R15
-                //if (FullScreenHelper.IsFullScreen)
-                //{
-                //    new SoundPlayer(Resources.notif2).Play();
-                //    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureFullScreen(this.ScreenData, upload)));
-                //    this.pressCounter = 0;
-                //}
             }
 
             // Third press
@@ -163,8 +146,16 @@ namespace NoelPush.Models
                 this.UploadFailed();
             }
 
-            screenshotData.uRL = url;
-            StatisticsService.StatUpload(screenshotData);
+            screenshotData.UrlPng = url;
+            StatisticsService.AddUpload(screenshotData);
+
+            this.UploadSecondaryPicture(screenshotData);
+        }
+
+        private void UploadSecondaryPicture(ScreenshotData screenshotData)
+        {
+            UploaderService.UploadSecondary(ref screenshotData);
+            StatisticsService.AddPngVersion(screenshotData);
         }
 
         public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)
