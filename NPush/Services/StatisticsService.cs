@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using NoelPush.Objects;
 
 namespace NoelPush.Services
@@ -30,7 +31,7 @@ namespace NoelPush.Services
             await RequestService.SendRequest(url, values);
         }
 
-        public static async void AddPngVersion(string userId, string jpegUrl, string pngUrl)
+        public static async Task<bool> AddPngVersion(string userId, string jpegUrl, string pngUrl)
         {
             const string url = "https://noelpush.com/add_png_version";
 
@@ -41,7 +42,7 @@ namespace NoelPush.Services
                 { "png_url", pngUrl }
             };
 
-            await RequestService.SendRequest(url, values);
+            return await RequestService.SendRequestStatusCode(url, values);
         }
     }
 }

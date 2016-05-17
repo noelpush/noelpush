@@ -67,14 +67,14 @@ namespace NoelPush.Models
             return ImageCodecInfo.GetImageDecoders().FirstOrDefault(codec => codec.FormatID == format.Guid);
         }
 
-        public void Uploaded(string path, string secondUrl)
+        public async void Uploaded(string path, string secondUrl)
         {
             var jpegUrl = this.firstUrl.Contains(".jpeg") ? this.firstUrl : secondUrl;
             var pngUrl = this.firstUrl.Contains(".png") ? this.firstUrl : secondUrl;
 
-            StatisticsService.AddPngVersion(this.userId, jpegUrl, pngUrl);
+            var result = await StatisticsService.AddPngVersion(this.userId, jpegUrl, pngUrl);
 
-            if (File.Exists(path))
+            if (File.Exists(path) && result)
                 File.Delete(path);
         }
     }

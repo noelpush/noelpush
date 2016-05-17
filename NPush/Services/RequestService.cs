@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using NLog;
 
@@ -26,6 +28,25 @@ namespace NoelPush.Services
             }
 
             return string.Empty;
+        }
+
+        public static async Task<bool> SendRequestStatusCode(string url, Dictionary<string, string> values)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var parameters = new FormUrlEncodedContent(values);
+                    var response = await client.PostAsync(url, parameters);
+                    return response.StatusCode == HttpStatusCode.NoContent;
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.GetCurrentClassLogger().Error(e.Message);
+            }
+
+            return false;
         }
     }
 }
