@@ -28,7 +28,7 @@ namespace NoelPush.Services
         // Upload first picture
         public void Upload(PictureData pictureData)
         {
-            var namePicture = new Random().Next(0, 9999).ToString("0000") + "-" + Properties.Resources.NamePicture + "." + pictureData.GetSmallestFormat();
+            var namePicture = new Random().Next(0, 9999).ToString("0000") + "-" + Properties.Resources.NamePicture + "." + pictureData.GetSmallerFormat();
             this.UploadHttpClient(pictureData, namePicture);
         }
 

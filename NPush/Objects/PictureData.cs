@@ -33,8 +33,9 @@ namespace NoelPush.Objects
 
             this.screenshotData.PngSize = (int)(new FileInfo(pathPng)).Length;
             this.screenshotData.JpegSize = (int)(new FileInfo(pathJpeg)).Length;
+            this.screenshotData.Format = this.GetSmallerFormat();
 
-            var smallestPath = this.GetSmallestPicture(pathPng, pathJpeg);
+            var smallestPath = this.GetSmallerPicture(pathPng, pathJpeg);
 
             this.DataBytes = File.ReadAllBytes(smallestPath);
 
@@ -73,7 +74,7 @@ namespace NoelPush.Objects
             return new Bitmap(Image.FromStream(ms));
         }
 
-        public string GetSmallestPicture(string pathPng, string pathJpeg)
+        public string GetSmallerPicture(string pathPng, string pathJpeg)
         {
             if (this.screenshotData.PngSize <= this.screenshotData.JpegSize)
                 return pathPng;
@@ -81,7 +82,7 @@ namespace NoelPush.Objects
             return pathJpeg;
         }
 
-        public string GetSmallestFormat()
+        public string GetSmallerFormat()
         {
             if (this.screenshotData.PngSize <= this.screenshotData.JpegSize)
                 return "png";

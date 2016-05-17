@@ -21,6 +21,10 @@ namespace NoelPush.Models
 
         public async void UploadTask(Bitmap picture, ScreenshotData screenshotData)
         {
+            // Upload only if a jpeg has been uploaded
+            if (screenshotData.Format == "png")
+                return;
+
             this.userId = screenshotData.UserId;
             this.firstUrl = screenshotData.uRL;
 
@@ -31,40 +35,17 @@ namespace NoelPush.Models
                 Directory.CreateDirectory(path);
             }
 
-            if (screenshotData.SentFormat == "png")
-            {
-                path += DateTime.Now.ToString(@"yyyy-MM-dd-HH\hmm\mss\s") + ".jpeg";
-                await CreateJpeg(picture, path);
-            }
-            else
-            {
-                path += DateTime.Now.ToString(@"yyyy-MM-dd-HH\hmm\mss\s") + ".png";
-                await CreatePng(picture, path);
-            }
+            path += DateTime.Now.ToString(@"yyyy-MM-dd-HH\hmm\mss\s") + ".png";
+            await CreatePng(picture, path);
 
             var dataBytes = File.ReadAllBytes(path);
 
             new UploaderService().Upload(this, path, dataBytes, path.Split('.').Last());
         }
 
-        private async Task CreateJpeg(Image picture, string path)
-        {
-            var jpgEncoder = this.GetEncoder(ImageFormat.Jpeg);
-            var myEncoder = Encoder.Quality;
-            var myEncoderParameters = new EncoderParameters(1);
-            myEncoderParameters.Param[0] = new EncoderParameter(myEncoder, 90L);
-
-            picture.Save(path, jpgEncoder, myEncoderParameters);
-        }
-
         private async Task CreatePng(Image picture, string path)
         {
             picture.Save(path, ImageFormat.Png);
-        }
-
-        private ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            return ImageCodecInfo.GetImageDecoders().FirstOrDefault(codec => codec.FormatID == format.Guid);
         }
 
         public async void Uploaded(string path, string secondUrl)

@@ -11,7 +11,7 @@ namespace NoelPush.Objects
 
         public string uRL { get; set; }
         public int Mode { get; set; }
-        public string SentFormat { get; set; }
+        public string Format { get; set; }
 
         public int PngSize { get; set; }
         public int JpegSize { get; set; }
