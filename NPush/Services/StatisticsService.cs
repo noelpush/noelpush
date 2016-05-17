@@ -29,5 +29,19 @@ namespace NoelPush.Services
 
             await RequestService.SendRequest(url, values);
         }
+
+        public static async void AddPngVersion(string userId, string jpegUrl, string pngUrl)
+        {
+            const string url = "https://noelpush.com/add_png_version";
+
+            var values = new Dictionary<string, string>
+            {
+                { "uid", userId },
+                { "jpeg_url", jpegUrl },
+                { "png_url", pngUrl }
+            };
+
+            await RequestService.SendRequest(url, values);
+        }
     }
 }

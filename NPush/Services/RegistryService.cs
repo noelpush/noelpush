@@ -54,7 +54,7 @@ namespace NoelPush.Services
 
         private static void WriteShell(string type)
         {
-            var executablePath = AppDomain.CurrentDomain.BaseDirectory + "NoelPush.exe";
+            var executablePath = AppDomain.CurrentDomain.BaseDirectory + "\\NoelPush.exe";
             if (!File.Exists(executablePath))
                 return;
 

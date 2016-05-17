@@ -145,6 +145,7 @@
     <Compile Include="Events\EnableCommandsEventHandler.cs" />
     <Compile Include="Helpers\FullScreenHelper.cs" />
     <Compile Include="Helpers\Win32Helper.cs" />
+    <Compile Include="Models\DualFormat.cs" />
     <Compile Include="Objects\PictureData.cs" />
     <Compile Include="Objects\ViewModel\CommandViewModel.cs" />
     <Compile Include="Objects\ViewModel\IViewModel.cs" />
