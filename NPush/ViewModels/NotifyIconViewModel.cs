@@ -156,37 +156,59 @@ namespace NoelPush.ViewModels
         private void OpenInBrowser(string url)
         {
             // Open in a navigator if the process is launched
-
-            var processList = Process.GetProcesses();
-            var browsers1 = new[] { "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
-
-            for (var i = 0; i < browsers1.Count(); i++)
+            try
             {
-                if (processList.Any(proc => proc.ProcessName == browsers1[i]))
+                var processList = Process.GetProcesses();
+                var browsers1 = new[] { "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
+
+                for (var i = 0; i < browsers1.Count(); i++)
                 {
-                    Process.Start(browsers1[i], url);
-                    return;
+                    if (processList.Any(proc => proc.ProcessName == browsers1[i]))
+                    {
+                        LogManager.GetCurrentClassLogger().Error("Open history with browser " + browsers1[i]);
+                        Process.Start(browsers1[i], url);
+                        return;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                LogManager.GetCurrentClassLogger().Error(e.Message);
             }
 
             // Else check if a navigator is pinned in taskbar
-            var taskbarPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar";
-            var taskbar = Directory.GetFiles(taskbarPath);
-
-            var browsers2 = new[] { "google chrome", "chromium", "firefox", "edge", "internet explorer", "opera", "safari" };
-            var browsers3 = new[] { "chrome", "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
-
-            for (var i = 0; i < browsers2.Count(); i++)
+            try
             {
-                if (taskbar.Any(t => t.ToLower().Contains(browsers2[i] + ".lnk")))
+                var taskbarPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar";
+                var taskbar = Directory.GetFiles(taskbarPath);
+
+                var browsers2 = new[] { "google chrome", "chromium", "firefox", "edge", "internet explorer", "opera", "safari" };
+                var browsers3 = new[] { "chrome", "chrome", "firefox", "edge", "iexplore", "opera", "safari" };
+
+                for (var i = 0; i < browsers2.Count(); i++)
                 {
-                    Process.Start(browsers3[i], url);
-                    return;
+                    if (taskbar.Any(t => t.ToLower().Contains(browsers2[i] + ".lnk")))
+                    {
+                        LogManager.GetCurrentClassLogger().Error("Open history with browser " + browsers3[i]);
+                        Process.Start(browsers3[i], url);
+                        return;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                LogManager.GetCurrentClassLogger().Error(e.Message);
             }
 
             // Else open with the default navigator
-            Process.Start(url);
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Exception e)
+            {
+                LogManager.GetCurrentClassLogger().Error(e.Message);
+            }
         }
 
         public void CaptureRegion()
