@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+
+using NLog;
 
 using NoelPush.Services;
 using NoelPush.ViewModels;
@@ -10,6 +14,7 @@ namespace NoelPush.Views
 {
     internal partial class NotifyIconView
     {
+        private List<char> debug;
         private readonly NotifyIcon NotifIcon;
         private readonly ContextMenuStrip NotifMenu;
 
@@ -18,10 +23,12 @@ namespace NoelPush.Views
         public NotifyIconView()
         {
             this.IsOpen = false;
+            this.debug = new List<char>();
 
             var icon = Properties.Resources.icon;
 
             this.NotifMenu = new ContextMenuStrip();
+            this.NotifMenu.KeyDown += NotifMenuOnKeyDown;
 
             this.NotifMenu.Items.Add(Properties.Resources.ScreenInProgress, null, this.ScreenInProgressAction);
             this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegionAction);
@@ -38,8 +45,7 @@ namespace NoelPush.Views
             {
                 Icon = icon,
                 Text = Properties.Resources.SoftwareName,
-                //Text = Application.ExecutablePath.Substring(0, Math.Min(Application.ExecutablePath.Length, 63)),
-                ContextMenuStrip = this.NotifMenu
+                ContextMenuStrip = this.NotifMenu,
             };
 
             this.NotifIcon.MouseClick += OnClick;
@@ -48,6 +54,33 @@ namespace NoelPush.Views
             this.ShowIcon();
 
             this.DataContext = new NotifyIconViewModel(EnableCommands);
+        }
+
+        private void NotifMenuOnKeyDown(object sender, KeyEventArgs k)
+        {
+            var letter = (char)k.KeyCode;
+
+            if (!char.IsLetterOrDigit(letter))
+                return;
+
+            debug.Add(letter);
+
+            if (debug.Count > 5)
+                debug.RemoveAt(0);
+
+            var concat = string.Join(string.Empty, debug.ToArray());
+            if (concat.ToLower() == "debug")
+            {
+                try
+                {
+                    var path = Application.StartupPath + "\\noelpush.logs.txt";
+                    System.Diagnostics.Process.Start(@path);
+                }
+                catch (Exception e)
+                {
+                    LogManager.GetCurrentClassLogger().Error(e.Message);
+                }
+            }
         }
 
         private void RestartAppEvent()
