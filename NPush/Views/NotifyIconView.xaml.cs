@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -73,7 +74,8 @@ namespace NoelPush.Views
                 try
                 {
                     var path = Application.StartupPath + "\\noelpush.logs.txt";
-                    System.Diagnostics.Process.Start(@path);
+                    if (File.Exists(path))
+                        System.Diagnostics.Process.Start(@path);
                 }
                 catch (Exception e)
                 {
