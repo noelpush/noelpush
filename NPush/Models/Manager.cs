@@ -166,7 +166,8 @@ namespace NoelPush.Models
             screenshotData.uRL = url;
 
             StatisticsService.StatUpload(screenshotData);
-            new DualFormatService().Upload(img, screenshotData);
+            // Disable temporary
+            //new DualFormatService().Upload(img, screenshotData);
         }
 
         public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)
