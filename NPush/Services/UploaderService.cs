@@ -131,11 +131,11 @@ namespace NoelPush.Services
 
         private string CustomUrl(string url)
         {
-            /* http://www.noelshack.com/2015-02-1420740001-noelpush.png
-             * http://image.noelshack.com/fichiers/2015/02/1420740001-noelpush.png */
+            /* http://www.noelshack.com/2017-23-5-1497015462-a.png
+             * http://image.noelshack.com/fichiers/2017/23/5/1497015462-a.png */
 
-            var Pattern = new Regex(@"www\.noelshack\.com\/(\d+)-(\d+)-(.+)");
-            return Pattern.Replace(url, "image.noelshack.com/fichiers/$1/$2/$3");
+            var Pattern = new Regex(@"www\.noelshack\.com\/(\d+)-(\d+)-(\d+)-(.+)");
+            return Pattern.Replace(url, "image.noelshack.com/fichiers/$1/$2/$3/$4");
         }
     }
 }
