@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Windows.Forms;
 
 using NLog;
-
-using NoelPush.Services;
 using NoelPush.ViewModels;
 
 namespace NoelPush.Views

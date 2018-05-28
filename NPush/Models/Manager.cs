@@ -22,7 +22,7 @@ namespace NoelPush.Models
 
         private int pressCounter;
         private DateTime pressDateTime;
-        public ScreenshotData ScreenData;
+        public Rectangle ImgSize;
 
         public Manager(NotifyIconViewModel notifyIconViewModel)
         { 
@@ -37,7 +37,7 @@ namespace NoelPush.Models
             {
                 var file = CommandService.GetFileName;
                 if (!string.IsNullOrEmpty(file))
-                    this.Captured(new Bitmap(Image.FromFile(file)), new ScreenshotData(this.UserId) { StartDate = DateTime.Now, Mode = 3 }, true);
+                    this.Captured(new Bitmap(Image.FromFile(file)), true);
             }
         }
 
@@ -49,7 +49,7 @@ namespace NoelPush.Models
             // First press or bad time
             if (this.pressCounter <= 1 || (this.pressCounter > 1 && date > this.pressDateTime.AddMilliseconds(400)))
             {
-                this.ScreenData = new ScreenshotData(this.UserId);
+                this.ImgSize = new Rectangle();
 
                 this.pressCounter = 1;
                 this.CancelCapture();
@@ -59,49 +59,34 @@ namespace NoelPush.Models
             // Second press
             else if (this.pressCounter == 2)
             {
-                this.ScreenData.Mode = 1;
-                this.ScreenData.SecondPressDate = DateTime.Now;
-                this.ScreenData.ThirdPressDate = DateTime.MinValue;
-
                 this.pressDateTime = DateTime.Now;
 
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(this.ScreenData, upload)));
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureRegion(upload)));
             }
 
             // Third press
             if (this.pressCounter == 3)
             {
-                this.ScreenData.Mode = 2;
-                this.ScreenData.ThirdPressDate = DateTime.Now;
-
                 this.CancelCapture();
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureScreen(this.ScreenData, upload)));
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => this.CaptureScreen(upload)));
                 this.pressCounter = 0;
             }
         }
 
-        public void CaptureRegion(ScreenshotData data, bool upload)
+        public void CaptureRegion(bool upload)
         {
-            var capture = CaptureService.CaptureRegion(ref data);
+            var capture = CaptureService.CaptureRegion(ref this.ImgSize);
 
             if (capture != null)
-                this.Captured(capture, data, upload);
+                this.Captured(capture, upload);
         }
 
-        public void CaptureScreen(ScreenshotData data, bool upload)
+        public void CaptureScreen(bool upload)
         {
-            var capture = CaptureService.CaptureScreen(ref data);
+            var capture = CaptureService.CaptureScreen(ref this.ImgSize);
 
             if (capture != null)
-                this.Captured(capture, data, upload);
-        }
-
-        private void CaptureFullScreen(ScreenshotData data, bool upload)
-        {
-            var capture = CaptureService.CaptureFullScreen(ref data);
-
-            if (capture != null)
-                this.Captured(capture, data, upload);
+                this.Captured(capture, upload);
         }
 
         private void CancelCapture()
@@ -110,14 +95,14 @@ namespace NoelPush.Models
             CaptureService.CancelCapture();
         }
 
-        public void Captured(Bitmap img, ScreenshotData screenshotData, bool upload)
+        public void Captured(Bitmap img, bool upload)
         {
             this.pressCounter = 0;
 
             if (upload)
             {
                 this.notifyIconViewModel.EnableCommands(false);
-                var pictureData = new PictureData(img, screenshotData);
+                var pictureData = new PictureData(img);
                 new UploaderService(this).Upload(pictureData);
             }
             else
@@ -127,7 +112,7 @@ namespace NoelPush.Models
             }
         }
 
-        public void Uploaded(Bitmap img, string url, ScreenshotData screenshotData, bool error)
+        public void Uploaded(Bitmap img, string url, bool error)
         {
             if (!error)
             {
@@ -139,8 +124,6 @@ namespace NoelPush.Models
             {
                 this.UploadFailed();
             }
-
-            screenshotData.uRL = url;
         }
 
         public BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)

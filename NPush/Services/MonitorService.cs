@@ -7,18 +7,7 @@ namespace NoelPush.Services
     static class MonitorService
     {
         // Virtual screens
-
-        public static Rectangle VirtualArea
-        {
-            get 
-            { 
-                return new Rectangle(
-                     new Point(SystemInformation.VirtualScreen.X, SystemInformation.VirtualScreen.Y),
-                     SystemInformation.VirtualScreen.Size
-                ); 
-            }
-        }
-
+        
         public static int VirtualHeight
         {
             get { return SystemInformation.VirtualScreen.Height; }
@@ -40,12 +29,7 @@ namespace NoelPush.Services
         }
 
         // Current screen
-
-        public static Rectangle CurrentArea
-        {
-            get { return Screen.FromPoint(Cursor.Position).Bounds; }
-        }
-
+        
         public static int CurrentHeight
         {
             get { return Screen.FromPoint(Cursor.Position).Bounds.Height; }

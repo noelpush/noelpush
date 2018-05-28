@@ -8,15 +8,16 @@ namespace NoelPush.Objects
 {
     public class PictureData
     {
+        private int PngSize;
+        private int JpegSize;
+        private string Format;
+
         public byte[] DataBytes { get; private set; }
         public Bitmap Picture { get; private set; }
-        public ScreenshotData screenshotData { get; private set; }
 
-        public PictureData(Bitmap img, ScreenshotData screenshotData)
+        public PictureData(Bitmap img)
         {
             this.Picture = img;
-            this.screenshotData = screenshotData;
-            this.screenshotData.ImgSize = new Rectangle(Point.Empty, this.Picture.Size);
 
             this.Initialize();
         }
@@ -31,9 +32,9 @@ namespace NoelPush.Objects
 
             this.CreateImage(pathPng, pathJpeg);
 
-            this.screenshotData.PngSize = (int)(new FileInfo(pathPng)).Length;
-            this.screenshotData.JpegSize = (int)(new FileInfo(pathJpeg)).Length;
-            this.screenshotData.Format = this.GetSmallerFormat();
+            this.PngSize = (int)(new FileInfo(pathPng)).Length;
+            this.JpegSize = (int)(new FileInfo(pathJpeg)).Length;
+            this.Format = this.GetSmallerFormat();
 
             var smallestPath = this.GetSmallerPicture(pathPng, pathJpeg);
 
@@ -76,7 +77,7 @@ namespace NoelPush.Objects
 
         public string GetSmallerPicture(string pathPng, string pathJpeg)
         {
-            if (this.screenshotData.PngSize <= this.screenshotData.JpegSize)
+            if (this.PngSize <= this.JpegSize)
                 return pathPng;
 
             return pathJpeg;
@@ -84,7 +85,7 @@ namespace NoelPush.Objects
 
         public string GetSmallerFormat()
         {
-            if (this.screenshotData.PngSize <= this.screenshotData.JpegSize)
+            if (this.PngSize <= this.JpegSize)
                 return "png";
 
             return "jpeg";

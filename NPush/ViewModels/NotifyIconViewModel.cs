@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using NLog;
 using NoelPush.Models;
-using NoelPush.Objects;
 using NoelPush.Views.Popup;
 
 namespace NoelPush.ViewModels
@@ -122,30 +115,14 @@ namespace NoelPush.ViewModels
 
         public void CaptureRegion()
         {
-            var screenshotData = new ScreenshotData(this.manager.UserId)
-            {
-                Mode = 1,
-                FirstPressDate = DateTime.MinValue,
-                SecondPressDate = DateTime.MinValue,
-                ThirdPressDate = DateTime.MinValue
-            };
-
             if (this.CanScreen)
-                this.manager.CaptureRegion(screenshotData, true);
+                this.manager.CaptureRegion(true);
         }
 
         public void CaptureScreen()
         {
-            var screenshotData = new ScreenshotData(this.manager.UserId)
-            {
-                Mode = 2,
-                FirstPressDate = DateTime.MinValue,
-                SecondPressDate = DateTime.MinValue,
-                ThirdPressDate = DateTime.MinValue
-            };
-
             if (this.CanScreen)
-                this.manager.CaptureScreen(screenshotData, true);
+                this.manager.CaptureScreen(true);
         }
 
         public void Exit()

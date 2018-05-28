@@ -5,7 +5,6 @@ using System.Threading;
 using System.Windows;
 using NLog;
 using NoelPush.Services;
-using Squirrel;
 
 namespace NoelPush
 {
