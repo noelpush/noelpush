@@ -154,14 +154,12 @@
     <Compile Include="Objects\ViewModel\StringExtension.cs" />
     <Compile Include="Objects\ViewModel\ViewElement.cs" />
     <Compile Include="Objects\ViewModel\ViewModelBase.cs" />
-    <Compile Include="Services\MonitorService.cs" />
-    <Compile Include="Services\RegistryService.cs" />
     <Compile Include="Services\CommandService.cs" />
+    <Compile Include="Services\MonitorService.cs" />
     <Compile Include="Services\RequestService.cs" />
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\CaptureService.cs" />
-    <Compile Include="Services\ShortcutService2.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">
       <DependentUpon>PopupFirstRunView.xaml</DependentUpon>
