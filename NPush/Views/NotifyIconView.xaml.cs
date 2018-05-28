@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-using NLog;
 using NoelPush.ViewModels;
 
 namespace NoelPush.Views
@@ -73,9 +72,8 @@ namespace NoelPush.Views
                     if (File.Exists(path))
                         System.Diagnostics.Process.Start(@path);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    LogManager.GetCurrentClassLogger().Error(e.Message);
                 }
             }
         }

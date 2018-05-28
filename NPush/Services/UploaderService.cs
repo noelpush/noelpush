@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using NLog;
 using NoelPush.Models;
 using NoelPush.Objects;
 
@@ -11,12 +10,10 @@ namespace NoelPush.Services
 {
     internal class UploaderService
     {
-        private readonly Logger logger;
         private readonly Manager manager;
 
         public UploaderService()
         {
-            this.logger = LogManager.GetCurrentClassLogger();
         }
 
         public UploaderService(Manager manager) : this()
@@ -64,8 +61,6 @@ namespace NoelPush.Services
             }
             catch (Exception e)
             {
-                this.logger.Error(e.Message);
-
                 if (e.Message == "A task was canceled.")
                 {
                     this.manager.UploadPictureTooLarge();

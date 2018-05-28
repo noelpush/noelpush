@@ -3,14 +3,12 @@
 using System;
 using System.Threading;
 using System.Windows;
-using NLog;
 using NoelPush.Services;
 
 namespace NoelPush
 {
     public partial class App
     {
-        private Logger logger;
         private static Mutex mutex;
 
         protected override void OnStartup(StartupEventArgs e)
@@ -20,8 +18,6 @@ namespace NoelPush
                 Environment.Exit(1);
             }
 
-            this.logger = LogManager.GetCurrentClassLogger();
-
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.OnStartup(e);
@@ -29,7 +25,6 @@ namespace NoelPush
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            this.logger.Error(e.ExceptionObject.ToString);
         }
 
         protected override void OnExit(ExitEventArgs e)
