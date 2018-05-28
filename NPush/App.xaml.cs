@@ -21,12 +21,6 @@ namespace NoelPush
                 Environment.Exit(1);
             }
 
-            SquirrelAwareApp.HandleEvents(
-                onInitialInstall: v => UpdatesService.InstallEvent(),
-                onAppUpdate: v => UpdatesService.UpdateEvent(),
-                onAppUninstall: v => UpdatesService.UninstallEvent()
-            );
-
             this.logger = LogManager.GetCurrentClassLogger();
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

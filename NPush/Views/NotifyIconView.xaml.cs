@@ -33,7 +33,6 @@ namespace NoelPush.Views
             this.NotifMenu.Items.Add(Properties.Resources.ScreenInProgress, null, this.ScreenInProgressAction);
             this.NotifMenu.Items.Add(Properties.Resources.CaptureRegion, null, this.CaptureRegionAction);
             this.NotifMenu.Items.Add(Properties.Resources.CaptureScreen, null, this.CaptureScreenAction);
-            this.NotifMenu.Items.Add(Properties.Resources.Historique, null, this.HistoriqueAction);
             this.NotifMenu.Items.Add(Properties.Resources.Exit, null, this.ExitAction);
 
             //this.NotifMenu.Items[1].Image = Bitmap.FromFile(@"");
@@ -49,7 +48,6 @@ namespace NoelPush.Views
             };
 
             this.NotifIcon.MouseClick += OnClick;
-            UpdatesService.RestartAppEvent += RestartAppEvent;
 
             this.ShowIcon();
 
@@ -87,15 +85,6 @@ namespace NoelPush.Views
         private void RestartAppEvent()
         {
             this.HideIcon();
-        }
-
-        private void HistoriqueAction(object sender, EventArgs e)
-        {
-            var notifyIconViewModel = this.DataContext as NotifyIconViewModel;
-            if (notifyIconViewModel != null)
-            {
-                notifyIconViewModel.Historique();
-            }
         }
 
         public void ShowIcon()
@@ -181,7 +170,7 @@ namespace NoelPush.Views
             this.NotifIcon.ContextMenuStrip.Items[2].Enabled = enabled;
 
             // Rename exit button
-            this.NotifIcon.ContextMenuStrip.Items[4].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNoelPush;
+            this.NotifIcon.ContextMenuStrip.Items[3].Text = enabled ? Properties.Resources.Exit : Properties.Resources.ExitNoelPush;
         }
     }
 }

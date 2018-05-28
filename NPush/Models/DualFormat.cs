@@ -53,9 +53,7 @@ namespace NoelPush.Models
             var jpegUrl = this.firstUrl.Contains(".jpeg") ? this.firstUrl : secondUrl;
             var pngUrl = this.firstUrl.Contains(".png") ? this.firstUrl : secondUrl;
 
-            var result = await StatisticsService.AddPngVersion(this.userId, jpegUrl, pngUrl);
-
-            if (File.Exists(path) && result)
+            if (File.Exists(path))
                 File.Delete(path);
         }
     }

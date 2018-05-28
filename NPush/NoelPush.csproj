@@ -162,8 +162,6 @@
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Services\CaptureService.cs" />
     <Compile Include="Services\ShortcutService2.cs" />
-    <Compile Include="Services\StatisticsService.cs" />
-    <Compile Include="Services\UpdatesService.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="Views\Popup\PopupFirstRunView.xaml.cs">
       <DependentUpon>PopupFirstRunView.xaml</DependentUpon>
