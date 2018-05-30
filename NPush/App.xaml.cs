@@ -18,13 +18,9 @@ namespace NoelPush
                 Environment.Exit(1);
             }
 
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            CleanFilesService.RemoveOldVersion();
 
             base.OnStartup(e);
-        }
-
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
         }
 
         protected override void OnExit(ExitEventArgs e)
